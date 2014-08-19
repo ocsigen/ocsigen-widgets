@@ -1,0 +1,5 @@
+0000000000000000000000000000000000000000 afee3f29476883cfd9cbab12fa5ef88d002d353c lisqlql <charly.n.chevalier@gmail.com> 1401379765 +0200	clone: from git@github.com:ocsigen/eliom-widgets.git
+afee3f29476883cfd9cbab12fa5ef88d002d353c fbc6ae405cd66cc0674ff221881b298d3eac1659 lisqlql <charly.n.chevalier@gmail.com> 1407610629 +0200	rebase finished: refs/heads/master onto fbc6ae405cd66cc0674ff221881b298d3eac1659
+fbc6ae405cd66cc0674ff221881b298d3eac1659 7710163ee4ac0a0ca4615646a940af0cb836f74e lisqlql <charly.n.chevalier@gmail.com> 1407613822 +0200	commit: Add closeable_by_button for button alerts
+7710163ee4ac0a0ca4615646a940af0cb836f74e f1aaab061fc0fe3e731285376834f1497b277524 lisqlql <charly.n.chevalier@gmail.com> 1408015690 +0200	rebase finished: refs/heads/master onto f1aaab061fc0fe3e731285376834f1497b277524
+f1aaab061fc0fe3e731285376834f1497b277524 2d1fa8c12c66a5bf84f02cb793238996607a74fd lisqlql <charly.n.chevalier@gmail.com> 1408462007 +0200	rebase finished: refs/heads/master onto 2d1fa8c12c66a5bf84f02cb793238996607a74fd

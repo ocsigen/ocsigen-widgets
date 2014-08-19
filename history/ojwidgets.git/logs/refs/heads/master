@@ -1,0 +1,17 @@
+0000000000000000000000000000000000000000 97e1d194700c8acfd369e050f641364aef0ff261 lisqlql <charly.n.chevalier@gmail.com> 1401380620 +0200	clone: from git@github.com:ocsigen/ojwidgets.git
+97e1d194700c8acfd369e050f641364aef0ff261 5dab2fa8ff2ee9cc10b6780d4b0904467699d178 lisqlql <charly.n.chevalier@gmail.com> 1405513278 +0200	rebase finished: refs/heads/master onto 5dab2fa8ff2ee9cc10b6780d4b0904467699d178
+5dab2fa8ff2ee9cc10b6780d4b0904467699d178 4ab2e0402fe77b728675e009c073ba419ca45c94 lisqlql <charly.n.chevalier@gmail.com> 1407584015 +0200	commit: Update to latest version of jsoo
+4ab2e0402fe77b728675e009c073ba419ca45c94 d9ccf0850bcf917d7d712cbf7e917a1836a65510 lisqlql <charly.n.chevalier@gmail.com> 1407584046 +0200	commit (amend): Update to latest version of jsoo
+d9ccf0850bcf917d7d712cbf7e917a1836a65510 7cdaf44ace80a53063897d01b03733af1d9a4458 lisqlql <charly.n.chevalier@gmail.com> 1407584569 +0200	commit: Make ojwidgets depending of jsoo dev version
+7cdaf44ace80a53063897d01b03733af1d9a4458 a36d1be63a34ea255b85d552714a4ec9d8b15e57 lisqlql <charly.n.chevalier@gmail.com> 1407584950 +0200	commit: Update jenkins
+a36d1be63a34ea255b85d552714a4ec9d8b15e57 d11f3f261cc0fccf414bbc802bb998659a5becbe lisqlql <charly.n.chevalier@gmail.com> 1407584974 +0200	commit (amend): Update jenkins.sh (missing for previous commit)
+d11f3f261cc0fccf414bbc802bb998659a5becbe d9cc7b61e13cda32f5759e58bbdb6e96dce81327 lisqlql <charly.n.chevalier@gmail.com> 1407613788 +0200	commit: Add closeable_by_button for button alerts
+d9cc7b61e13cda32f5759e58bbdb6e96dce81327 b8428e29c089b38bba525e277ea05d126c35e905 lisqlql <charly.n.chevalier@gmail.com> 1408100776 +0200	commit: Clean up extra asterisk in comments
+b8428e29c089b38bba525e277ea05d126c35e905 3e90d295b1dbc901121674c90d1a87d4029292c9 lisqlql <charly.n.chevalier@gmail.com> 1408101045 +0200	commit: Reorganize menu doc + Add missing widget
+3e90d295b1dbc901121674c90d1a87d4029292c9 b97657f42136ce4a9a40fc9a735d5091944e0b3e lisqlql <charly.n.chevalier@gmail.com> 1408104386 +0200	commit: Add doc for popups + Add missing intf, functions
+b97657f42136ce4a9a40fc9a735d5091944e0b3e 6cf4295a1e7161ec37ce9ec78d0aa432d070c440 lisqlql <charly.n.chevalier@gmail.com> 1408104430 +0200	commit: Add popups in doc intro
+6cf4295a1e7161ec37ce9ec78d0aa432d070c440 5d874449da7b79dad5842300f40a5013aadca251 lisqlql <charly.n.chevalier@gmail.com> 1408104511 +0200	rebase -i (finish): refs/heads/master onto 3e90d295b1dbc901121674c90d1a87d4029292c9
+5d874449da7b79dad5842300f40a5013aadca251 b98edcd93ff05e75ef19efc9f68c104a6b3f7434 lisqlql <charly.n.chevalier@gmail.com> 1408104528 +0200	commit: Update gitignore
+b98edcd93ff05e75ef19efc9f68c104a6b3f7434 9c91ad68de0ffcf618e23c85467223f053c2627e lisqlql <charly.n.chevalier@gmail.com> 1408116628 +0200	commit: Reorganize index doc
+9c91ad68de0ffcf618e23c85467223f053c2627e 647b142ca618550babc106b4bc6fd29fd2043d02 lisqlql <charly.n.chevalier@gmail.com> 1408438909 +0200	commit: Fix matching of completion widget
+647b142ca618550babc106b4bc6fd29fd2043d02 c724fa18e829557e640272a34181de30ab98eed9 lisqlql <charly.n.chevalier@gmail.com> 1408438935 +0200	commit: Use two kinds of value for completion widget
