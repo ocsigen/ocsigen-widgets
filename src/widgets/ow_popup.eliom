@@ -14,7 +14,7 @@
   let get_global_bg () =
     let update_bg bg =
       let w, h =
-        let w, h = Ow_tools.get_screen_size () in
+        let w, h = Ow_size.get_screen_size () in
         Js.Optdef.case (window##innerWidth)
           (fun () -> w)
           (fun w -> w),
