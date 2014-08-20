@@ -12,28 +12,40 @@ PKG_DESC := your description
 SERVER_FILES := $(wildcard\
 	src/*.eliom*\
 	src/experimental/*.eliom*\
+	src/bindings/*.eliom*\
+	src/tools/*.eliom*\
+	src/widgets/*.eliom*\
 )
 # Source files for the client
 CLIENT_FILES := $(wildcard\
 	src/*.eliom*\
    	src/experimental/*.eliom*\
+	src/bindings/*.eliom*\
+	src/tools/*.eliom*\
+	src/widgets/*.eliom*\
 )
 
 # Source files for the server
 SERVER_FILES_DOC := $(wildcard\
-  src/*.eliomi\
-  src/experimental/*.eliomi\
+	src/*.eliomi\
+	src/experimental/*.eliomi\
+	src/bindings/*.eliomi\
+	src/tools/*.eliomi\
+	src/widgets/*.eliomi\
 )
 # Source files for the client
 CLIENT_FILES_DOC := $(wildcard\
-  src/*.eliomi\
-  src/experimental/*.eliomi\
+	src/*.eliomi\
+	src/experimental/*.eliomi\
+	src/bindings/*.eliomi\
+	src/tools/*.eliomi\
+	src/widgets/*.eliomi\
 )
 
 # OCamlfind packages for the server
 SERVER_PACKAGES := text
 # OCamlfind packages for the client
-CLIENT_PACKAGES := 
+CLIENT_PACKAGES := ojquery
 
 # Native mode (yes/no): Compile also with native mode (it will always compile with byte mode)
 NATIVE := yes
@@ -43,3 +55,6 @@ DEBUG := no
 
 # Package's library $(PKG_NAME).{client,server}.cma (a,cmxa,cmxs only server side)
 LIBDIR := lib/
+
+# Module's prefix
+MODULE_PREFIX := ow_
