@@ -1,0 +1,19 @@
+opam-version: "1"
+maintainer: "dev@ocsigen.org"
+version: "dev"
+build: [
+  [ make ]
+  [ make "install" ]
+]
+remove: [
+  [ "rm" "-rf" "%{lib}%/ocsigen-widgets/server" ]
+  [ "rm" "-rf" "%{lib}%/ocsigen-widgets/client" ]
+  [ "ocamlfind" "remove" "ocsigen-widgets" ]
+]
+depends: [
+  "ocamlfind"
+  "text"
+  "js_of_ocaml" {>= "dev"}
+  "ojquery"     {>= "dev"}
+  "eliom"       {>= "dev"}
+]
