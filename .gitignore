@@ -38,3 +38,5 @@ _server
 _deps
 META
 .depend
+doc/client
+doc/server
