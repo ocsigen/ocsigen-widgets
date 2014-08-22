@@ -1,3 +1,18 @@
+{shared{
+  open Eliom_content.Html5
+  open Html5_types
+  open Ow_dom
+}}
+{client{
+  open Dom_html
+  open Dom
+}}
+
+{shared{
+  type refresh_fun' = int -> string -> li elt list Lwt.t
+  type on_confirm_fun' = string -> unit Lwt.t
+}}
+
 {client{
   open Eliom_content.Html5
 
@@ -23,9 +38,6 @@
        function [refresh] on the construction of the widget). *)
     method refresh : unit Lwt.t Js.meth
   end
-
-  type refresh_fun = (int -> string -> Html5_types.li elt list Lwt.t)
-  type on_confirm_fun = (string -> unit Lwt.t)
 
   (** Provides behaviours of a completion widget.
 
@@ -76,7 +88,7 @@
 
       *)
   val completion :
-     refresh : refresh_fun
+     refresh : refresh_fun'
   -> ?limit : int
   -> ?accents : bool
   -> ?from_start : bool
@@ -86,8 +98,40 @@
   -> ?auto_match : bool
   -> ?clear_input_on_confirm : bool
   -> ?move_with_tab : bool
-  -> ?on_confirm : on_confirm_fun
+  -> ?on_confirm : on_confirm_fun'
   -> 'a elt
   -> Html5_types.ul elt
   -> ('a elt * Html5_types.ul elt)
+}}
+
+{server{
+  (* w1 is a completion of w0. ex: is_completed_by "e" "eddy" = yes *)
+  (* both arg are utf8 caml string *)
+  val is_completed_by : string -> string -> bool
+}}
+
+{shared{
+  val li :
+    ?a:[< Html5_types.li_attrib > `Class `User_data ]
+      Eliom_content.Html5.D.attrib list
+  -> value:Html5_types.text
+  -> value_to_match:Html5_types.text
+  -> Html5_types.flow5_without_interactive Eliom_content.Html5.D.Raw.elt list
+  -> [> Html5_types.li ] Eliom_content.Html5.D.elt
+}}
+
+{server{
+  val completion :
+     refresh:refresh_fun' client_value
+  -> ?limit:int
+  -> ?accents:bool
+  -> ?sensitive:bool
+  -> ?adaptive:bool
+  -> ?auto_match:bool
+  -> ?clear_input_on_confirm:bool
+  -> ?move_with_tab:bool
+  -> ?on_confirm:on_confirm_fun' client_value
+  -> 'a elt
+  -> ul elt
+  -> ('a elt * ul elt)
 }}

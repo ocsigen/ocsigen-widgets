@@ -1,3 +1,7 @@
+{shared{
+  type t'
+}}
+
 {client{
   class type item = object
     inherit Dom_html.element
@@ -25,4 +29,10 @@
     -> disable : (#item Js.t -> unit -> unit)
     -> #item' Js.t
     -> item Js.t
+}}
+
+{client{
+  val set : ?at_least_one:bool -> unit -> t
+  val of_server_set : t' -> t
+  val to_server_set : t -> t'
 }}

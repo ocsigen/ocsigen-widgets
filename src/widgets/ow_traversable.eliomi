@@ -1,3 +1,13 @@
+{shared{
+  open Eliom_content.Html5
+  open Html5_types
+  open Ow_dom
+}}
+{client{
+  open Dom_html
+  open Dom
+}}
+
 {client{
   open Eliom_content.Html5
 
@@ -139,4 +149,40 @@
 
   (** Check if the given element is an instance of a [traversable] widget. *)
   val to_traversable : Html5_types.ul elt -> traversable Js.t
+}}
+
+{shared{
+  val li :
+    ?a:[< Html5_types.li_attrib > `Class `User_data ]
+      Eliom_content.Html5.D.attrib list
+  -> ?anchor:bool
+  -> ?href:string
+  -> ?value:Html5_types.text
+  -> ?value_to_match:Html5_types.text
+  -> Html5_types.flow5_without_interactive Eliom_content.Html5.D.Raw.elt list
+  -> [> Html5_types.li ] Eliom_content.Html5.D.elt
+}}
+
+{server{
+  module Style : sig
+    val traversable_cls : string
+    val traversable_elt_cls : string
+    val selected_cls : string
+  end
+}}
+
+{server{
+  class type traversable = object end
+}}
+
+{server{
+  val traversable :
+     ?enable_link:bool
+  -> ?focus:bool
+    (* TODO
+  -> ?is_traversable:(#traversable Js.t -> bool) client_value
+  -> ?on_keydown:(Dom_html.keyboardEvent Js.t -> bool Lwt.t) client_value
+     *)
+  -> ul elt
+  -> ul elt
 }}

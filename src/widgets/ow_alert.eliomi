@@ -1,3 +1,8 @@
+{shared{
+  open Ow_dom
+  open Eliom_content.Html5
+}}
+
 {client{
   open Eliom_content.Html5
 
@@ -168,5 +173,31 @@
   val to_dyn_alert :
      'a elt
   -> dyn_alert Js.t
+
+}}
+
+{shared{
+  type dyn_alert_fun' = any_elt' elt -> any_elt' elt list Lwt.t
+}}
+
+{server{
+  val closeable_by_click :
+     'a elt
+  -> 'a elt
+
+  val alert :
+     ?allow_outer_clicks:bool
+  -> ?before:('a elt -> unit)
+  -> ?after:('a elt -> unit)
+  -> 'a elt
+  -> 'a elt
+
+  val dyn_alert :
+     ?allow_outer_clicks:bool
+  -> ?before:('a elt -> unit Lwt.t)
+  -> ?after:('a elt -> unit Lwt.t)
+  -> 'a elt
+  -> dyn_alert_fun' client_value
+  -> 'a elt
 
 }}

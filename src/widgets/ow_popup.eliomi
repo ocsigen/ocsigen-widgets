@@ -1,3 +1,13 @@
+{shared{
+  open Eliom_content.Html5
+  open Html5_types
+  open Ow_dom
+}}
+{client{
+  open Dom_html
+  open Dom
+}}
+
 {client{
   open Eliom_content.Html5
 
@@ -45,4 +55,29 @@
   (** Tests if an element is an alert or not and returns it as a [dyn_popup]
       instance. *)
   val to_dyn_popup : 'a elt -> Ow_alert.dyn_alert Js.t
+}}
+
+{shared{
+  type dyn_popup_fun' = Ow_alert.dyn_alert_fun'
+}}
+
+{server{
+  val closeable_by_click :
+     'a elt
+  -> 'a elt
+
+  val popup :
+     ?show:bool
+  -> ?allow_outer_clicks:bool
+  -> ?with_background:bool
+  -> 'a elt
+  -> 'a elt
+
+  val dyn_popup :
+     ?show:bool
+  -> ?allow_outer_clicks:bool
+  -> ?with_background:bool
+  -> 'a elt
+  -> dyn_popup_fun' client_value
+  -> 'a elt
 }}

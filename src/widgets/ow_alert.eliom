@@ -1,7 +1,16 @@
+{shared{
+  open Eliom_content.Html5
+  open Html5_types
+  open Ow_dom
+}}
+{client{
+  open Dom_html
+  open Dom
+}}
+
 {client{
   open Dom
   open Dom_html
-  open Ow_dom
 
   class type alert_event = object
     inherit Dom_html.event
@@ -272,4 +281,54 @@
                              *)
             Lwt.return ()))
 
+}}
+
+{shared{
+  type dyn_alert_fun' = any_elt' elt -> any_elt' elt list Lwt.t
+}}
+
+{server{
+  let closeable_by_click (elt : 'a elt) =
+    ignore {unit{
+      Eliom_client.onload (fun () ->
+        ignore (closeable_by_click %elt)
+      )
+    }};
+    elt
+
+  let alert
+      ?(allow_outer_clicks : bool option)
+      ?(before : ('a elt -> unit) option)
+      ?(after : ('a elt -> unit) option)
+      (elt : 'a elt) =
+    ignore {unit{
+      Eliom_client.onload (fun () ->
+        ignore (
+          alert
+            ?allow_outer_clicks:%allow_outer_clicks
+            ?before:%before
+            ?after:%after
+            %elt
+        ))
+    }};
+    elt
+
+  let dyn_alert
+      ?(allow_outer_clicks : bool option)
+      ?(before : ('a elt -> unit Lwt.t) option)
+      ?(after : ('a elt -> unit Lwt.t) option)
+      (elt : 'a elt)
+      (f : dyn_alert_fun' client_value) =
+    ignore {unit{
+      Eliom_client.onload (fun () ->
+        ignore (
+          dyn_alert
+            ?allow_outer_clicks:%allow_outer_clicks
+            ?before:%before
+            ?after:%after
+            %elt
+            %f
+        ))
+    }};
+    elt
 }}

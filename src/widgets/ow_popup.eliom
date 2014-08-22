@@ -3,6 +3,16 @@
    Author : Charly Chevalier
 *)
 
+{shared{
+  open Eliom_content.Html5
+  open Html5_types
+  open Ow_dom
+}}
+{client{
+  open Dom_html
+  open Dom
+}}
+
 {client{
   open Dom
   open Dom_html
@@ -95,8 +105,53 @@
 
     elt
 
-  let closeable_by_click = Ow_alert.closeable_by_click
-
   let to_popup = Ow_alert.to_alert
   let to_dyn_popup = Ow_alert.to_dyn_alert
+}}
+
+{shared{
+  type dyn_popup_fun' = Ow_alert.dyn_alert_fun'
+
+  let closeable_by_click = Ow_alert.closeable_by_click
+}}
+
+{server{
+
+  let popup
+      ?(show : bool option)
+      ?(allow_outer_clicks : bool option)
+      ?(with_background : bool option)
+      (elt : 'a elt) =
+    ignore {unit{
+      Eliom_client.onload (fun () ->
+        ignore (
+          popup
+            ?show:%show
+            ?allow_outer_clicks:%allow_outer_clicks
+            ?with_background:%with_background
+            %elt
+        )
+      )
+    }};
+    elt
+
+  let dyn_popup
+      ?(show : bool option)
+      ?(allow_outer_clicks : bool option)
+      ?(with_background : bool option)
+      (elt : 'a elt)
+      (f : dyn_popup_fun' client_value) =
+    ignore {unit{
+      Eliom_client.onload (fun () ->
+        ignore (
+          dyn_popup
+            ?show:%show
+            ?allow_outer_clicks:%allow_outer_clicks
+            ?with_background:%with_background
+            %elt
+            %f
+        )
+      )
+    }};
+    elt
 }}

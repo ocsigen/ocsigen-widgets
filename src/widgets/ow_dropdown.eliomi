@@ -1,6 +1,14 @@
-{client{
+{shared{
   open Eliom_content.Html5
+  open Html5_types
+  open Ow_dom
+}}
+{client{
+  open Dom_html
+  open Dom
+}}
 
+{client{
   (** A dropdown menu is a menu which can be displayed under an element
       which will act like a [button]. *)
 
@@ -57,4 +65,22 @@
   -> ('a elt * Html5_types.ul elt)
 
   (* FIXME: add conversion functions. *)
+}}
+
+{shared{
+  val li :
+    ?a:[< Html5_types.li_attrib > `Class `User_data ]
+      Eliom_content.Html5.D.attrib list
+  -> href:string
+  -> Html5_types.flow5_without_interactive Eliom_content.Html5.D.Raw.elt list
+  -> [> Html5_types.li ] Eliom_content.Html5.D.elt
+}}
+
+{server{
+  val dropdown :
+     ?hover:bool
+  -> ?hover_timeout:float
+  -> 'a elt
+  -> ul elt
+  -> ('a elt * ul elt)
 }}

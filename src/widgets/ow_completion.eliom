@@ -1,3 +1,14 @@
+{shared{
+  open Eliom_content.Html5
+  open Html5_types
+  open Ow_dom
+}}
+{client{
+  open Dom_html
+  open Dom
+}}
+
+
 {client{
   module M = Regexp
 
@@ -35,9 +46,6 @@
 }}
 
 {client{
-  open Ow_dom
-  open Eliom_content.Html5
-
   class type completion = object
     inherit Ow_dropdown.dropdown
 
@@ -63,9 +71,6 @@
     method _confirm : (#completion Js.t, unit -> unit Lwt.t) Js.meth_callback Js.prop
     method _refresh : (#completion Js.t, unit -> unit Lwt.t) Js.meth_callback Js.prop
   end
-
-  type refresh_fun = (int -> string -> Html5_types.li elt list Lwt.t)
-  type on_confirm_fun = (string -> unit Lwt.t)
 
   let default_on_confirm _ =
     Lwt.return ()
@@ -390,4 +395,98 @@
            end));
 
     (elt , elt_traversable)
+}}
+
+{server{
+  module M = Netstring_pcre
+
+  let search rex w =
+    try Some (M.search_forward rex w 0) with
+      | Not_found -> None
+
+  let regex_case_insensitive =
+    M.regexp_case_fold
+}}
+
+{server{
+  let build_pattern w =
+    let w = M.quote w in
+    regex_case_insensitive  (("^" ^ w) ^ "|\\s" ^ w)
+
+  let search_case_insensitive w0 w1 =
+    if w0 = "" || w0 = w1
+    then None
+    else
+      let pattern = (build_pattern w0) in
+      match search pattern w1 with
+        | None -> None
+        | Some (i,r) -> if i = 0 then Some (i,r) else Some (i+1, r)
+}}
+
+{server{
+  (* arguments are utf8 caml string *)
+  let search_case_accents_i w0 w1 =
+    let w0 = Ow_accents.without w0 in
+    let w1 = Ow_accents.without w1 in
+    search_case_insensitive w0 w1
+}}
+
+{server{
+  let searchopt_to_bool w0 w1 =
+    match search_case_accents_i w0 w1 with
+      | None -> false
+      | Some _ -> true
+}}
+
+{server{
+  (* w1 is a completion of w0. ex: is_completed_by "e" "eddy" = yes *)
+  (* both arg are utf8 caml string *)
+  let is_completed_by w0 w1 =
+    if w0 = "" || w1 = ""
+    then false
+    else searchopt_to_bool w0 w1
+}}
+
+{shared{
+  type refresh_fun' = int -> string -> li elt list Lwt.t
+  type on_confirm_fun' = string -> unit Lwt.t
+}}
+
+{shared{
+  let li ?a ~value ~value_to_match =
+    Ow_traversable.li ?a ?href:None ~anchor:false ~value ~value_to_match
+}}
+
+{server{
+  let completion
+      ~(refresh : refresh_fun' client_value)
+      ?(limit : int option)
+      ?(accents : bool option)
+      ?(sensitive : bool option)
+      ?(adaptive : bool option)
+      ?(auto_match : bool option)
+      ?(clear_input_on_confirm : bool option)
+      ?(move_with_tab : bool option)
+      ?(on_confirm : on_confirm_fun' client_value option)
+      (elt : 'a elt)
+      (elt_traversable : ul elt) =
+    ignore {unit{
+        Eliom_client.onload (fun () ->
+          let (_,_) =
+            completion
+              ~refresh:%refresh
+              ?limit:%limit
+              ?accents:%accents
+              ?sensitive:%sensitive
+              ?adaptive:%adaptive
+              ?auto_match:%auto_match
+              ?clear_input_on_confirm:%clear_input_on_confirm
+              ?move_with_tab:%move_with_tab
+              ?on_confirm:%on_confirm
+              %elt
+              %elt_traversable
+          in ()
+      )
+    }};
+    (elt, elt_traversable)
 }}

@@ -1,7 +1,14 @@
-{client{
-  open Ow_dom
+{shared{
   open Eliom_content.Html5
+  open Html5_types
+  open Ow_dom
+}}
+{client{
+  open Dom_html
+  open Dom
+}}
 
+{client{
   class type dropdown = object
     inherit Ow_button.button
 
@@ -115,4 +122,27 @@
     end;
 
     (elt, elt_traversable)
+}}
+
+{shared{
+  let li ?a ~href = Ow_traversable.li ?a ?value:None ~anchor:true ~href ?value_to_match:None
+}}
+
+{server{
+  let dropdown
+      ?(hover:bool option)
+      ?(hover_timeout:float option)
+      (elt : 'a elt)
+      (elt_traversable : ul elt) =
+    ignore {unit{
+      Eliom_client.onload (fun () ->
+        ignore (
+          dropdown
+            ?hover:%hover
+            ?hover_timeout:%hover_timeout
+            %elt %elt_traversable
+        )
+      )
+    }};
+    (elt, elt_traversable);
 }}

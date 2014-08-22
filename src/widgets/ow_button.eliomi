@@ -1,3 +1,8 @@
+{shared{
+  open Ow_dom
+  open Eliom_content.Html5
+}}
+
 {client{
   open Ow_dom
   open Eliom_content.Html5
@@ -224,4 +229,46 @@
   val to_button : 'a elt -> button Js.t
   val to_button_alert : 'a elt -> button_alert Js.t
   val to_button_dyn_alert : 'a elt -> button_dyn_alert Js.t
+}}
+
+{shared{
+  type button_dyn_alert_fun' = any_elt' elt -> any_elt' elt -> any_elt' elt list Lwt.t
+}}
+
+{server{
+  val closeable_by_click :
+     'a elt
+  -> 'a elt
+
+  val button :
+    ?set:Ow_active_set.t' client_value
+  -> ?pressed:bool
+  -> ?predicate:(unit -> bool Lwt.t)
+  -> 'a elt
+  -> 'a elt
+
+  val button_alert :
+    ?set:Ow_active_set.t' client_value
+  -> ?pressed:bool
+  -> ?predicate:(unit -> bool Lwt.t)
+  -> ?allow_outer_clicks:bool
+  -> ?closeable_by_button:bool
+  -> ?before:('a elt -> 'b elt -> unit)
+  -> ?after:('a elt -> 'b elt -> unit)
+  -> 'a elt
+  -> 'b elt
+  -> ('a elt * 'b elt)
+
+  val button_dyn_alert :
+    ?set:Ow_active_set.t' client_value
+  -> ?pressed:bool
+  -> ?predicate:(unit -> bool Lwt.t)
+  -> ?allow_outer_clicks:bool
+  -> ?closeable_by_button:bool
+  -> ?before:('a elt -> 'b elt -> unit Lwt.t)
+  -> ?after:('a elt -> 'b elt -> unit Lwt.t)
+  -> 'a elt
+  -> 'b elt
+  -> button_dyn_alert_fun' client_value
+  -> ('a elt * 'b elt)
 }}

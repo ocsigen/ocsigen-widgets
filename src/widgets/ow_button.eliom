@@ -1,6 +1,9 @@
-{client{
+{shared{
   open Ow_dom
+  open Eliom_content.Html5
+}}
 
+{client{
   class type button = object
     inherit Ow_active_set.item
     inherit Ow_base_widget.widget
@@ -306,4 +309,95 @@
   let to_button elt = (Js.Unsafe.coerce (to_dom_elt elt) :> button Js.t)
   let to_button_alert elt = (Js.Unsafe.coerce (to_dom_elt elt) :> button_alert Js.t)
   let to_button_dyn_alert elt = (Js.Unsafe.coerce (to_dom_elt elt) :> button_dyn_alert Js.t)
+}}
+
+{shared{
+  type button_dyn_alert_fun' = any_elt' elt -> any_elt' elt -> any_elt' elt list Lwt.t
+}}
+
+{server{
+  let closeable_by_click = Ow_alert.closeable_by_click
+
+  let button
+      ?(set : Ow_active_set.t' client_value option)
+      ?(pressed : bool option)
+      ?(predicate : (unit -> bool Lwt.t) option)
+      (elt : 'a elt) =
+    ignore {unit{
+      Eliom_client.onload (fun () ->
+        ignore (
+          let button = match %set with
+            | None -> button ?set:None
+            | Some set -> button ~set:(Ow_active_set.of_server_set set)
+          in
+          button
+            ?pressed:%pressed
+            ?predicate:%predicate
+            %elt
+        ))
+    }};
+    elt
+
+  let button_alert
+        ?(set : Ow_active_set.t' client_value option)
+        ?(pressed : bool option)
+        ?(predicate : (unit -> bool Lwt.t) option)
+        ?(allow_outer_clicks : bool option)
+        ?(closeable_by_button : bool option)
+        ?(before : ('a elt -> 'b elt -> unit) option)
+        ?(after : ('a elt -> 'b elt -> unit) option)
+        (elt : 'a elt)
+        (elt_alert : 'b elt) =
+    ignore {unit{
+      Eliom_client.onload (fun () ->
+        ignore (
+          let button_alert = match %set with
+            | None -> button_alert ?set:None
+            | Some set -> button_alert ~set:((Ow_active_set.of_server_set set) :> Ow_active_set.t)
+          in
+          button_alert
+            ?pressed:%pressed
+            ?predicate:%predicate
+            ?allow_outer_clicks:%allow_outer_clicks
+            ?closeable_by_button:%closeable_by_button
+            ?before:%before
+            ?after:%after
+            %elt
+            %elt_alert
+        ))
+    }};
+    (elt, elt_alert)
+
+  let button_dyn_alert
+        ?(set : Ow_active_set.t' client_value option)
+        ?(pressed : bool option)
+        ?(predicate : (unit -> bool Lwt.t) option)
+        ?(allow_outer_clicks : bool option)
+        ?(closeable_by_button : bool option)
+        ?(before : ('a elt -> 'b elt -> unit Lwt.t) option)
+        ?(after : ('a elt -> 'b elt -> unit Lwt.t) option)
+        (elt : 'a elt)
+        (elt_alert : 'b elt)
+        (f : button_dyn_alert_fun' client_value) =
+    ignore {unit{
+      Eliom_client.onload (fun () ->
+        ignore (
+          let alert = match %set with
+            | None -> button_dyn_alert ?set:None
+            | Some set ->
+                button_dyn_alert ~set:((Ow_active_set.of_server_set set) :> Ow_active_set.t)
+          in
+          button_dyn_alert
+            ?pressed:%pressed
+            ?predicate:%predicate
+            ?allow_outer_clicks:%allow_outer_clicks
+            ?closeable_by_button:%closeable_by_button
+            ?before:%before
+            ?after:%after
+            %elt
+            %elt_alert
+            %f
+        ))
+    }};
+    (elt, elt_alert)
 }}

@@ -1,3 +1,14 @@
+{shared{
+  open Eliom_content.Html5
+  open Eliom_content.Html5.D
+  open Html5_types
+  open Ow_dom
+}}
+{client{
+  open Dom_html
+  open Dom
+}}
+
 {client{
   open Ow_dom
   open Eliom_content.Html5
@@ -242,4 +253,62 @@
     elt
 
   let to_traversable elt = (Js.Unsafe.coerce (to_dom_elt elt) :> traversable Js.t)
+}}
+
+{server{
+  module Style = struct
+    let traversable_cls = "ojw_traversable"
+    let traversable_elt_cls = "ojw_traversable_elt"
+    let selected_cls = "selected"
+  end
+}}
+
+{shared{
+  let li ?(a = []) ?(anchor = true) ?(href = "#") ?value ?value_to_match elts =
+    let a =
+      (a_class [Style.traversable_elt_cls])
+      ::(match value with
+          | None -> []
+          | Some value -> [a_user_data "value" value])
+      @ (match value_to_match with
+          | None -> []
+          | Some value_to_match -> [a_user_data "value-to-match" value_to_match]
+      ) @ a
+    in
+    if anchor then
+      Eliom_content.Html5.D.li ~a [
+        Eliom_content.Html5.D.Raw.a
+          ~a:[a_tabindex (-1); a_href (uri_of_string (fun () -> href))] elts
+      ]
+    else Eliom_content.Html5.D.li ~a elts
+}}
+
+{server{
+  class type traversable = object end
+}}
+
+{server{
+  let traversable
+     ?(enable_link : bool option)
+     ?(focus : bool option)
+     (* TODO
+     ?(is_traversable : (#traversable Js.t -> bool) option client_value)
+     ?(on_keydown : (Dom_html.keyboardEvent Js.t -> bool Lwt.t) option client_value)
+      *)
+     (elt : 'a elt) =
+    ignore {unit{
+      Eliom_client.onload (fun () ->
+        ignore (
+          traversable
+            ?enable_link:%enable_link
+            ?focus:%focus
+            (* TODO
+            ~is_traversable:%is_traversable
+            ~on_keydown:%on_keydown
+             *)
+            %elt
+        )
+      )
+    }};
+    elt
 }}
