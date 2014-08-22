@@ -1,0 +1,44 @@
+{1 Ocsigen-widgets client API}
+
+{2 Non-widgets tools}
+
+{!modules:
+    Ow_list
+    Ow_option
+}
+
+{2 Helpers and tools}
+
+{!modules:
+    Ow_fun
+    Ow_log
+    Ow_size
+    Ow_tools
+    Ow_event
+    Ow_position
+    Ow_dyn_upload
+}
+
+{2 Widgets}
+
+{!modules:
+    Ow_alert
+    Ow_popup
+    Ow_button
+    Ow_traversable
+    Ow_dropdown
+    Ow_completion
+    Ow_table_color_picker
+}
+
+{2 Experimental}
+
+{!modules:
+    Ow_scrollbar
+    Ow_sliderbar
+    Ow_slider
+}
+
+{2 Index}
+
+{!indexlist}
