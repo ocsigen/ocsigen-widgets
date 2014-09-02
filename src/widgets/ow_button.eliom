@@ -91,25 +91,25 @@
 
 
   let presses ?cancel_handler ?use_capture t =
-    Lwt_js_events.seq_loop press ?cancel_handler ?use_capture (to_dom_elt t)
+    Lwt_js_events.seq_loop press ?cancel_handler ?use_capture (To_dom.of_element t)
   let unpresses ?cancel_handler ?use_capture t =
-    Lwt_js_events.seq_loop unpress ?cancel_handler ?use_capture (to_dom_elt t)
+    Lwt_js_events.seq_loop unpress ?cancel_handler ?use_capture (To_dom.of_element t)
 
   let pre_presses ?cancel_handler ?use_capture t =
-    Lwt_js_events.seq_loop pre_press ?cancel_handler ?use_capture (to_dom_elt t)
+    Lwt_js_events.seq_loop pre_press ?cancel_handler ?use_capture (To_dom.of_element t)
   let pre_unpresses ?cancel_handler ?use_capture t =
-    Lwt_js_events.seq_loop pre_unpress ?cancel_handler ?use_capture (to_dom_elt t)
+    Lwt_js_events.seq_loop pre_unpress ?cancel_handler ?use_capture (To_dom.of_element t)
 
   let post_presses ?cancel_handler ?use_capture t =
-    Lwt_js_events.seq_loop post_press ?cancel_handler ?use_capture (to_dom_elt t)
+    Lwt_js_events.seq_loop post_press ?cancel_handler ?use_capture (To_dom.of_element t)
   let post_unpresses ?cancel_handler ?use_capture t =
-    Lwt_js_events.seq_loop post_unpress ?cancel_handler ?use_capture (to_dom_elt t)
+    Lwt_js_events.seq_loop post_unpress ?cancel_handler ?use_capture (To_dom.of_element t)
 
   let default_predicate () =
     Lwt.return true
 
   let button ?set ?(pressed = false) ?(predicate = default_predicate) elt =
-    let elt' = (Js.Unsafe.coerce (to_dom_elt elt) : button' Js.t) in
+    let elt' = (Js.Unsafe.coerce (To_dom.of_element elt) : button' Js.t) in
     let meth = Js.wrap_meth_callback in
 
     let wbutton b = (Js.Unsafe.coerce b : button' Js.t) in
@@ -185,7 +185,7 @@
       elt'##unpress();
 
     Lwt.async (fun () ->
-      Lwt_js_events.clicks (to_dom_elt elt)
+      Lwt_js_events.clicks (To_dom.of_element elt)
         (fun e _ ->
            lwt ret = predicate () in
            if ret then
@@ -205,7 +205,7 @@
       ?before
       ?after
       elt elt_alert =
-    let elt' = (Js.Unsafe.coerce (to_dom_elt elt) : button_alert Js.t) in
+    let elt' = (Js.Unsafe.coerce (To_dom.of_element elt) : button_alert Js.t) in
     let elt_alert' = Ow_alert.to_alert elt_alert in
 
     let before, after =
@@ -274,7 +274,7 @@
       ?before
       ?after
       elt elt_alert f =
-    let elt' = (Js.Unsafe.coerce (to_dom_elt elt) : button_dyn_alert' Js.t) in
+    let elt' = (Js.Unsafe.coerce (To_dom.of_element elt) : button_dyn_alert' Js.t) in
     let elt_alert' = Ow_alert.to_dyn_alert elt_alert in
     let meth = Js.wrap_meth_callback in
 
@@ -335,9 +335,9 @@
 
   let closeable_by_click = Ow_alert.closeable_by_click
 
-  let to_button elt = (Js.Unsafe.coerce (to_dom_elt elt) :> button Js.t)
-  let to_button_alert elt = (Js.Unsafe.coerce (to_dom_elt elt) :> button_alert Js.t)
-  let to_button_dyn_alert elt = (Js.Unsafe.coerce (to_dom_elt elt) :> button_dyn_alert Js.t)
+  let to_button elt = (Js.Unsafe.coerce (To_dom.of_element elt) :> button Js.t)
+  let to_button_alert elt = (Js.Unsafe.coerce (To_dom.of_element elt) :> button_alert Js.t)
+  let to_button_dyn_alert elt = (Js.Unsafe.coerce (To_dom.of_element elt) :> button_dyn_alert Js.t)
 }}
 
 {shared{

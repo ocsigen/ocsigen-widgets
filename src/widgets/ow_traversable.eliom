@@ -73,7 +73,7 @@
   let active ?use_capture target =
     Lwt_js_events.make_event Event.actives ?use_capture target
   let actives ?cancel_handler ?use_capture t =
-    Lwt_js_events.seq_loop active ?cancel_handler ?use_capture (to_dom_elt t)
+    Lwt_js_events.seq_loop active ?cancel_handler ?use_capture (To_dom.of_element t)
 
   module Style = struct
     let traversable_cls = "ojw_traversable"
@@ -99,7 +99,7 @@
         ?(is_traversable = default_is_traversable)
         ?(on_keydown = default_on_keydown)
         elt =
-    let elt' = (Js.Unsafe.coerce (to_dom_elt elt) :> traversable' Js.t) in
+    let elt' = (Js.Unsafe.coerce (To_dom.of_element elt) :> traversable' Js.t) in
     let meth = Js.wrap_meth_callback in
 
     elt'##classList##add(Js.string Style.traversable_cls);
@@ -111,7 +111,7 @@
     in
 
     let move ~default ~next this =
-      let set item = this##setActive(of_dom_elt (Js.Unsafe.coerce item)) in
+      let set item = this##setActive(Of_dom.of_element (Js.Unsafe.coerce item)) in
       Js.Opt.case (this##getActive())
         (fun () ->
            Js.Opt.iter (default ()) (fun item -> set item))
@@ -125,7 +125,7 @@
                   if contains item Style.traversable_elt_cls
                   then set item
                   else aux item)
-           in aux (to_dom_elt active))
+           in aux (To_dom.of_element active))
     in
 
     elt'##_getContainer <-
@@ -153,14 +153,14 @@
     meth (fun this () ->
       Js.Opt.iter (this##getActive())
         (fun item ->
-           (to_dom_elt item)##classList##remove(Js.string Style.selected_cls));
+           (To_dom.of_element item)##classList##remove(Js.string Style.selected_cls));
     );
 
     elt'##_getActive <-
     meth (fun this () ->
       Js.Opt.case (!$ (Printf.sprintf "li.%s.%s" Style.traversable_elt_cls Style.selected_cls))
         (fun () -> Js.null)
-        (fun item -> Js.some (of_dom_elt item))
+        (fun item -> Js.some (Of_dom.of_element item))
     );
 
     elt'##_setActive <-
@@ -170,20 +170,20 @@
 
     elt'##_setActiveBy <-
     meth (fun this by item ->
-      Js.Opt.case ((to_dom_elt item)##parentNode)
+      Js.Opt.case ((To_dom.of_element item)##parentNode)
         (* if there is no parent, so item is not a child of
            the traversable element *)
         (fun () -> ())
         (fun parent ->
-           if not (parent = ((to_dom_elt elt) :> Dom.node Js.t))
+           if not (parent = ((To_dom.of_element elt) :> Dom.node Js.t))
            then ()
            else (
              Js.Opt.iter (this##getActive())
                (fun item ->
-                  (to_dom_elt item)##classList##remove(Js.string Style.selected_cls));
-             (to_dom_elt item)##classList##add(Js.string Style.selected_cls);
+                  (To_dom.of_element item)##classList##remove(Js.string Style.selected_cls));
+             (To_dom.of_element item)##classList##add(Js.string Style.selected_cls);
              if focus then
-               Js.Opt.iter ((to_dom_elt item)##firstChild)
+               Js.Opt.iter ((To_dom.of_element item)##firstChild)
                  (fun item -> (Js.Unsafe.coerce item)##focus());
              let detail = Js.Unsafe.obj [||] in
              detail##_by <- meth (fun this () -> by);
@@ -240,7 +240,7 @@
                             if not (contains elt "ew_dropdown_element")
                             then (Js.Opt.iter (elt##parentNode) (fun p -> aux p))
                             else (
-                                elt'##setActiveBy(`Click, (of_dom_elt elt));
+                                elt'##setActiveBy(`Click, (Of_dom.of_element elt));
                               if not enable_link
                               then Dom.preventDefault e
                               else (()))
@@ -252,7 +252,7 @@
 
     elt
 
-  let to_traversable elt = (Js.Unsafe.coerce (to_dom_elt elt) :> traversable Js.t)
+  let to_traversable elt = (Js.Unsafe.coerce (To_dom.of_element elt) :> traversable Js.t)
 }}
 
 {server{

@@ -39,11 +39,11 @@
 
 
   let shows ?cancel_handler ?use_capture t =
-    Lwt_js_events.seq_loop show ?cancel_handler ?use_capture (to_dom_elt t)
+    Lwt_js_events.seq_loop show ?cancel_handler ?use_capture (To_dom.of_element t)
   let hides ?cancel_handler ?use_capture t =
-    Lwt_js_events.seq_loop hide ?cancel_handler ?use_capture (to_dom_elt t)
+    Lwt_js_events.seq_loop hide ?cancel_handler ?use_capture (To_dom.of_element t)
   let outer_clicks ?cancel_handler ?use_capture t =
-    Lwt_js_events.seq_loop outer_click ?cancel_handler ?use_capture (to_dom_elt t)
+    Lwt_js_events.seq_loop outer_click ?cancel_handler ?use_capture (To_dom.of_element t)
 
   class type alert = object
     inherit Ow_base_widget.widget
@@ -102,7 +102,7 @@
     in
     let on_close elt = (Js.Unsafe.coerce elt)##hide() in
     Ow_tools.closeable_by_click
-      ~get_parent ~on_close (to_dom_elt elt);
+      ~get_parent ~on_close (To_dom.of_element elt);
     elt
 
   let created_alerts = ref ([] : alert Js.t list)
@@ -121,13 +121,13 @@
     *)
     Lwt.async (fun () ->
         (* FIXME: use another module ? Which corresponds to any dom element ? *)
-      Lwt_js_events.clicks (to_dom_elt elt)
+      Lwt_js_events.clicks (To_dom.of_element elt)
         (fun e _ ->
           Dom_html.stopPropagation e;
           Lwt.return ()))
 
-  let to_alert elt = (Js.Unsafe.coerce (to_dom_elt elt) :> alert Js.t)
-  let to_dyn_alert elt = (Js.Unsafe.coerce (to_dom_elt elt) :> dyn_alert Js.t)
+  let to_alert elt = (Js.Unsafe.coerce (To_dom.of_element elt) :> alert Js.t)
+  let to_dyn_alert elt = (Js.Unsafe.coerce (To_dom.of_element elt) :> dyn_alert Js.t)
 
   let alert
       ?(show = false)
@@ -136,7 +136,7 @@
       ?(before = (fun _ -> ()))
       ?(after = (fun _ -> ()))
       elt =
-    let elt' = (Js.Unsafe.coerce (to_dom_elt elt) :> alert' Js.t) in
+    let elt' = (Js.Unsafe.coerce (To_dom.of_element elt) :> alert' Js.t) in
     let meth = Js.wrap_meth_callback in
 
     elt'##classList##add(Js.string Style.alert_cls);
@@ -192,7 +192,7 @@
       ?(before = (fun _ -> Lwt.return ()))
       ?(after = (fun _ -> Lwt.return ()))
       elt f =
-    let elt' = (Js.Unsafe.coerce (to_dom_elt elt) :> dyn_alert' Js.t) in
+    let elt' = (Js.Unsafe.coerce (To_dom.of_element elt) :> dyn_alert' Js.t) in
     let meth = Js.wrap_meth_callback in
 
     ignore (alert ~allow_outer_clicks elt);
@@ -208,7 +208,7 @@
       lwt () = before elt in
       lwt cnt = f elt in
       List.iter
-        (fun c -> appendChild elt' (to_dom_elt c))
+        (fun c -> appendChild elt' (To_dom.of_element c))
         (cnt);
       if event then
         Ow_event.dispatchEvent this (Ow_event.customEvent Event.S.show);

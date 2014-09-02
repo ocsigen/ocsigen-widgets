@@ -88,7 +88,7 @@
         ?(move_with_tab = false)
         ?(on_confirm = default_on_confirm)
         elt elt_traversable =
-    let elt' = (Js.Unsafe.coerce (to_dom_elt elt) :> completion' Js.t) in
+    let elt' = (Js.Unsafe.coerce (To_dom.of_element elt) :> completion' Js.t) in
     let meth = Js.wrap_meth_callback in
 
     elt'##classList##add(Js.string "ojw_completion");
@@ -110,17 +110,17 @@
       let elt_traversable' = Ow_traversable.to_traversable elt_traversable in
       Js.Opt.iter (elt_traversable'##getActive ())
         (fun act ->
-           let act' = to_li_elt act in
+           let act' = To_dom.of_li act in
            Js.Opt.iter (get_data_value_to_match act') set_input;
            Js.Opt.iter (get_data_value act') set_selected_value)
     in
     (* Set the first element (if one) of the dropdown as selected. *)
     let set_first_as_selected () =
-      let elt_traversable' = to_ul_elt elt_traversable in
+      let elt_traversable' = To_dom.of_ul elt_traversable in
       Js.Opt.iter (elt_traversable'##firstChild)
         (fun first ->
            (Ow_traversable.to_traversable elt_traversable)
-           ##setActive(of_li_elt (Js.Unsafe.coerce first)));
+           ##setActive(Of_dom.of_li (Js.Unsafe.coerce first)));
     in
     (* Set the input value to the data-value-to-display of the selected element. *)
     let set_as_selected () =
@@ -145,7 +145,7 @@
     (* This function will be used by the [traversable] widget. [true] means
        that the event will be prevented. *)
     let on_keydown e =
-      let elt_traversable' = to_ul_elt elt_traversable in
+      let elt_traversable' = To_dom.of_ul elt_traversable in
       let has_content = elt_traversable'##childNodes##length <> 0 in
       match e##keyCode with
         | 9 -> (* tab (without shift) *)
@@ -203,7 +203,7 @@
 
     elt'##_refresh <-
     meth (fun this () ->
-      let elt_traversable' = to_ul_elt elt_traversable in
+      let elt_traversable' = To_dom.of_ul elt_traversable in
       let value = elt'##value in
       lwt rl =
         lwt rl = refresh limit (Js.to_string value) in
@@ -211,7 +211,7 @@
         if not auto_match
         then Lwt.return (rl)
         else Lwt.return
-            (epur ~get_attr:(fun a -> get_data_value_to_match (to_li_elt a)) rl)
+            (epur ~get_attr:(fun a -> get_data_value_to_match (To_dom.of_li a)) rl)
       in
       let mapn n f l =
         if n < 0 then failwith "limit, invalid argument";
@@ -223,14 +223,14 @@
       in
       List.iter
         (Dom.appendChild elt_traversable')
-        (mapn limit (to_li_elt) rl);
+        (mapn limit To_dom.of_li rl);
       set_first_as_selected ();
       elt'##_needUpdate <- false;
       Lwt.return ()
     );
 
     let soft_refresh () =
-      let elt_traversable' = to_ul_elt elt_traversable in
+      let elt_traversable' = To_dom.of_ul elt_traversable in
       let selected_has_been_removed = ref false in
       let remove_and_reset elt =
         let elt' = Js.Unsafe.coerce elt in
@@ -258,7 +258,7 @@
         | hd::tl ->
             if n >= limit then ()
             else begin
-              let hd' = to_li_elt hd in
+              let hd' = To_dom.of_li hd in
               Js.Opt.case (get_data_value_to_match hd')
                 (fun () -> soft_refresh n tl)
                 (fun data_value ->
@@ -277,7 +277,7 @@
 
     elt'##_clear <-
     meth (fun this () ->
-       let elt_traversable' = to_ul_elt elt_traversable in
+       let elt_traversable' = To_dom.of_ul elt_traversable in
        reset_context ();
        List.iter
          (Dom.removeChild elt_traversable')
@@ -307,18 +307,18 @@
                  | `Click ->
                      set_input_and_set_selected_value_with_active ();
                      (* Re-give the focus to the input after a click *)
-                     (Js.Unsafe.coerce (to_dom_elt elt))##focus()
+                     (Js.Unsafe.coerce (To_dom.of_element elt))##focus()
                  | _ -> ()));
            Lwt.return ()));
 
     Lwt.async (fun () ->
-      Lwt_js_events.focuses (to_dom_elt elt)
+      Lwt_js_events.focuses (To_dom.of_element elt)
         (fun _ _ ->
            elt'##press();
            Lwt.return ()));
 
     Lwt.async (fun () ->
-      Lwt_js_events.blurs (to_dom_elt elt)
+      Lwt_js_events.blurs (To_dom.of_element elt)
         (fun _ _ ->
            elt'##unpress();
            Lwt.return ()));
@@ -327,7 +327,7 @@
        when it is empty. (keydowns is trigger before the input value changed)
      *)
     Lwt.async (fun () ->
-      Lwt_js_events.keyups (to_dom_elt elt)
+      Lwt_js_events.keyups (To_dom.of_element elt)
         (fun e _ ->
            let keycode = e##keyCode in
            (* Ignore up and down to prevent clear and refresh *)

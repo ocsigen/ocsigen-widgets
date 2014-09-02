@@ -5,6 +5,7 @@ Author : Vincent Balat
 *)
 
 {client{
+  open Eliom_content.Html5
   open Ow_dom
 
   type scroll_t =
@@ -130,13 +131,13 @@ Author : Vincent Balat
     ()
 
   let get_dragger_pos elt : int =
-    (get_scrollbar_utils (to_dom_elt elt))##draggerPos
+    (get_scrollbar_utils (To_dom.of_element elt))##draggerPos
 
   let get_dragger_pct elt : int =
-    (get_scrollbar_utils (to_dom_elt elt))##draggerPct
+    (get_scrollbar_utils (To_dom.of_element elt))##draggerPct
 
   let lwt_scroll_to ?inertia ?scroll elt =
-    let elt = (to_dom_elt elt) in
+    let elt = (To_dom.of_element elt) in
     scroll_to ?inertia ?scroll elt;
     let lwt_onscroll = get_lwt_on_scroll elt in
     lwt _ = fst !(lwt_onscroll) in
@@ -156,7 +157,7 @@ Author : Vincent Balat
         Lwt.return ()
 
   let update ?height ?scroll elt =
-    let elt = (to_dom_elt elt) in
+    let elt = (To_dom.of_element elt) in
     update_ ?height ?scroll elt
 
   let add =
@@ -195,7 +196,7 @@ Author : Vincent Balat
     append_callback while_scrolling f elt
 
   let while_scrolling f elt =
-    let elt = (to_dom_elt elt) in
+    let elt = (To_dom.of_element elt) in
     while_scrolling_ f elt
 
   let scroll_starts_ f elt =
@@ -203,7 +204,7 @@ Author : Vincent Balat
     append_callback scroll_start f elt
 
   let scroll_starts f elt =
-    let elt = (to_dom_elt elt) in
+    let elt = (To_dom.of_element elt) in
     scroll_starts_ f elt
 
   let scrolls_ f elt =
@@ -216,7 +217,7 @@ Author : Vincent Balat
       (until you add an other one of course) **)
 
   let scrolls f elt =
-    let elt = (to_dom_elt elt) in
+    let elt = (To_dom.of_element elt) in
     scrolls_ f elt
 
   (** This function add a customScrollbar to the element elt. There are
@@ -279,7 +280,7 @@ Author : Vincent Balat
                                                (List.filter
                                                   (fun fon -> fon ())
                                                   !list)))) in
-    let elt = (to_dom_elt elt) in
+    let elt = (To_dom.of_element elt) in
     let scrollbar = Js.Unsafe.coerce (Ojquery.js_jQelt elt) in
     (Js.Unsafe.coerce elt)##scrollbar <- scrollbar;
     scrollbar_utils_constructor elt;

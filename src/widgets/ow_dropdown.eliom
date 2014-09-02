@@ -34,7 +34,7 @@
         ?(on_keydown)
         elt elt_traversable =
     let elt' = (Js.Unsafe.coerce (Ow_button.to_button elt) :> dropdown' Js.t) in
-    let elt_traversable' = to_ul_elt elt_traversable in
+    let elt_traversable' = To_dom.of_ul elt_traversable in
 
     (* Don't use the 'this' argument because it correspond to dropdown content
        and not the button used by the dropdown.

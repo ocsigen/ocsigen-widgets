@@ -60,7 +60,7 @@
     (get_global_bg ())##style##visibility <- Js.string "hidden"
 
   let define_popup ~bg ?(with_background = true) elt =
-    (to_dom_elt elt)##classList##add(Js.string Style.popup_cls);
+    (To_dom.of_element elt)##classList##add(Js.string Style.popup_cls);
 
     Lwt.async (fun () ->
       Ow_alert.shows elt
@@ -83,7 +83,7 @@
     let before elt =
       Ow_position.absolute_move
         ~h:`center ~v:`center ~scroll:false ~position:`fixed
-        ~relative:bg (to_dom_elt elt);
+        ~relative:bg (To_dom.of_element elt);
     in
 
     define_popup ?with_background ~bg elt;
@@ -96,7 +96,7 @@
     let before elt =
       Ow_position.absolute_move
         ~h:`center ~v:`center ~scroll:false ~position:`fixed
-        ~relative:bg (to_dom_elt elt);
+        ~relative:bg (To_dom.of_element elt);
       Lwt.return ()
     in
 

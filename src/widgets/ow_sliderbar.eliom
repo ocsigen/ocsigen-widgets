@@ -1,5 +1,5 @@
 (* Copyright Université Paris Diderot.
-Author : Christophe Lecointe*)
+   Author : Christophe Lecointe*)
 
 {client{
   class type slider_utils = object
