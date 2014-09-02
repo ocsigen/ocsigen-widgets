@@ -50,6 +50,13 @@
       @see 'Ow_traversable'.
       @see 'Ow_position'.
       *)
+(*VVV FIX!
+  MISSING: DOC ON OTHER OPTIONAL ARGUMENTS.
+  What is the is_traversable function? etc.
+  What does it mean if the dropdown is not traversable?
+  (+ explain what means "traversable" in the doc on this element)
+  When is the predicate evaluated? (before opening? after opening? closing? etc)
+*)
   val dropdown :
      ?v : Ow_position.v_orientation'
   -> ?h : Ow_position.h_orientation'
