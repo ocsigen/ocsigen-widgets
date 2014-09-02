@@ -134,7 +134,6 @@
       (elt : 'a elt)
       (elt_traversable : ul elt) =
     ignore {unit{
-      Eliom_client.onload (fun () ->
         ignore (
           dropdown
             ?v:%v
@@ -143,7 +142,6 @@
             ?hover_timeout:%hover_timeout
             %elt %elt_traversable
         )
-      )
     }};
     (elt, elt_traversable);
 }}

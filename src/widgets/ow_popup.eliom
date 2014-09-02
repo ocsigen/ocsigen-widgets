@@ -123,7 +123,6 @@
       ?(with_background : bool option)
       (elt : 'a elt) =
     ignore {unit{
-      Eliom_client.onload (fun () ->
         ignore (
           popup
             ?show:%show
@@ -131,8 +130,7 @@
             ?with_background:%with_background
             %elt
         )
-      )
-    }};
+      }};
     elt
 
   let dyn_popup
@@ -142,7 +140,6 @@
       (elt : 'a elt)
       (f : dyn_popup_fun' client_value) =
     ignore {unit{
-      Eliom_client.onload (fun () ->
         ignore (
           dyn_popup
             ?show:%show
@@ -151,7 +148,6 @@
             %elt
             %f
         )
-      )
     }};
     elt
 }}

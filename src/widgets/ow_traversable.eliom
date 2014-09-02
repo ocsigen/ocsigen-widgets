@@ -297,7 +297,6 @@
       *)
      (elt : 'a elt) =
     ignore {unit{
-      Eliom_client.onload (fun () ->
         ignore (
           traversable
             ?enable_link:%enable_link
@@ -308,7 +307,6 @@
              *)
             %elt
         )
-      )
     }};
     elt
 }}

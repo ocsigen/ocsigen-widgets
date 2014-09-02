@@ -91,19 +91,25 @@
 
 
   let presses ?cancel_handler ?use_capture t =
-    Lwt_js_events.seq_loop press ?cancel_handler ?use_capture (To_dom.of_element t)
+    Lwt_js_events.seq_loop
+      press ?cancel_handler ?use_capture (To_dom.of_element t)
   let unpresses ?cancel_handler ?use_capture t =
-    Lwt_js_events.seq_loop unpress ?cancel_handler ?use_capture (To_dom.of_element t)
+    Lwt_js_events.seq_loop
+      unpress ?cancel_handler ?use_capture (To_dom.of_element t)
 
   let pre_presses ?cancel_handler ?use_capture t =
-    Lwt_js_events.seq_loop pre_press ?cancel_handler ?use_capture (To_dom.of_element t)
+    Lwt_js_events.seq_loop
+      pre_press ?cancel_handler ?use_capture (To_dom.of_element t)
   let pre_unpresses ?cancel_handler ?use_capture t =
-    Lwt_js_events.seq_loop pre_unpress ?cancel_handler ?use_capture (To_dom.of_element t)
+    Lwt_js_events.seq_loop
+      pre_unpress ?cancel_handler ?use_capture (To_dom.of_element t)
 
   let post_presses ?cancel_handler ?use_capture t =
-    Lwt_js_events.seq_loop post_press ?cancel_handler ?use_capture (To_dom.of_element t)
+    Lwt_js_events.seq_loop
+      post_press ?cancel_handler ?use_capture (To_dom.of_element t)
   let post_unpresses ?cancel_handler ?use_capture t =
-    Lwt_js_events.seq_loop post_unpress ?cancel_handler ?use_capture (To_dom.of_element t)
+    Lwt_js_events.seq_loop
+      post_unpress ?cancel_handler ?use_capture (To_dom.of_element t)
 
   let default_predicate () =
     Lwt.return true
@@ -274,7 +280,8 @@
       ?before
       ?after
       elt elt_alert f =
-    let elt' = (Js.Unsafe.coerce (To_dom.of_element elt) : button_dyn_alert' Js.t) in
+    let elt' =
+      (Js.Unsafe.coerce (To_dom.of_element elt) : button_dyn_alert' Js.t) in
     let elt_alert' = Ow_alert.to_dyn_alert elt_alert in
     let meth = Js.wrap_meth_callback in
 
@@ -290,7 +297,9 @@
       elt'##unpress()
     in
 
-    ignore (Ow_alert.dyn_alert ?allow_outer_clicks ~on_outer_click ~before ~after elt_alert (f elt));
+    ignore (Ow_alert.dyn_alert
+              ?allow_outer_clicks ~on_outer_click
+              ~before ~after elt_alert (f elt));
     Ow_alert.prevent_outer_clicks elt;
 
     let position_to v h =
@@ -353,7 +362,6 @@
       ?(predicate : (unit -> bool Lwt.t) option)
       (elt : 'a elt) =
     ignore {unit{
-      Eliom_client.onload (fun () ->
         ignore (
           let button = match %set with
             | None -> button ?set:None
@@ -363,7 +371,7 @@
             ?pressed:%pressed
             ?predicate:%predicate
             %elt
-        ))
+        )
     }};
     elt
 
@@ -380,7 +388,6 @@
         (elt : 'a elt)
         (elt_alert : 'b elt) =
     ignore {unit{
-      Eliom_client.onload (fun () ->
         ignore (
           let button_alert = match %set with
             | None -> button_alert ?set:None
@@ -397,7 +404,7 @@
             ?after:%after
             %elt
             %elt_alert
-        ))
+        )
     }};
     (elt, elt_alert)
 
@@ -415,7 +422,6 @@
         (elt_alert : 'b elt)
         (f : button_dyn_alert_fun' client_value) =
     ignore {unit{
-      Eliom_client.onload (fun () ->
         ignore (
           let alert = match %set with
             | None -> button_dyn_alert ?set:None
@@ -434,7 +440,7 @@
             %elt
             %elt_alert
             %f
-        ))
+        )
     }};
     (elt, elt_alert)
 }}

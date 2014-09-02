@@ -471,22 +471,20 @@
       (elt : 'a elt)
       (elt_traversable : ul elt) =
     ignore {unit{
-        Eliom_client.onload (fun () ->
-          let (_,_) =
-            completion
-              ~refresh:%refresh
-              ?limit:%limit
-              ?accents:%accents
-              ?sensitive:%sensitive
-              ?adaptive:%adaptive
-              ?auto_match:%auto_match
-              ?clear_input_on_confirm:%clear_input_on_confirm
-              ?move_with_tab:%move_with_tab
-              ?on_confirm:%on_confirm
-              %elt
-              %elt_traversable
-          in ()
-      )
+        let (_,_) =
+          completion
+            ~refresh:%refresh
+            ?limit:%limit
+            ?accents:%accents
+            ?sensitive:%sensitive
+            ?adaptive:%adaptive
+            ?auto_match:%auto_match
+            ?clear_input_on_confirm:%clear_input_on_confirm
+            ?move_with_tab:%move_with_tab
+            ?on_confirm:%on_confirm
+          %elt
+          %elt_traversable
+        in ()
     }};
     (elt, elt_traversable)
 }}
