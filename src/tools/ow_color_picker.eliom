@@ -3,6 +3,7 @@
    Author : Enguerrand Decorne
 *)
 
+{client{
 type t = { hue_canvas : Dom_html.canvasElement Js.t;
            hue_cover : Dom_html.canvasElement Js.t;
            sv_canvas : Dom_html.canvasElement Js.t;
@@ -171,3 +172,4 @@ let create ?(width = 100) _ =
   draw_sv (get_ctx sv) 0. 0. 0. width;
   {hue_canvas = hue; hue_cover = hue_cover; sv_canvas = sv;
    sv_cover = sv_cover; width = width; rgb = color }
+}}

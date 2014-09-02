@@ -137,7 +137,7 @@ CLIENT_CMI=$(wildcard $(addsuffix /$(MODULE_PREFIX)*.cmi,$(addprefix $(ELIOM_CLI
 SERVER_CMI=$(wildcard $(addsuffix /$(MODULE_PREFIX)*.cmi,$(addprefix $(ELIOM_SERVER_DIR)/,$(SERVER_DIRS))))
 
 basename_for_each = $(shell echo $(foreach f,$(1),$(shell basename $(f))))
-CLIENT_CMO_META=$(call basename_for_each, $(call depsort,$(ELIOM_CLIENT_DIR),cmo,-server,$(CLIENT_INC),$(CLIENT_FILES)))
+CLIENT_CMO_META=$(call basename_for_each, $(call depsort,$(ELIOM_CLIENT_DIR),cmo,-client,$(CLIENT_INC),$(CLIENT_FILES)))
 
 META: META.in
 	sed -e 's#@@PKG_NAME@@#$(PKG_NAME)#g' \
