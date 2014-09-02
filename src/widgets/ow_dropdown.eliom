@@ -71,12 +71,9 @@
       Ow_button.button_alert
         ~pressed:false
         ?predicate
+        ~v ~h
         elt elt_traversable
     );
-
-    Ow_position.relative_move ~v ~h
-      ~relative:(to_dom_elt elt)
-      elt_traversable';
 
     elt'##_traversable <-
       Ow_traversable.to_traversable
@@ -130,6 +127,8 @@
 
 {server{
   let dropdown
+      ?(v:Ow_position.v_orientation' option)
+      ?(h:Ow_position.h_orientation' option)
       ?(hover:bool option)
       ?(hover_timeout:float option)
       (elt : 'a elt)
@@ -138,6 +137,8 @@
       Eliom_client.onload (fun () ->
         ignore (
           dropdown
+            ?v:%v
+            ?h:%h
             ?hover:%hover
             ?hover_timeout:%hover_timeout
             %elt %elt_traversable

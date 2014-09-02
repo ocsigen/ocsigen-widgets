@@ -189,7 +189,9 @@
 
    *)
   val button_alert :
-    ?set:Ow_active_set.t
+       ?v : Ow_position.v_orientation'
+    -> ?h : Ow_position.h_orientation'
+    -> ?set:Ow_active_set.t
     -> ?pressed:bool
     -> ?predicate:(unit -> bool Lwt.t)
     -> ?allow_outer_clicks:bool
@@ -209,7 +211,9 @@
      @see 'Ow_alert' Ow_alert.
    *)
   val button_dyn_alert :
-    ?set:Ow_active_set.t
+       ?v : Ow_position.v_orientation'
+    -> ?h : Ow_position.h_orientation'
+    -> ?set:Ow_active_set.t
     -> ?pressed:bool
     -> ?predicate:(unit -> bool Lwt.t)
     -> ?allow_outer_clicks:bool
@@ -248,7 +252,9 @@
   -> 'a elt
 
   val button_alert :
-    ?set:Ow_active_set.t' client_value
+     ?v : Ow_position.v_orientation'
+  -> ?h : Ow_position.h_orientation'
+  -> ?set:Ow_active_set.t' client_value
   -> ?pressed:bool
   -> ?predicate:(unit -> bool Lwt.t)
   -> ?allow_outer_clicks:bool
@@ -260,7 +266,9 @@
   -> ('a elt * 'b elt)
 
   val button_dyn_alert :
-    ?set:Ow_active_set.t' client_value
+     ?v : Ow_position.v_orientation'
+  -> ?h : Ow_position.h_orientation'
+  -> ?set:Ow_active_set.t' client_value
   -> ?pressed:bool
   -> ?predicate:(unit -> bool Lwt.t)
   -> ?allow_outer_clicks:bool

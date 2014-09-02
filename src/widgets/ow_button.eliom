@@ -193,7 +193,11 @@
            Lwt.return ()));
     elt
 
+  let default_v = `bottom
+  let default_h = `center
+
   let button_alert
+      ?v ?h
       ?set ?pressed
       ?predicate
       ?allow_outer_clicks
@@ -218,6 +222,18 @@
 
     ignore (Ow_alert.alert ?allow_outer_clicks ~on_outer_click ~before ~after elt_alert);
     Ow_alert.prevent_outer_clicks elt;
+
+    let position_to v h =
+      Ow_position.relative_move ~v ~h
+        ~relative:(to_dom_elt elt)
+        elt_alert'
+    in
+    begin match v, h with
+      | Some v, None -> position_to v default_h
+      | None, Some h -> position_to default_v h
+      | Some v, Some h -> position_to v h
+      | None, None -> ()
+    end;
 
     Lwt.async (fun () ->
       pre_unpresses elt
@@ -250,6 +266,7 @@
     (elt, elt_alert)
 
     let button_dyn_alert
+      ?v ?h
       ?set ?pressed
       ?predicate
       ?allow_outer_clicks
@@ -275,6 +292,18 @@
 
     ignore (Ow_alert.dyn_alert ?allow_outer_clicks ~on_outer_click ~before ~after elt_alert (f elt));
     Ow_alert.prevent_outer_clicks elt;
+
+    let position_to v h =
+      Ow_position.relative_move ~v ~h:default_h
+        ~relative:(to_dom_elt elt)
+        elt_alert'
+    in
+    begin match v, h with
+      | Some v, None -> position_to v default_h
+      | None, Some h -> position_to default_v h
+      | Some v, Some h -> position_to v h
+      | None, None -> ()
+    end;
 
     elt'##_update <-
     meth (fun this () ->
@@ -339,6 +368,8 @@
     elt
 
   let button_alert
+        ?(v : Ow_position.v_orientation' option)
+        ?(h : Ow_position.h_orientation' option)
         ?(set : Ow_active_set.t' client_value option)
         ?(pressed : bool option)
         ?(predicate : (unit -> bool Lwt.t) option)
@@ -356,6 +387,8 @@
             | Some set -> button_alert ~set:((Ow_active_set.of_server_set set) :> Ow_active_set.t)
           in
           button_alert
+            ?v:%v
+            ?h:%h
             ?pressed:%pressed
             ?predicate:%predicate
             ?allow_outer_clicks:%allow_outer_clicks
@@ -369,6 +402,8 @@
     (elt, elt_alert)
 
   let button_dyn_alert
+        ?(v : Ow_position.v_orientation' option)
+        ?(h : Ow_position.h_orientation' option)
         ?(set : Ow_active_set.t' client_value option)
         ?(pressed : bool option)
         ?(predicate : (unit -> bool Lwt.t) option)
@@ -388,6 +423,8 @@
                 button_dyn_alert ~set:((Ow_active_set.of_server_set set) :> Ow_active_set.t)
           in
           button_dyn_alert
+            ?v:%v
+            ?h:%h
             ?pressed:%pressed
             ?predicate:%predicate
             ?allow_outer_clicks:%allow_outer_clicks

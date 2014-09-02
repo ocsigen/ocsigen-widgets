@@ -28,33 +28,37 @@
 
   *)
 
-{client{
-  open Dom
-  open Dom_html
-
+{shared{
   (** The type to determin the value of the position attribute of the javascript
       element. *)
-  type position = [
+  type position' = [
     | `fixed
     | `absolute
   ]
 
   (** The type used by vertical and horizontal orientation *)
-  type common_orientation = [
+  type common_orientation' = [
     | `center
   ]
+
   (** The type for horizontal orientation. *)
-  type h_orientation = [
+  type h_orientation' = [
     | `right
     | `left
-    | common_orientation
+    | common_orientation'
   ]
+
   (** The type for vertical orientation. *)
-  type v_orientation = [
+  type v_orientation' = [
     | `bottom
     | `top
-    | common_orientation
+    | common_orientation'
   ]
+}}
+
+{client{
+  open Dom
+  open Dom_html
 
   (** [relative_coord ?h ?v ~relative elt] try to calculate the
       coordinates of [elt] applying the directions [h] and [v] on it and using
@@ -64,8 +68,8 @@
       to the opposite.
     *)
   val relative_coord :
-       ?h:h_orientation
-    -> ?v:v_orientation
+       ?h:h_orientation'
+    -> ?v:v_orientation'
     -> ?scroll:bool
     -> relative:#element Js.t
     -> #element Js.t
@@ -76,10 +80,10 @@
       coordinates.
       *)
   val relative_move :
-       ?h:h_orientation
-    -> ?v:v_orientation
+       ?h:h_orientation'
+    -> ?v:v_orientation'
     -> ?scroll:bool
-    -> ?position:position
+    -> ?position:position'
     -> relative:#element Js.t
     -> #element Js.t
     -> unit
@@ -88,8 +92,8 @@
       of placing [elt] outside of [relative], it place {b inside}.
     *)
   val absolute_coord :
-       ?h:h_orientation
-    -> ?v:v_orientation
+       ?h:h_orientation'
+    -> ?v:v_orientation'
     -> ?scroll:bool
     -> relative:#element Js.t
     -> #element Js.t
@@ -100,10 +104,10 @@
       coordinates.
       *)
   val absolute_move :
-       ?h:h_orientation
-    -> ?v:v_orientation
+       ?h:h_orientation'
+    -> ?v:v_orientation'
     -> ?scroll:bool
-    -> ?position:position
+    -> ?position:position'
     -> relative:#element Js.t
     -> #element Js.t
     -> unit

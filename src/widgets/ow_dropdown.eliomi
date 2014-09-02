@@ -51,8 +51,8 @@
       @see 'Ow_position'.
       *)
   val dropdown :
-     ?v : Ow_position.v_orientation
-  -> ?h : Ow_position.h_orientation
+     ?v : Ow_position.v_orientation'
+  -> ?h : Ow_position.h_orientation'
   -> ?focus : bool
   -> ?hover : bool
   -> ?hover_timeout : float
@@ -78,7 +78,9 @@
 
 {server{
   val dropdown :
-     ?hover:bool
+     ?v : Ow_position.v_orientation'
+  -> ?h : Ow_position.h_orientation'
+  -> ?hover:bool
   -> ?hover_timeout:float
   -> 'a elt
   -> ul elt

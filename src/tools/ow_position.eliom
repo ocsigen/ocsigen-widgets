@@ -18,37 +18,39 @@
    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *)
 
-{client{
-  open Dom
-  open Dom_html
-  open Ow_pervasives
-
-  type position = [
+{shared{
+  type position' = [
     | `fixed
     | `absolute
   ]
 
-  type common_orientation = [
+  type common_orientation' = [
     | `center
   ]
-  type h_orientation = [
+  type h_orientation' = [
     | `right
     | `left
-    | common_orientation
+    | common_orientation'
   ]
-  type v_orientation = [
+  type v_orientation' = [
     | `bottom
     | `top
-    | common_orientation
+    | common_orientation'
   ]
+}}
+
+{client{
+  open Dom
+  open Dom_html
+  open Ow_pervasives
 
   let attr_of_position = function
     | `fixed -> Js.string "fixed"
     | `absolute -> Js.string "absolute"
 
   let relative_coord
-        ?(h : h_orientation = `center)
-        ?(v : v_orientation = `center)
+        ?(h : h_orientation' = `center)
+        ?(v : v_orientation' = `center)
         ?(scroll = false)
         ~relative elt =
     let elt' = Ow_fun.getComputedStyle elt in
@@ -94,8 +96,8 @@
     in (to_side (hshift,hshift') rect##left, to_side (vshift,vshift') rect##top)
 
   let absolute_coord
-        ?(h : h_orientation = `center)
-        ?(v : v_orientation = `center)
+        ?(h : h_orientation' = `center)
+        ?(v : v_orientation' = `center)
         ?(scroll = false)
         ~relative elt =
     let elt' = Ow_fun.getComputedStyle elt in
