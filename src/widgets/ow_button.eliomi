@@ -50,6 +50,12 @@
     -> unit Lwt.t
 
   (** This event is triggered when the [button] is pressed. *)
+(*VVV EXPLAIN!!! what is the difference with pre_press?
+  It seems (but I needed to read the code to understand) that
+  press is triggered BEFORE the event, but after pre_press,
+  but only if the event is not "prevented", whereas pre_press is
+  triggered even if it is prevented.
+*)
   val presses :
     ?cancel_handler:bool
     -> ?use_capture:bool
@@ -125,6 +131,7 @@
 
     (** {b EXPERIMENTAL}: try to prevents a button from beeing [pressed]. This
         method should be used with [pre_presses] or [pre_unpresses] events. *)
+(*VVV What does it mean "shouldbe used with"? *)
     method prevent : bool Js.t -> unit Js.meth
   end
 

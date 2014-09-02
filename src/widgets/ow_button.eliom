@@ -372,7 +372,7 @@
             ?predicate:%predicate
             %elt
         )
-    }};
+     }};
     elt
 
   let button_alert
