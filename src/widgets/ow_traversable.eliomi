@@ -14,7 +14,9 @@
   (** A traversable element can iterate through their children. *)
 (*VVV This is not a description of the widget. Please fix.
       A "traversable" is much more than a DOM element with an iterator
-      (and bwt I don't even see where is the iterator function) *)
+      (and bwt I don't even see where is the iterator function).
+  Is this name used elsewhere for the same concept? Where?
+*)
 
   (**  {2 Specific events for alerts} *)
 

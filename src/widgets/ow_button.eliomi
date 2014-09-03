@@ -180,6 +180,11 @@
     -> 'a elt
     -> 'a elt
 
+
+(*VVV DOC: You must explain what IS an alert button.
+  What you are saying is: an alert button is an alert button.
+  (same everywhere)
+*)
   (** Provides behaviours of an alert button.
 
      It works as [alert] from [Ow_alert]. The first parameter

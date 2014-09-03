@@ -226,7 +226,8 @@
       elt'##unpress()
     in
 
-    ignore (Ow_alert.alert ?allow_outer_clicks ~on_outer_click ~before ~after elt_alert);
+    ignore (Ow_alert.alert
+              ?allow_outer_clicks ~on_outer_click ~before ~after elt_alert);
     Ow_alert.prevent_outer_clicks elt;
 
     let position_to v h =
@@ -391,7 +392,8 @@
         ignore (
           let button_alert = match %set with
             | None -> button_alert ?set:None
-            | Some set -> button_alert ~set:((Ow_active_set.of_server_set set) :> Ow_active_set.t)
+            | Some set -> button_alert ~set:((Ow_active_set.of_server_set set)
+                                             :> Ow_active_set.t)
           in
           button_alert
             ?v:%v
