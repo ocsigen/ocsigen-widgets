@@ -25,10 +25,12 @@
   open Eliom_content.Html5
 
   type dynup_service_t =
-      (unit, Eliom_lib.file_info, Eliom_service.service_method, Eliom_service.non_attached_kind, [`NonattachedCoservice],
+      (unit, Eliom_lib.file_info,
+       Eliom_service.service_method, Eliom_service.non_attached_kind,
+       [`NonattachedCoservice],
        [ `WithoutSuffix ], unit,
        [ `One of Eliom_lib.file_info ] Eliom_parameter.param_name,
-       [ `Registrable ], (string list * string) Eliom_service.ocaml_service)
+       [ `Registrable ], string Eliom_service.ocaml_service)
         Eliom_service.service
 }}
 
@@ -188,8 +190,8 @@
          else Lwt.return ()
        in
        (* on uploaded, call the user's handler *)
-       lwt () = f dir fname in
-       Lwt.return (dir, fname))
+       lwt () = f fname in
+       Lwt.return fname)
 
   let register service handler =
     Eliom_registration.Ocaml.register (service :> dynup_service_t) handler
@@ -207,10 +209,6 @@
 
 {client{
   let dyn_upload ~(service : dynup_service_t) ~(file : File.file Js.t) handler =
-    lwt (dname, fname) =
-      Eliom_client.call_ocaml_service
-        ~service:(service)
-        () file
-    in
-    handler dname fname
+    lwt fname = Eliom_client.call_ocaml_service ~service () file in
+    handler fname
 }}
