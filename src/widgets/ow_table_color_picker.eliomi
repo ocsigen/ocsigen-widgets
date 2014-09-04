@@ -1,7 +1,8 @@
-(* Eliom widgets
- * https://github.com/ocsigen/eliom-widgets
- * Copyright (C) 2013 Arnaud Parant
- * Laboratoire PPS - CNRS Université Paris Diderot
+(* Ocsigen-widgets
+ * http://www.ocsigen.org/ocsigen-widgets
+ *
+ * Copyright (C) 2014 Université Paris Diderot
+ *      Arnaud Parant
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -10,7 +11,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
