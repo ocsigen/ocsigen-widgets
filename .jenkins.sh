@@ -1,4 +1,5 @@
 opam pin add --no-action eliom 'https://github.com/ocsigen/eliom.git#master'
+opam pin add --no-action js_of_ocaml 'https://github.com/ocsigen/js_of_ocaml.git#master'
 opam pin add --no-action ojquery 'https://github.com/ocsigen/ojquery.git#master'
 
 opam pin add --no-action ocsigen-widgets .
@@ -13,5 +14,5 @@ do_build_doc () {
 }
 
 do_remove () {
-  opam remove --verbose js_of_ocaml
+  opam remove --verbose ocsigen-widgets
 }
