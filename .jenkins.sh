@@ -1,3 +1,5 @@
+opam pin add --no-action eliom 'https://github.com/ocsigen/eliom.git#master'
+opam pin add --no-action ojquery 'https://github.com/ocsigen/ojquery.git#master'
 
 opam pin add --no-action ocsigen-widgets .
 opam install --deps-only ocsigen-widgets
