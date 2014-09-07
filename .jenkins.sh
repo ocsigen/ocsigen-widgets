@@ -11,9 +11,12 @@ opam install --verbose ocsigen-widgets
 
 do_build_doc () {
   make doc
-#  cp -Rf doc/manual/files/* ${MANUAL_FILES_DIR}/
-#  cp -Rf doc/manual/src/* ${MANUAL_SRC_DIR}/
-#  cp -Rf doc/api/wiki/*.wiki ${API_DIR}/
+  cp -Rf doc/manual-wiki/*.wiki ${MANUAL_SRC_DIR}
+  mkdir -p ${API_DIR}/server ${API_DIR}/client
+  cp -Rf doc/server/wiki/*.wiki ${API_DIR}/server/
+  cp -Rf doc/client/wiki/*.wiki ${API_DIR}/client/
+#  cp -Rf doc/index.wiki ${API_DIR}/
+
 }
 
 do_remove () {
