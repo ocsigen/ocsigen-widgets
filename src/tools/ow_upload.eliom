@@ -70,10 +70,10 @@
       lwt () = Array.fold_left
         (fun t filename ->
            lwt () = t in
-           let filename = dpath^"/"^filename in
+           let filename = String.concat "/" [dpath; filename] in
            lwt stat = Lwt_unix.LargeFile.stat filename in
            let date = stat.Lwt_unix.LargeFile.st_mtime in
-           if date -. now >= timeout
+           if now -. date >= timeout
            then Lwt_unix.unlink filename
            else Lwt.return ()
         )
