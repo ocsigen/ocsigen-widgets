@@ -37,6 +37,7 @@
     method minSize : (int * int) Js.writeonly_prop
     method maxSize : (int * int) Js.writeonly_prop
     method setSelect : (int * int * int * int) Js.writeonly_prop
+    method allowSelect : bool Js.t Js.writeonly_prop
     method bgColor : string Js.writeonly_prop
     method bgOpacity : float Js.writeonly_prop
     method onSelect : (param Js.t -> unit) Js.callback Js.writeonly_prop
@@ -52,6 +53,7 @@
     ?min_size
     ?max_size
     ?set_select
+    ?(allow_select = true)
     ?(bg_color = "black")
     ?(bg_opacity = 0.6)
     (elt : Dom_html.imageElement Js.t)
@@ -75,6 +77,7 @@
     Ow_option.iter (fun ov -> opt##minSize <- ov) min_size;
     Ow_option.iter (fun ov -> opt##maxSize <- ov) max_size;
 
+    opt##allowSelect <- Js.bool allow_select;
     opt##bgColor <- bg_color;
     opt##bgOpacity <- bg_opacity;
 

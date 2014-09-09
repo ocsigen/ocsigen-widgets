@@ -19,6 +19,8 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *)
 
+let section = Lwt_log.Section.make "ocsigen-widgets"
+
 {client{
   let alert s =
     Dom_html.window##alert(Js.string s)

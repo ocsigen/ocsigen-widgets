@@ -53,6 +53,7 @@
     -> ?min_size:(int * int)
     -> ?max_size:(int * int)
     -> ?set_select:(int * int * int * int)
+    -> ?allow_select:bool
     -> ?bg_color:string
     -> ?bg_opacity:float
     -> Dom_html.imageElement Js.t
