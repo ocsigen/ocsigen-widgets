@@ -116,7 +116,9 @@ let new_filename filename =
   | _ -> name
 
 let make ~directory ~name ?crop_ratio ?max_width ?max_height
-    ?(continuation = fun fname -> Lwt.return ()) () =
+    ?(service_wrapper = fun f a -> f a)
+    ?(crop_wrapper = fun f a -> lwt _ = f a in Lwt.return ())
+    () =
   let service = Eliom_service.Ocaml.post_coservice'
       ~name
       ~post_params:(Eliom_parameter.file "f")
@@ -127,13 +129,8 @@ let make ~directory ~name ?crop_ratio ?max_width ?max_height
                  directory, without timeout, after checking the file
                  and resizing it. *)
       let cp = check_and_resize ?max_height ?max_width () in
-      let file_saver =
+      let service_handler =
         Ow_upload.create_file_saver ~new_filename ~directory ~cp ()
-      in
-      let service_handler file_info =
-        lwt fname = file_saver file_info in
-        lwt () = continuation fname in
-        Lwt.return fname
       in
       service_handler, None
     | Some crop_ratio -> (* We want to ask the user to crop the picture *)
@@ -154,13 +151,15 @@ let make ~directory ~name ?crop_ratio ?max_width ?max_height
       let crop_fun = server_function
           ~name:("_c"^name)
           Json.t<crop_type>
-          (fun ((fname, _) as v) ->
-            lwt () = crop_handler v in
-            continuation fname)
+          (crop_wrapper
+             (fun ((fname, _) as v) ->
+                lwt () = crop_handler v in
+                Lwt.return fname))
       in
       (service_handler, Some (crop_fun, crop_ratio))
   in
-  Eliom_registration.Ocaml.register service (fun () -> service_handler);
+  Eliom_registration.Ocaml.register service
+    (fun () -> service_wrapper service_handler);
   { directory;
     service;
     crop }
@@ -170,9 +169,7 @@ let make ~directory ~name ?crop_ratio ?max_width ?max_height
 
    let bind_send_button
        uploader
-       ~err_log
-       ~std_log
-       url_path inp send_button container continuation =
+       url_path inp send_button container on_error continuation =
      Lwt_js_events.async (fun () ->
        Lwt_js_events.clicks (To_dom.of_element send_button)
          (fun _ _ ->
@@ -180,9 +177,7 @@ let make ~directory ~name ?crop_ratio ?max_width ?max_height
               (fun _ -> Lwt.return ())
               (fun files ->
                  Js.Opt.case (files##item(0))
-                   (fun () ->
-                      err_log "Please select a file.";
-                      Lwt.return ())
+                   (fun () -> Lwt.return ())
                    (fun file ->
                       Manip.removeChildren container;
                       Manip.appendChild container (Ow_icons.spinner ());
@@ -194,7 +189,6 @@ let make ~directory ~name ?crop_ratio ?max_width ?max_height
                         in
                         match uploader.crop with
                         | None -> (* Finished! *)
-                          std_log "Picture uploaded";
                           continuation fname
                         | Some (crop_fun, crop_ratio) ->
                           let im = D.img ~alt:"image to be cropped"
@@ -231,20 +225,11 @@ let make ~directory ~name ?crop_ratio ?max_width ?max_height
                                Manip.removeChildren container;
                                Manip.appendChild container
                                  (Ow_icons.spinner ());
-                               lwt () = crop_fun (fname, !coord) in
-                               continuation fname)
-                      with
-                      | e ->
-(*                      | Eliom_lib.Exception_on_server s -> *)
-                        (* reset uploading button before insert it into
-                           the popup (because it is pressed at this
-                           moment, so we have to unpress it) *)
-                        err_log "Error while uploading picture";
-                        Eliom_lib.debug "%s" (Printexc.to_string e);
-                        Manip.removeChildren container;
-                        Manip.appendChild container inp;
-                        Manip.appendChild container send_button;
-                        Lwt.return ())
+                               try_lwt
+                                 lwt () = crop_fun (fname, !coord) in
+                                 continuation fname
+                               with e -> on_error e)
+                      with e -> on_error e)
               )
          )
      )
@@ -254,20 +239,20 @@ let make ~directory ~name ?crop_ratio ?max_width ?max_height
 
 {shared{
 
-let upload_pic_form t ~url_path ~text ~err_log ~std_log continuation =
+let upload_pic_form t ~url_path ~text ~on_error ~continuation () =
   let inp = D.Raw.input ~a:[a_input_type `File] () in
   let send_button = D.Raw.input ~a:[a_input_type `Submit; a_value "Send"] () in
   let container = D.div ~a:[a_class ["ow_pic_uploader"]] [ inp; send_button ] in
   ignore {unit{
-    bind_send_button %t ~err_log:%err_log ~std_log:%std_log
-      %url_path %inp %send_button %container %continuation }};
+    bind_send_button
+      %t %url_path %inp %send_button %container %on_error %continuation }};
   container
 
  }}
 
 {client{
 
-let upload_pic_popup t ~url_path ~text ~err_log ~std_log () =
+let upload_pic_popup t ~url_path ~text () =
   let w, u = Lwt.wait () in
   let box = ref None in
   let continuation fname =
@@ -275,7 +260,12 @@ let upload_pic_popup t ~url_path ~text ~err_log ~std_log () =
     Lwt.wakeup u fname;
     Lwt.return ()
   in
-  let form = upload_pic_form t ~url_path ~text ~err_log ~std_log continuation in
+  let on_error e =
+    Eliom_lib.Option.iter Manip.removeSelf !box;
+    Lwt.wakeup_exn u e;
+    Lwt.return ()
+  in
+  let form = upload_pic_form t ~url_path ~text ~on_error ~continuation () in
   let d = D.div ~a:[a_class ["ow_background"]] [form] in
   box := Some d;
   Manip.appendToBody d;

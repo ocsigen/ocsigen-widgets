@@ -43,6 +43,9 @@
 (** The type of picture uploaders. *)
 type t
 
+(** Type of the data sent to the cropping function *)
+type crop_type = string (* image name *) * (int * int * int * int)
+
 }}
 
 (** [make ~directory ~name ()] creates a picture uploader in [directory]
@@ -56,8 +59,13 @@ type t
     if you want the picture to be resized (for example to avoid large files).
     Images will never be enlarged.
     If the the image is to be cropped, the resizing will be made after cropping.
-    - Argument [?continuation] contains the action to be executed
-    after the picture is saved in the destination directory
+    - [?service_wrapper] is called on the upload service handlers.
+    By default it is the identity function. But you can
+    use this for example to add some action to the service (for example
+    allow only connected users, or filter the result).
+    - [?crop_wrapper] is a wrapper for the cropping function.
+    By default it does nothing.
+    The cropping function returns the file name on the server.
 
 *)
 val make :
@@ -66,7 +74,9 @@ val make :
   ?crop_ratio: float option ->
   ?max_width: int ->
   ?max_height: int ->
-  ?continuation:(string -> unit Lwt.t) ->
+  ?service_wrapper:((Ocsigen_extensions.file_info -> string Lwt.t) ->
+                    Eliom_lib.file_info -> string Lwt.t) ->
+  ?crop_wrapper:((crop_type -> string Lwt.t) -> crop_type -> unit Lwt.t) ->
   unit ->
   t
 
@@ -89,9 +99,9 @@ val upload_pic_form :
   t ->
   url_path: string list ->
   text: string ->
-  err_log: (string -> unit) ->
-  std_log: (string -> unit) ->
-  (string -> unit Lwt.t) ->
+  on_error: (exn -> unit Lwt.t) ->
+  continuation: (string -> unit Lwt.t) ->
+  unit ->
   [ `Div ] Eliom_content.Html5.D.elt
 }}
 
@@ -105,8 +115,6 @@ val upload_pic_popup :
   t ->
   url_path: string list ->
   text: string ->
-  err_log: (string -> unit) ->
-  std_log: (string -> unit) ->
   unit ->
   string Lwt.t
 
