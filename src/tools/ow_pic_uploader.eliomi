@@ -108,7 +108,12 @@ val upload_pic_form :
 {client{
 
 (** This function will display a popup asking the user to upload a picture,
-    and return the name of the picture.
+    and returns:
+    - the name of the picture if the procedure succeeded,
+    - [None] if the procedure was interrupted (popup closed).
+
+    It may raise an exception if something went wrong.
+
     The arguments are the same as for [upload_pic_form].
 *)
 val upload_pic_popup :
@@ -116,6 +121,6 @@ val upload_pic_popup :
   url_path: string list ->
   text: string ->
   unit ->
-  string Lwt.t
+  string option Lwt.t
 
  }}

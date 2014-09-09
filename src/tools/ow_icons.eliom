@@ -26,20 +26,27 @@
 *)
 
 {shared{
-open Eliom_content.Html5.F
+module Make(A : module type of Eliom_content.Html5.F) = struct
 
-let icon classes ?(class_=[]) () = i ~a:[a_class ("fa"::classes@class_)] []
+  let icon classes ?(class_=[]) () =
+    A.i ~a:[A.a_class ("fa"::classes@class_)] []
 
-let user = icon ["fa-user"; "fa-fw"]
-let plus = icon ["fa-plus"; "fa-fw"]
-let envelope = icon ["fa-envelope"; "fa-fw" ]
-let logout = icon ["fa-logout"; "fa-fw"]
-let spinner = icon ["fa-spinner"; "fa-spin"; "fa-fw"]
-let file = icon ["fa-file"; "fa-fw"]
-let download = icon ["fa-cloud-download"; "fa-fw"]
-let share = icon ["fa-share"; "fa-fw"]
-let shutdown = icon ["fa-sign-out"; "fa-fw"]
-let config = icon ["fa-gear"]
-let signout = icon ["fa-signout"]
+  let user = icon ["fa-user"; "fa-fw"]
+  let plus = icon ["fa-plus"; "fa-fw"]
+  let envelope = icon ["fa-envelope"; "fa-fw" ]
+  let logout = icon ["fa-logout"; "fa-fw"]
+  let spinner = icon ["fa-spinner"; "fa-spin"; "fa-fw"]
+  let file = icon ["fa-file"; "fa-fw"]
+  let download = icon ["fa-cloud-download"; "fa-fw"]
+  let share = icon ["fa-share"; "fa-fw"]
+  let shutdown = icon ["fa-sign-out"; "fa-fw"]
+  let config = icon ["fa-gear"]
+  let signout = icon ["fa-signout"]
+  let close = icon ["fa-close"]
+
+end
+
+module F = Make(Eliom_content.Html5.F)
+module D = Make(Eliom_content.Html5.D)
 
 }}

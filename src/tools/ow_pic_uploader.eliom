@@ -180,7 +180,7 @@ let make ~directory ~name ?crop_ratio ?max_width ?max_height
                    (fun () -> Lwt.return ())
                    (fun file ->
                       Manip.removeChildren container;
-                      Manip.appendChild container (Ow_icons.spinner ());
+                      Manip.appendChild container (Ow_icons.F.spinner ());
                       try_lwt
                         lwt fname =
                           Eliom_client.call_ocaml_service
@@ -224,7 +224,7 @@ let make ~directory ~name ?crop_ratio ?max_width ?max_height
                             (fun _ _ ->
                                Manip.removeChildren container;
                                Manip.appendChild container
-                                 (Ow_icons.spinner ());
+                                 (Ow_icons.F.spinner ());
                                try_lwt
                                  lwt () = crop_fun (fname, !coord) in
                                  continuation fname
@@ -257,7 +257,7 @@ let upload_pic_popup t ~url_path ~text () =
   let box = ref None in
   let continuation fname =
     Eliom_lib.Option.iter Manip.removeSelf !box;
-    Lwt.wakeup u fname;
+    Lwt.wakeup u (Some fname);
     Lwt.return ()
   in
   let on_error e =
@@ -265,8 +265,18 @@ let upload_pic_popup t ~url_path ~text () =
     Lwt.wakeup_exn u e;
     Lwt.return ()
   in
+  let close_button = Ow_icons.D.close () in
+  Lwt_js_events.async (fun () ->
+    Lwt_js_events.clicks (To_dom.of_element close_button)
+      (fun _ _ ->
+         Eliom_lib.Option.iter Manip.removeSelf !box;
+         Lwt.wakeup u None;
+         Lwt.return ()
+      ));
   let form = upload_pic_form t ~url_path ~text ~on_error ~continuation () in
-  let d = D.div ~a:[a_class ["ow_background"]] [form] in
+  let d = D.div ~a:[a_class ["ow_background"]]
+      [div ~a:[a_class ["ow_popup"]] [close_button; form]]
+  in
   box := Some d;
   Manip.appendToBody d;
   w
