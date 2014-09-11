@@ -231,7 +231,7 @@
       lwt cnt = f elt in
       List.iter
         (fun c -> appendChild elt' (To_dom.of_element c))
-        (cnt);
+        cnt;
       if event then
         Ow_event.dispatchEvent this (Ow_event.customEvent Event.S.show);
       lwt () = after elt in

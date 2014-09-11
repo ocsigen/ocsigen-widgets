@@ -105,15 +105,18 @@
     (** This method returns [true] if the content of the [alert] is currently
         shown. [false] if not. *)
     method visible : bool Js.meth
+
     (** Call the function associated to the [alert] to generate his content and
        make visible the [alert].
 
        If the method is called during the [alert] is already [visible], this
        method has no effect. *)
     method show : unit Lwt.t Js.meth
+
     (** Hide the content of the [alert]. If already hidden, the method has no
         effect. *)
     method hide : unit Js.meth
+
     (** Refresh the content of the [alert] if it is visible. *)
     method update : unit Lwt.t Js.meth
   end
@@ -171,6 +174,7 @@
       from the container.
 
       [update] should only be called when a [dyn_alert] is [visible]. *)
+(*VVV Doc : What is the argument of the function? *)
   val dyn_alert :
      ?show:bool
   -> ?allow_outer_clicks:bool
@@ -178,7 +182,7 @@
   -> ?before:('a elt -> unit Lwt.t)
   -> ?after:('a elt -> unit Lwt.t)
   -> 'a elt
-  -> ('a elt -> 'a elt list Lwt.t)
+  -> ('a elt -> 'b elt list Lwt.t)
   -> 'a elt
 
   (** {2 Conversion functions} *)
