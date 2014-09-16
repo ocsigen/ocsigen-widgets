@@ -17,4 +17,5 @@ depends: [
   "js_of_ocaml"
   "ojquery"
   "eliom"
+  "imagemagick"
 ]
