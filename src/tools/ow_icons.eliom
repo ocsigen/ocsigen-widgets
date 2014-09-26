@@ -43,6 +43,7 @@ module Make(A : module type of Eliom_content.Html5.F) = struct
   let config = icon ["fa-gear"]
   let signout = icon ["fa-signout"]
   let close = icon ["fa-close"]
+  let question = icon ["fa-question"]
 
 end
 
