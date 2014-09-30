@@ -24,7 +24,8 @@ open Eliom_content.Html5
 open Eliom_content.Html5.F
 
 type crop_type =
-  string (* image name *) * (int * int * int * int)
+  string (* image name *) * int (* width on client size *) *
+ (int * int * int * int)
   deriving (Json)
 
 type t =
@@ -84,17 +85,24 @@ let check_and_resize ?max_height ?max_width () name1 name2 =
 let crop_and_resize
     name1 name2
     crop_ratio ?max_width ?max_height
+    clientfullwidth
     (x, y, width, height) =
   (* Magick is not cooperative. We use a preemptive thread *)
   Lwt_preemptive.detach
     (fun () ->
        let im = Magick.read_image ~filename:name1 in
+       let fullwidth = Magick.get_image_width im in
+       let mult = (float clientfullwidth) /. (float fullwidth) in
        (* If the crop ratio is fixed, we do not trust the height sent by
           the client. We recompute it. *)
        let height = match crop_ratio with
-         | None -> height
-         | Some ratio -> int_of_float ((float_of_int width) /. ratio)
+         | None -> float height
+         | Some ratio -> (float_of_int width) /. ratio
        in
+       let x = int_of_float ((float_of_int x) /. mult) in
+       let y = int_of_float ((float_of_int y) /. mult) in
+       let width = int_of_float ((float_of_int width) /. mult) in
+       let height = int_of_float (height /. mult) in
        Magick.Imper.crop im ~x ~y ~width ~height;
        resize im ?max_height ?max_width ();
        Magick.write_image im ~filename:name2)
@@ -103,10 +111,10 @@ let crop_and_resize
 let make_crop_handler ~directory ~crop_ratio ?max_width ?max_height () =
   let dest_path = String.concat "/" directory in
   let src_path = String.concat "/" ([dest_path; "tmp"]) in
-  fun (fname, coord) ->
+  fun (fname, width, coord) ->
     let src = String.concat "/" ([src_path; fname]) in
     let dest = String.concat "/" ([dest_path; fname]) in
-    crop_and_resize src dest crop_ratio ?max_width ?max_height coord
+    crop_and_resize src dest crop_ratio ?max_width ?max_height width coord
 
 let new_filename filename =
   let name = Ow_upload.default_new_filename filename in
@@ -149,7 +157,7 @@ let make ~directory ~name ?crop_ratio ?max_width ?max_height
           ~name:("_c"^name)
           Json.t<crop_type>
           (crop_wrapper
-             (fun ((fname, _) as v) ->
+             (fun ((fname, _, _) as v) ->
                 lwt () = crop_handler v in
                 Lwt.return fname))
       in
@@ -219,11 +227,12 @@ let make ~directory ~name ?crop_ratio ?max_width ?max_height
                             Lwt.return ());
                           Lwt_js_events.clicks (To_dom.of_element send_button)
                             (fun _ _ ->
+                               let width = (To_dom.of_img im)##clientWidth in
                                Manip.removeChildren container;
                                Manip.appendChild container
                                  (Ow_icons.F.spinner ());
                                try_lwt
-                                 lwt () = crop_fun (fname, !coord) in
+                                 lwt () = crop_fun (fname, width, !coord) in
                                  continuation fname
                                with e -> on_error e)
                       with e -> on_error e)

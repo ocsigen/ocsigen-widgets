@@ -44,7 +44,9 @@
 type t
 
 (** Type of the data sent to the cropping function *)
-type crop_type = string (* image name *) * (int * int * int * int)
+type crop_type =
+  string (* image name *) * int (* width on client size *) *
+ (int * int * int * int)
 
 }}
 
