@@ -16,6 +16,6 @@ depends: [
   "imagemagick"
   "js_of_ocaml" {>= "dev"}
   "ojquery"
-  "eliom"
+  "eliom" {>= "dev"}
   "imagemagick"
 ]
