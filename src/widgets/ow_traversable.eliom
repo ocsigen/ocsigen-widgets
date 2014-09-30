@@ -57,14 +57,14 @@
     inherit traversable
     inherit Ow_base_widget.widget'
 
-    method _getContainer : (#traversable Js.t, unit -> Html5_types.ul elt) Js.meth_callback Js.prop
+    method _getContainer : (#traversable Js.t, Html5_types.ul elt) Js.meth_callback Js.prop
 
-    method _next : (#traversable Js.t, unit -> unit) Js.meth_callback Js.prop
-    method _prev : (#traversable Js.t, unit -> unit) Js.meth_callback Js.prop
-    method _resetActive : (#traversable Js.t, unit -> unit) Js.meth_callback Js.prop
+    method _next : (#traversable Js.t, unit) Js.meth_callback Js.prop
+    method _prev : (#traversable Js.t, unit) Js.meth_callback Js.prop
+    method _resetActive : (#traversable Js.t, unit) Js.meth_callback Js.prop
     method _setActive : (#traversable Js.t, Html5_types.li elt -> unit) Js.meth_callback Js.prop
-    method _getActive : (#traversable Js.t, unit -> Html5_types.li elt Js.opt) Js.meth_callback Js.prop
-    method _isTraversable : (#traversable Js.t, unit -> bool) Js.meth_callback Js.prop
+    method _getActive : (#traversable Js.t, Html5_types.li elt Js.opt) Js.meth_callback Js.prop
+    method _isTraversable : (#traversable Js.t, bool) Js.meth_callback Js.prop
 
     method _setActiveBy : (#traversable Js.t, by -> Html5_types.li elt -> unit) Js.meth_callback Js.prop
     method setActiveBy : by -> Html5_types.li elt -> unit Js.meth
@@ -150,19 +150,19 @@
     in
 
     elt'##_getContainer <-
-    meth (fun this () ->
+    meth (fun this ->
       elt
     );
 
     elt'##_prev <-
-    meth (fun this () ->
+    meth (fun this ->
       move this
         ~default:(fun () -> elt'##lastChild)
         ~next:(fun elt -> elt##previousSibling)
     );
 
     elt'##_next <-
-    meth (fun this () ->
+    meth (fun this ->
       move this
         ~default:(fun () -> elt'##firstChild)
         ~next:(fun elt -> elt##nextSibling)
@@ -171,14 +171,14 @@
     let (!$) q = elt'##querySelector(Js.string q) in
 
     elt'##_resetActive <-
-    meth (fun this () ->
+    meth (fun this ->
       Js.Opt.iter (this##getActive())
         (fun item ->
            (To_dom.of_element item)##classList##remove(Js.string Style.selected_cls));
     );
 
     elt'##_getActive <-
-    meth (fun this () ->
+    meth (fun this ->
       Js.Opt.case (!$ (Printf.sprintf "li.%s.%s" Style.traversable_elt_cls Style.selected_cls))
         (fun () -> Js.null)
         (fun item -> Js.some (Of_dom.of_element item))
@@ -207,14 +207,14 @@
                Js.Opt.iter ((To_dom.of_element item)##firstChild)
                  (fun item -> (Js.Unsafe.coerce item)##focus());
              let detail = Js.Unsafe.obj [||] in
-             detail##_by <- meth (fun this () -> by);
+             detail##_by <- meth (fun this -> by);
              Ow_event.dispatchEvent this
                (Ow_event.customEvent ~detail Event.S.active);
              ()))
     );
 
     elt'##_isTraversable <-
-    meth (fun this () ->
+    meth (fun this ->
       is_traversable this
     );
 

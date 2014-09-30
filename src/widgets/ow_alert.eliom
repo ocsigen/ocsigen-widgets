@@ -78,9 +78,9 @@
   class type alert' = object
     inherit alert
 
-    method _visible : (#alert Js.t, unit -> bool) Js.meth_callback Js.prop
-    method _show : (#alert Js.t, unit -> unit) Js.meth_callback Js.prop
-    method _hide : (#alert Js.t, unit -> unit) Js.meth_callback Js.prop
+    method _visible : (#alert Js.t, bool) Js.meth_callback Js.prop
+    method _show : (#alert Js.t, unit) Js.meth_callback Js.prop
+    method _hide : (#alert Js.t, unit) Js.meth_callback Js.prop
   end
 
   class type dyn_alert = object
@@ -95,10 +95,10 @@
   class type dyn_alert' = object
     inherit dyn_alert
 
-    method _visible : (#dyn_alert Js.t, unit -> bool) Js.meth_callback Js.prop
-    method _show : (#dyn_alert Js.t, unit -> unit Lwt.t) Js.meth_callback Js.prop
-    method _hide : (#dyn_alert Js.t, unit -> unit) Js.meth_callback Js.prop
-    method _update : (#dyn_alert Js.t, unit -> unit Lwt.t) Js.meth_callback Js.prop
+    method _visible : (#dyn_alert Js.t, bool) Js.meth_callback Js.prop
+    method _show : (#dyn_alert Js.t, unit Lwt.t) Js.meth_callback Js.prop
+    method _hide : (#dyn_alert Js.t, unit) Js.meth_callback Js.prop
+    method _update : (#dyn_alert Js.t, unit Lwt.t) Js.meth_callback Js.prop
   end
 
   module Style = struct
@@ -171,7 +171,7 @@
     let display = get_display elt' in
 
     elt'##_show <-
-    meth (fun this () ->
+    meth (fun this ->
       if not this##visible() then begin
         (* Could blink, FIXME: should be set after the [before] function. *)
         this##style##display <- display;
@@ -182,14 +182,14 @@
     );
 
     elt'##_hide <-
-    meth (fun this () ->
+    meth (fun this ->
       Ow_event.dispatchEvent this (Ow_event.customEvent Event.S.hide);
       this##style##display <- Js.string "none";
       ()
     );
 
     elt'##_visible <-
-    meth (fun this () ->
+    meth (fun this ->
       not (this##style##display = (Js.string "none"))
     );
 
@@ -245,21 +245,21 @@
     in
 
     elt'##_show <-
-    meth (fun this () ->
+    meth (fun this ->
       if not this##visible() then begin
         internal_show this
       end else Lwt.return ()
     );
 
     elt'##_hide <-
-    meth (fun this () ->
+    meth (fun this ->
       Ow_event.dispatchEvent this (Ow_event.customEvent Event.S.hide);
       this##style##display <- Js.string "none";
       internal_clear ()
     );
 
     elt'##_update <-
-    meth (fun this () ->
+    meth (fun this ->
       internal_clear ();
       internal_show ~event:false ~update_display:false this;
     );

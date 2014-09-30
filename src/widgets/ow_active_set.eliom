@@ -34,8 +34,8 @@
   class type item' = object
     inherit item
 
-    method _enable : (#item Js.t, unit -> unit) Js.meth_callback Js.prop
-    method _disable : (#item Js.t, unit -> unit) Js.meth_callback Js.prop
+    method _enable : (#item Js.t, unit) Js.meth_callback Js.prop
+    method _disable : (#item Js.t, unit) Js.meth_callback Js.prop
   end
 
   type t = {
@@ -63,8 +63,8 @@
        set.active <- None)
 
   let ctor
-      ~(enable : (#item Js.t -> unit -> unit))
-      ~(disable : (#item Js.t -> unit -> unit))
+      ~(enable : (#item Js.t -> unit))
+      ~(disable : (#item Js.t -> unit))
       (elt : #item' Js.t) =
     let elt' = (Js.Unsafe.coerce elt :> item' Js.t) in
     let meth = Js.wrap_meth_callback in

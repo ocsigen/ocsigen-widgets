@@ -86,11 +86,11 @@
     method _selectedValue : string Js.prop
     method _oldValue : string Js.prop
 
-    method _confirm : (#completion Js.t, unit -> unit Lwt.t) Js.meth_callback Js.prop
+    method _confirm : (#completion Js.t, unit Lwt.t) Js.meth_callback Js.prop
 
-    method _clear : (#completion Js.t, unit -> unit) Js.meth_callback Js.prop
-    method _confirm : (#completion Js.t, unit -> unit Lwt.t) Js.meth_callback Js.prop
-    method _refresh : (#completion Js.t, unit -> unit Lwt.t) Js.meth_callback Js.prop
+    method _clear : (#completion Js.t, unit) Js.meth_callback Js.prop
+    method _confirm : (#completion Js.t, unit Lwt.t) Js.meth_callback Js.prop
+    method _refresh : (#completion Js.t, unit Lwt.t) Js.meth_callback Js.prop
   end
 
   let default_on_confirm _ =
@@ -223,7 +223,7 @@
     );
 
     elt'##_refresh <-
-    meth (fun this () ->
+    meth (fun this ->
       let elt_traversable' = To_dom.of_ul elt_traversable in
       let value = elt'##value in
       lwt rl =
@@ -297,7 +297,7 @@
     in
 
     elt'##_clear <-
-    meth (fun this () ->
+    meth (fun this ->
        let elt_traversable' = To_dom.of_ul elt_traversable in
        reset_context ();
        List.iter
@@ -306,7 +306,7 @@
     );
 
     elt'##_confirm <-
-    meth (fun this () ->
+    meth (fun this ->
        let selected_value = elt'##_selectedValue in
        if clear_input_on_confirm then begin
          set_input (Js.string "");

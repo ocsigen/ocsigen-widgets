@@ -47,9 +47,9 @@
     method _prevented : bool Js.t Js.prop
     method _prevent : (#button Js.t, bool Js.t -> unit) Js.meth_callback Js.prop
 
-    method _press : (#button Js.t, unit -> unit) Js.meth_callback Js.prop
-    method _unpress : (#button Js.t, unit -> unit) Js.meth_callback Js.prop
-    method _toggle : (#button Js.t, unit -> unit) Js.meth_callback Js.prop
+    method _press : (#button Js.t, unit) Js.meth_callback Js.prop
+    method _unpress : (#button Js.t, unit) Js.meth_callback Js.prop
+    method _toggle : (#button Js.t, unit) Js.meth_callback Js.prop
   end
 
   class type button_alert = object
@@ -65,7 +65,7 @@
   class type button_dyn_alert' = object
     inherit button_dyn_alert
 
-    method _update : (#button_dyn_alert Js.t, unit -> unit Lwt.t) Js.meth_callback Js.prop
+    method _update : (#button_dyn_alert Js.t, unit Lwt.t) Js.meth_callback Js.prop
   end
 
   class type button_event = object
@@ -153,7 +153,7 @@
     ignore (Ow_base_widget.ctor elt' "button");
     ignore (
       Ow_active_set.ctor
-        ~enable:(fun this () ->
+        ~enable:(fun this ->
             let wthis = wbutton this in
             Ow_event.dispatchEvent this (Ow_event.customEvent Event.S.pre_press);
             if not (wthis##_prevented = Js._true) then begin
@@ -163,7 +163,7 @@
             end;
             wthis##_prevented <- Js._false
           )
-        ~disable:(fun this () ->
+        ~disable:(fun this ->
             let wthis = wbutton this in
             Ow_event.dispatchEvent this (Ow_event.customEvent Event.S.pre_unpress);
             if not ((wbutton this)##_prevented = Js._true) then begin
@@ -177,7 +177,7 @@
     );
 
     elt'##_press <-
-    meth (fun this () ->
+    meth (fun this ->
       match set with
       | None -> this##enable()
       | Some set ->
@@ -185,7 +185,7 @@
     );
 
     elt'##_unpress <-
-    meth (fun this () ->
+    meth (fun this ->
       match set with
       | None -> this##disable()
       | Some set ->
@@ -193,7 +193,7 @@
     );
 
     elt'##_toggle <-
-    meth (fun this () ->
+    meth (fun this ->
       if Js.to_bool this##pressed
       then this##unpress()
       else this##press()
@@ -338,7 +338,7 @@
     end;
 
     elt'##_update <-
-    meth (fun this () ->
+    meth (fun this ->
       elt_alert'##update();
     );
 

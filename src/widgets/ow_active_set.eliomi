@@ -34,8 +34,8 @@
   class type item' = object
     inherit item
 
-    method _enable : (#item Js.t, unit -> unit) Js.meth_callback Js.prop
-    method _disable : (#item Js.t, unit -> unit) Js.meth_callback Js.prop
+    method _enable : (#item Js.t, unit) Js.meth_callback Js.prop
+    method _disable : (#item Js.t, unit) Js.meth_callback Js.prop
   end
 
   type t
@@ -46,8 +46,8 @@
   val disable : set:t -> #item Js.t -> unit
 
   val ctor :
-       enable : (#item Js.t -> unit -> unit)
-    -> disable : (#item Js.t -> unit -> unit)
+       enable : (#item Js.t -> unit)
+    -> disable : (#item Js.t -> unit)
     -> #item' Js.t
     -> item Js.t
 }}
