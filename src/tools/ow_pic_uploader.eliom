@@ -109,11 +109,8 @@ let make_crop_handler ~directory ~crop_ratio ?max_width ?max_height () =
     crop_and_resize src dest crop_ratio ?max_width ?max_height coord
 
 let new_filename filename =
-  let im = Magick.read_image ~filename in
   let name = Ow_upload.default_new_filename filename in
-  match Eliom_lib.String.split '/' (Magick.get_image_mimetype im) with
-  | ["image"; ext] -> String.concat "." [name; ext]
-  | _ -> name
+  name^".png"
 
 let make ~directory ~name ?crop_ratio ?max_width ?max_height
     ?(service_wrapper = fun f a -> f a)
