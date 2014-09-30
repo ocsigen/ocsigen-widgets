@@ -15,6 +15,7 @@ SERVER_FILES := $(wildcard\
 	src/bindings/*.eliom*\
 	src/tools/*.eliom*\
 	src/widgets/*.eliom*\
+  src/mobile/*.eliom*\
 )
 # Source files for the client
 CLIENT_FILES := $(wildcard\
@@ -23,6 +24,7 @@ CLIENT_FILES := $(wildcard\
 	src/bindings/*.eliom*\
 	src/tools/*.eliom*\
 	src/widgets/*.eliom*\
+  src/mobile/*.eliom*\
 )
 
 # Source files for the server
@@ -32,6 +34,7 @@ SERVER_FILES_DOC := $(wildcard\
 	src/bindings/*.eliomi\
 	src/tools/*.eliomi\
 	src/widgets/*.eliomi\
+  src/mobile/*.eliomi\
 )
 # Source files for the client
 CLIENT_FILES_DOC := $(wildcard\
@@ -40,6 +43,7 @@ CLIENT_FILES_DOC := $(wildcard\
 	src/bindings/*.eliomi\
 	src/tools/*.eliomi\
 	src/widgets/*.eliomi\
+  src/mobile/*.eliomi\
 )
 
 # OCamlfind packages for the server
