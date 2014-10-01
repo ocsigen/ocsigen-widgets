@@ -14,7 +14,7 @@ depends: [
   "ocamlfind"
   "text"
   "imagemagick"
-  "js_of_ocaml" {>= "dev"}
+  "js_of_ocaml" {>= "2.5"}
   "ojquery"
   "eliom" {>= "dev"}
 ]
