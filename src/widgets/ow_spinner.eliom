@@ -47,7 +47,7 @@ end
           let d = Html5.D.div ?a [Ow_icons.F.spinner ()] in
           Lwt.async
             (fun () ->
-               lwt v = thread in
+               lwt v = try_lwt thread with _ -> Lwt.return fail in
                Eliom_content.Html5.Manip.replaceSelf d v; Lwt.return ());
           d
         | Lwt.Fail _ -> fail)
