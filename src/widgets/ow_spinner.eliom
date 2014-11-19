@@ -34,21 +34,24 @@ end
  }}
 
 {server{
-   let with_spinner ?a ?(fail=Html5.F.div ?a [Ow_icons.F.question ()]) thread =
-     try_lwt thread with _ -> Lwt.return fail
+   let with_spinner
+       ?a ?(fail=fun () -> Lwt.return (Html5.F.div ?a [Ow_icons.F.question ()]))
+       thread =
+     try_lwt thread with _ -> fail ()
  }}
 
 {client{
-   let with_spinner ?a ?(fail=Html5.F.div ?a [Ow_icons.F.question ()]) thread =
-     Lwt.return
-       (match Lwt.state thread with
-        | Lwt.Return v -> v
-        | Lwt.Sleep ->
-          let d = Html5.D.div ?a [Ow_icons.F.spinner ()] in
-          Lwt.async
-            (fun () ->
-               lwt v = try_lwt thread with _ -> Lwt.return fail in
-               Eliom_content.Html5.Manip.replaceSelf d v; Lwt.return ());
-          d
-        | Lwt.Fail _ -> fail)
+   let with_spinner
+       ?a ?(fail=fun () -> Lwt.return (Html5.F.div ?a [Ow_icons.F.question ()]))
+       thread =
+     match Lwt.state thread with
+     | Lwt.Return v -> Lwt.return v
+     | Lwt.Sleep ->
+       let d = Html5.D.div ?a [Ow_icons.F.spinner ()] in
+       Lwt.async
+         (fun () ->
+            lwt v = try_lwt thread with _ -> fail () in
+            Eliom_content.Html5.Manip.replaceSelf d v; Lwt.return ());
+       Lwt.return d
+     | Lwt.Fail _ -> fail ()
  }}
