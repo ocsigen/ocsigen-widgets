@@ -35,14 +35,14 @@ end
 
 {server{
    let with_spinner
-       ?a ?(fail=fun _ -> Lwt.return (Html5.F.div ?a [Ow_icons.F.question ()]))
+       ?a ?(fail=fun _ -> Lwt.return (Html5.D.div ?a [Ow_icons.F.question ()]))
        thread =
      try_lwt thread with e -> fail e
  }}
 
 {client{
    let with_spinner
-       ?a ?(fail=fun _ -> Lwt.return (Html5.F.div ?a [Ow_icons.F.question ()]))
+       ?a ?(fail=fun _ -> Lwt.return (Html5.D.div ?a [Ow_icons.F.question ()]))
        thread =
      match Lwt.state thread with
      | Lwt.Return v -> Lwt.return v
