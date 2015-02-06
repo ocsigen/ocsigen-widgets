@@ -31,19 +31,23 @@ end
 module F = struct
    let spinner = Ow_icons.F.spinner
 end
+
+let default_fail a e =
+  let c = if %(Ocsigen_config.get_debugmode ())
+    then Html5.F.em [Html5.F.pcdata (Printexc.to_string e)]
+    else Ow_icons.F.question ()
+  in
+  Lwt.return (Html5.D.div ?a [c])
+
  }}
 
 {server{
-   let with_spinner
-       ?a ?(fail=fun _ -> Lwt.return (Html5.D.div ?a [Ow_icons.F.question ()]))
-       thread =
+   let with_spinner ?a ?(fail=default_fail a) thread =
      try_lwt thread with e -> fail e
  }}
 
 {client{
-   let with_spinner
-       ?a ?(fail=fun _ -> Lwt.return (Html5.D.div ?a [Ow_icons.F.question ()]))
-       thread =
+   let with_spinner ?a ?(fail=default_fail a) thread =
      match Lwt.state thread with
      | Lwt.Return v -> Lwt.return v
      | Lwt.Sleep ->
