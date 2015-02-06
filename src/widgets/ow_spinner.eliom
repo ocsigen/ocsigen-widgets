@@ -47,15 +47,29 @@ let default_fail a e =
  }}
 
 {client{
+
    let with_spinner ?a ?(fail=default_fail a) thread =
      match Lwt.state thread with
      | Lwt.Return v -> Lwt.return v
      | Lwt.Sleep ->
        let d = Html5.D.div ?a [Ow_icons.F.spinner ()] in
+       (* This ugly div dd is necessary to be sure that replaceSelf works.
+          If d has no parent when the thread finishes,
+          (because it has still not been inserted in page),
+          parentNode will fail and the spinner will stay forever ...
+          An alternative would be to detect when d gets a parent
+          but I don't think it is possible.
+          -- Vincent
+       *)
+       let dd = Html5.D.div [d] in
+       (* We must force the creation of the DOM element corresponding to dd,
+          otherwise parentNode will fail: *)
+       let _ = Html5.To_dom.of_element dd in
        Lwt.async
          (fun () ->
             lwt v = try_lwt thread with e -> fail e in
-            Eliom_content.Html5.Manip.replaceSelf d v; Lwt.return ());
-       Lwt.return d
+            Eliom_content.Html5.Manip.replaceSelf d v;
+            Lwt.return ());
+       Lwt.return dd
      | Lwt.Fail e -> fail e
  }}
