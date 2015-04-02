@@ -22,12 +22,12 @@
 {client{
   (** Types used to constraint usage of parameters of Jcrop's callbacks *)
   class type param = object
-    method x : int Js.readonly_prop
-    method x2 : int Js.readonly_prop
-    method y : int Js.readonly_prop
-    method y2 : int Js.readonly_prop
-    method h : int Js.readonly_prop
-    method w : int Js.readonly_prop
+    method x : float Js.readonly_prop
+    method x2 : float Js.readonly_prop
+    method y : float Js.readonly_prop
+    method y2 : float Js.readonly_prop
+    method h : float Js.readonly_prop
+    method w : float Js.readonly_prop
   end
 
   (** Jcrop gives you crop tools to redefine an <img> tag. You have to pass.
@@ -52,6 +52,9 @@
     -> ?aspect_ratio:float
     -> ?min_size:(int * int)
     -> ?max_size:(int * int)
+    -> ?box_height:int
+    -> ?box_width:int
+    -> ?true_size:(int * int)
     -> ?set_select:(int * int * int * int)
     -> ?allow_select:bool
     -> ?bg_color:string

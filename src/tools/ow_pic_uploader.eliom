@@ -24,8 +24,8 @@ open Eliom_content.Html5
 open Eliom_content.Html5.F
 
 type crop_type =
-  string (* image name *) * int (* width on client size *) *
- (int * int * int * int)
+  string (* image name *) *
+ (float * float * float * float)
   deriving (Json)
 
 type t =
@@ -85,24 +85,20 @@ let check_and_resize ?max_height ?max_width () name1 name2 =
 let crop_and_resize
     name1 name2
     crop_ratio ?max_width ?max_height
-    clientfullwidth
     (x, y, width, height) =
   (* Magick is not cooperative. We use a preemptive thread *)
   Lwt_preemptive.detach
     (fun () ->
        let im = Magick.read_image ~filename:name1 in
-       let fullwidth = Magick.get_image_width im in
-       let mult = (float clientfullwidth) /. (float fullwidth) in
        (* If the crop ratio is fixed, we do not trust the height sent by
           the client. We recompute it. *)
        let height = match crop_ratio with
-         | None -> float height
-         | Some ratio -> (float_of_int width) /. ratio
+         | None -> int_of_float height
+         | Some ratio -> int_of_float (width /. ratio)
        in
-       let x = int_of_float ((float_of_int x) /. mult) in
-       let y = int_of_float ((float_of_int y) /. mult) in
-       let width = int_of_float ((float_of_int width) /. mult) in
-       let height = int_of_float (height /. mult) in
+       let width = int_of_float width in
+       let x = int_of_float x in
+       let y = int_of_float y in
        Magick.Imper.crop im ~x ~y ~width ~height;
        resize im ?max_height ?max_width ();
        Magick.write_image im ~filename:name2)
@@ -111,10 +107,10 @@ let crop_and_resize
 let make_crop_handler ~directory ~crop_ratio ?max_width ?max_height () =
   let dest_path = String.concat "/" directory in
   let src_path = String.concat "/" ([dest_path; "tmp"]) in
-  fun (fname, width, coord) ->
+  fun (fname, coord) ->
     let src = String.concat "/" ([src_path; fname]) in
     let dest = String.concat "/" ([dest_path; fname]) in
-    crop_and_resize src dest crop_ratio ?max_width ?max_height width coord
+    crop_and_resize src dest crop_ratio ?max_width ?max_height coord
 
 let new_filename filename =
   let name = Ow_upload.default_new_filename filename in
@@ -157,7 +153,7 @@ let make ~directory ~name ?crop_ratio ?max_width ?max_height
           ~name:("_c"^name)
           Json.t<crop_type>
           (crop_wrapper
-             (fun ((fname, _, _) as v) ->
+             (fun ((fname, _) as v) ->
                 lwt () = crop_handler v in
                 Lwt.return fname))
       in
@@ -211,15 +207,31 @@ let make ~directory ~name ?crop_ratio ?max_width ?max_height
                             (p [pcdata "Select an area of the picture"]);
                           Manip.appendChild container im;
                           Manip.appendChild container send_button;
-                          let coord = ref (100, 100, 50, 50) in
+                          let coord = ref (0., 0., 100., 100.) in
                           Lwt.async (fun () ->
                             (* We must wait for the image to be loaded
                                before setting the crop widget *)
-                            lwt _ = Lwt_js_events.load (To_dom.of_img im) in
+                            let im' = To_dom.of_img im in
+                            lwt _ = Lwt_js_events.load im' in
+                            let nw = Js.Optdef.case (im'##naturalWidth)
+                                (fun () -> 0) (fun x -> x)
+                            in
+                            let nh = Js.Optdef.case (im'##naturalHeight)
+                                (fun () -> 0) (fun x -> x)
+                            in
+                            let side = min (nw / 3) (nh / 3) in
+                            let hside = side / 2 in
+                            let (x1, y1) = (nw / 2 - hside, nh / 2 - hside) in
+                            let (x2, y2) = (x1 + side, y1 + side) in
+                            let set_select = (x1, y1, x2, y2) in
+                            coord := (float x1, float y1,
+                                      float (x2 - x1),
+                                      float (y2 - y1));
                             ignore
                               (new Ow_jcrop.jcrop
                                 ?aspect_ratio:crop_ratio
-                                ~set_select:!coord
+                                ~set_select
+                                ~true_size:(nw, nh)
                                 ~on_select:(fun c ->
                                   coord := (c##x,c##y,c##w,c##h))
                                 ~allow_select:false
@@ -227,12 +239,11 @@ let make ~directory ~name ?crop_ratio ?max_width ?max_height
                             Lwt.return ());
                           Lwt_js_events.clicks (To_dom.of_element send_button)
                             (fun _ _ ->
-                               let width = (To_dom.of_img im)##clientWidth in
                                Manip.removeChildren container;
                                Manip.appendChild container
                                  (Ow_icons.F.spinner ());
                                try_lwt
-                                 lwt () = crop_fun (fname, width, !coord) in
+                                 lwt () = crop_fun (fname, !coord) in
                                  continuation fname
                                with e -> on_error e)
                       with e -> on_error e)

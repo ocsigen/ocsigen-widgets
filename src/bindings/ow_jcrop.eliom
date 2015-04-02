@@ -23,20 +23,23 @@
 
   (* Type used to constraint usage of parameters of Jcrop's callbacks *)
   class type param = object
-    method x : int Js.readonly_prop
-    method x2 : int Js.readonly_prop
-    method y : int Js.readonly_prop
-    method y2 : int Js.readonly_prop
-    method h : int Js.readonly_prop
-    method w : int Js.readonly_prop
+    method x : float Js.readonly_prop
+    method x2 : float Js.readonly_prop
+    method y : float Js.readonly_prop
+    method y2 : float Js.readonly_prop
+    method h : float Js.readonly_prop
+    method w : float Js.readonly_prop
   end
 
   (* Object to simulate Jcrop parameters on creation of the widget *)
   class type options = object
     method aspectRatio : float Js.writeonly_prop
-    method minSize : (int * int) Js.writeonly_prop
-    method maxSize : (int * int) Js.writeonly_prop
-    method setSelect : (int * int * int * int) Js.writeonly_prop
+    method minSize : int Js.js_array Js.t Js.writeonly_prop
+    method maxSize : int Js.js_array Js.t Js.writeonly_prop
+    method trueSize : int Js.js_array Js.t Js.writeonly_prop
+    method boxHeight : int Js.writeonly_prop
+    method boxWidth : int Js.writeonly_prop
+    method setSelect : int Js.js_array Js.t Js.writeonly_prop
     method allowSelect : bool Js.t Js.writeonly_prop
     method bgColor : string Js.writeonly_prop
     method bgOpacity : float Js.writeonly_prop
@@ -52,6 +55,9 @@
     ?aspect_ratio
     ?min_size
     ?max_size
+    ?box_height
+    ?box_width
+    ?true_size
     ?set_select
     ?(allow_select = true)
     ?(bg_color = "black")
@@ -73,9 +79,14 @@
     Ow_option.iter (fun ov -> opt##onRelease <- wrap_callback ov) on_release;
 
     Ow_option.iter (fun ov -> opt##aspectRatio <- ov) aspect_ratio;
-    Ow_option.iter (fun ov -> opt##setSelect <- ov) set_select;
-    Ow_option.iter (fun ov -> opt##minSize <- ov) min_size;
-    Ow_option.iter (fun ov -> opt##maxSize <- ov) max_size;
+    Ow_option.iter (fun (x1, y1, x2, y2) ->
+      opt##setSelect <-  Js.array [| x1; y1; x2; y2 |]) set_select;
+    Ow_option.iter (fun (x, y) -> opt##minSize <- Js.array [| x; y |]) min_size;
+    Ow_option.iter (fun (x, y) -> opt##maxSize <- Js.array [| x; y |]) max_size;
+    Ow_option.iter (fun ov -> opt##boxHeight <- ov) box_height;
+    Ow_option.iter (fun ov -> opt##boxWidth <- ov) box_width;
+    Ow_option.iter
+      (fun (x, y) -> opt##trueSize <- Js.array [| x; y |]) true_size;
 
     opt##allowSelect <- Js.bool allow_select;
     opt##bgColor <- bg_color;
@@ -84,8 +95,6 @@
     let img =
       Js.Unsafe.coerce (Ojquery.js_jQelt (elt :> Dom_html.element Js.t))
     in
-    (* We can't use the extension syntax of jsoo, because Jcrop is not a valid
-       identifier, so we use meth_call instead. *)
-    (Js.Unsafe.meth_call img "Jcrop" [| Js.Unsafe.inject opt |])
+    img##_Jcrop(opt)
   end
 }}
