@@ -114,7 +114,7 @@ let make_crop_handler ~directory ~crop_ratio ?max_width ?max_height () =
 
 let new_filename filename =
   let name = Ow_upload.default_new_filename filename in
-  name^".png"
+  name^".jpg"
 
 let make ~directory ~name ?crop_ratio ?max_width ?max_height
     ?(service_wrapper = fun f a -> f a)
