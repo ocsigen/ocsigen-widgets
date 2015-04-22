@@ -54,6 +54,11 @@
     type 'a ctor = (Js.js_string Js.t -> 'a customEventInit Js.t -> 'a customEvent Js.t) Js.constr
 
     let customEvent ?(can_bubble = false) ?(cancelable = false) ?(detail : 'a Js.t option) typ =
+      let detail = match detail with
+         | None -> Js.null
+         | Some detail -> Js.some detail
+      in
+(*
       let ctor : 'a ctor =
         Js.Optdef.case (Js.def (Js.Unsafe.variable ("CustomEvent")))
           (fun () -> raise (Failure "CustomEvent is not supported")) (* TODO *)
@@ -62,12 +67,13 @@
       let init = ((Js.Unsafe.obj [||]) : 'a customEventInit Js.t) in
       init##bubbles <- Js.bool can_bubble;
       init##cancelable <- Js.bool cancelable;
-      let detail = match detail with
-         | None -> Js.null
-         | Some detail -> Js.some detail
-      in
       init##detail <- detail;
       jsnew ctor (Js.string typ, init)
+*)
+      let ev = Js.Unsafe.global##document##createEvent(Js.string "CustomEvent") in
+      ev##initCustomEvent
+        (Js.string typ, Js.bool can_bubble, Js.bool cancelable, detail);
+      ev
 
     let dispatchEvent (elt : #Dom_html.element Js.t) (ev : #Dom_html.event Js.t) : unit =
       (Js.Unsafe.coerce elt)##dispatchEvent(ev)
