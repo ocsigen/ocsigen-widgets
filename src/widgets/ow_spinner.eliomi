@@ -26,7 +26,7 @@ module D : sig
 
   (** Display spinner with DOM semantics *)
   val spinner :
-    ?class_:Html5_types.nmtoken list ->
+    ?a:Html5_types.i_attrib Eliom_content.Html5.attrib list ->
     unit -> [> Html5_types.i ] Eliom_content.Html5.D.elt
 
 end
@@ -35,7 +35,7 @@ module F : sig
 
   (** Display spinner with functional semantics *)
   val spinner :
-    ?class_:Html5_types.nmtoken list ->
+    ?a:Html5_types.i_attrib Eliom_content.Html5.attrib list ->
     unit -> [> Html5_types.i ] Eliom_content.Html5.F.elt
 
 end
