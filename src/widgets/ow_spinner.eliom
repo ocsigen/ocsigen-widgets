@@ -42,55 +42,42 @@ let default_fail a e =
  }}
 
 {server{
-   let with_spinner ?a ?(fail=default_fail a) thread =
-     lwt v = try_lwt
-         lwt v = thread in
-         Lwt.return
-           (v : [< Html5_types.div_content_fun ] Html5.F.elt
-            :> [ Html5_types.div_content_fun ] Html5.F.elt)
-       with e ->
-         lwt v = fail e in
-         Lwt.return
-           (v : [< Html5_types.div_content_fun > `Div ] Html5.F.elt
-            :> [ Html5_types.div_content_fun ] Html5.F.elt)
-     in
-     Lwt.return (Html5.D.div ?a [v])
- }}
+
+let with_spinner ?a ?(fail=default_fail a) thread =
+  lwt v = try_lwt
+      lwt v = thread in
+      Lwt.return
+        (v :> [ Html5_types.div_content_fun ] Html5.F.elt list)
+    with e ->
+      lwt v = fail e in
+      Lwt.return
+        [(v :> [ Html5_types.div_content_fun ] Html5.F.elt)]
+  in
+  Lwt.return (Html5.D.div ?a v)
+
+}}
 
 {client{
 
-   let with_spinner ?a ?(fail=default_fail a) thread =
-     match Lwt.state thread with
-     | Lwt.Return v -> Lwt.return (Html5.D.div ?a [v])
-     | Lwt.Sleep ->
-       let d = Html5.D.div [Ow_icons.F.spinner ()] in
-       (* This ugly div dd is necessary to be sure that replaceSelf works.
-          If d has no parent when the thread finishes,
-          (because it has still not been inserted in page),
-          parentNode will fail and the spinner will stay forever ...
-          An alternative would be to detect when d gets a parent
-          but I don't think it is possible.
-          -- Vincent
-       *)
-       let dd = Html5.D.div ?a [d] in
-       (* We must force the creation of the DOM element corresponding to dd,
-          otherwise parentNode will fail: *)
-       let _ = Html5.To_dom.of_element dd in
-       Lwt.async
-         (fun () ->
-            lwt v = try_lwt
-                lwt v = thread in
-                Lwt.return
-                  (v : [< Html5_types.div_content_fun ] Html5.F.elt
-                   :> [ Html5_types.div_content_fun ] Html5.F.elt)
-              with e ->
-                lwt v = fail e in
-                Lwt.return
-                  (v : [< Html5_types.div_content_fun > `Div ] Html5.F.elt
-                   :> [ Html5_types.div_content_fun ] Html5.F.elt)
-            in
-            Eliom_content.Html5.Manip.replaceSelf d v;
-            Lwt.return ());
-       Lwt.return dd
-     | Lwt.Fail e -> lwt c = fail e in Lwt.return (Html5.D.div ?a [c])
- }}
+let with_spinner ?a ?(fail=default_fail a) thread =
+  match Lwt.state thread with
+  | Lwt.Return v -> Lwt.return (Html5.D.div ?a v)
+  | Lwt.Sleep ->
+    let d = Html5.D.div [Ow_icons.F.spinner ()] in
+    Lwt.async
+      (fun () ->
+         lwt v = try_lwt
+             lwt v = thread in
+             Lwt.return
+               (v :> [ Html5_types.div_content_fun ] Html5.F.elt list)
+           with e ->
+             lwt v = fail e in
+             Lwt.return
+               [(v :> [ Html5_types.div_content_fun ] Html5.F.elt)]
+         in
+         Eliom_content.Html5.Manip.replaceChildren d v ;
+         Lwt.return ()) ;
+    Lwt.return d
+  | Lwt.Fail e -> lwt c = fail e in Lwt.return (Html5.D.div ?a [c])
+
+}}
