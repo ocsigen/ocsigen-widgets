@@ -32,18 +32,18 @@ module F = struct
    let spinner = Ow_icons.F.spinner
 end
 
-let default_fail a e =
-  let c = if %(Ocsigen_config.get_debugmode ())
+let default_fail e =
+  Lwt.return [
+    if %(Ocsigen_config.get_debugmode ())
     then Html5.F.em [Html5.F.pcdata (Printexc.to_string e)]
     else Ow_icons.F.question ()
-  in
-  Lwt.return (Html5.D.div ?a [c])
+  ]
 
  }}
 
 {server{
 
-let with_spinner ?a ?(fail=default_fail a) thread =
+let with_spinner ?a ?(fail=default_fail) thread =
   lwt v = try_lwt
       lwt v = thread in
       Lwt.return
@@ -51,7 +51,7 @@ let with_spinner ?a ?(fail=default_fail a) thread =
     with e ->
       lwt v = fail e in
       Lwt.return
-        [(v :> [ Html5_types.div_content_fun ] Html5.F.elt)]
+        (v :> [ Html5_types.div_content_fun ] Html5.F.elt list)
   in
   Lwt.return (Html5.D.div ?a v)
 
@@ -59,7 +59,7 @@ let with_spinner ?a ?(fail=default_fail a) thread =
 
 {client{
 
-let with_spinner ?a ?(fail=default_fail a) thread =
+let with_spinner ?a ?(fail=default_fail) thread =
   match Lwt.state thread with
   | Lwt.Return v -> Lwt.return (Html5.D.div ?a v)
   | Lwt.Sleep ->
@@ -73,11 +73,11 @@ let with_spinner ?a ?(fail=default_fail a) thread =
            with e ->
              lwt v = fail e in
              Lwt.return
-               [(v :> [ Html5_types.div_content_fun ] Html5.F.elt)]
+               (v :> [ Html5_types.div_content_fun ] Html5.F.elt list)
          in
          Eliom_content.Html5.Manip.replaceChildren d v ;
          Lwt.return ()) ;
     Lwt.return d
-  | Lwt.Fail e -> lwt c = fail e in Lwt.return (Html5.D.div ?a [c])
+  | Lwt.Fail e -> lwt c = fail e in Lwt.return (Html5.D.div ?a c)
 
 }}
