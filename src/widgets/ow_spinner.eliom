@@ -63,7 +63,7 @@ let with_spinner ?a ?(fail=default_fail a) thread =
   match Lwt.state thread with
   | Lwt.Return v -> Lwt.return (Html5.D.div ?a v)
   | Lwt.Sleep ->
-    let d = Html5.D.div [Ow_icons.F.spinner ()] in
+    let d = Html5.D.div ?a [Ow_icons.F.spinner ()] in
     Lwt.async
       (fun () ->
          lwt v = try_lwt
