@@ -49,9 +49,9 @@ end
 *)
 val with_spinner :
   ?a:[< Html5_types.div_attrib ] Eliom_content.Html5.F.attrib list ->
-  ?fail:(exn -> ([< Html5_types.div_content_fun > `Div ] as 'a)
-           Eliom_content.Html5.F.elt Lwt.t) ->
-  [< Html5_types.div_content_fun ] Eliom_content.Html5.F.elt Lwt.t ->
+  ?fail:(exn -> [< Html5_types.div_content_fun > `Em `I ]
+           Eliom_content.Html5.F.elt list Lwt.t) ->
+  [< Html5_types.div_content_fun ] Eliom_content.Html5.F.elt list Lwt.t ->
   [> Html5_types.div ] Eliom_content.Html5.F.elt Lwt.t
 
  }}
