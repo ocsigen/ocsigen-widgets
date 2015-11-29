@@ -76,6 +76,7 @@
     | `Kbd
     | `Keygen
     | `Label
+    | `Main
     | `Map of flow5
     | `Mark
     | `Menu
