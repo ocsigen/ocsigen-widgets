@@ -23,7 +23,6 @@
 {shared{
   open Eliom_content.Html5
   open Html5_types
-  open Ow_dom
 }}
 {client{
   open Dom_html
@@ -33,7 +32,6 @@
 {client{
   open Dom
   open Dom_html
-  open Ow_dom
   open Eliom_content.Html5
 
   let global_bg = ref (None : divElement Js.t option)
@@ -127,8 +125,6 @@
 }}
 
 {shared{
-  type dyn_popup_fun' = Ow_alert.dyn_alert_fun'
-
   let closeable_by_click = Ow_alert.closeable_by_click
 }}
 
@@ -155,7 +151,7 @@
       ?(allow_outer_clicks : bool option)
       ?(with_background : bool option)
       (elt : 'a elt)
-      (f : dyn_popup_fun' client_value) =
+      (f : ('a, _) Ow_alert.dyn_alert_fun' client_value) =
     ignore {unit{
         ignore (
           dyn_popup

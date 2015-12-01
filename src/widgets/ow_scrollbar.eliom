@@ -22,7 +22,6 @@
 
 {client{
   open Eliom_content.Html5
-  open Ow_dom
 
   type scroll_t =
     | Bottom

@@ -21,7 +21,6 @@
 
 
 {shared{
-  open Ow_dom
   open Eliom_content.Html5
 }}
 
@@ -373,7 +372,8 @@
 }}
 
 {shared{
-  type button_dyn_alert_fun' = any_elt' elt -> any_elt' elt -> any_elt' elt list Lwt.t
+  type ('a, 'b, 'c) button_dyn_alert_fun' =
+    'a elt -> 'b elt -> 'c elt list Lwt.t
 }}
 
 {server{
@@ -444,7 +444,7 @@
         ?(after : ('a elt -> 'b elt -> unit Lwt.t) option)
         (elt : 'a elt)
         (elt_alert : 'b elt)
-        (f : button_dyn_alert_fun' client_value) =
+        (f : ('a, _, _) button_dyn_alert_fun' client_value) =
     ignore {unit{
         ignore (
           let alert = match %set with

@@ -23,7 +23,6 @@
   open Eliom_content.Html5
   open Eliom_content.Html5.D
   open Html5_types
-  open Ow_dom
 }}
 {client{
   open Dom_html
@@ -31,9 +30,6 @@
 }}
 
 {client{
-  open Ow_dom
-  open Eliom_content.Html5
-
   type by = [
       | `Click
       | `Key of int

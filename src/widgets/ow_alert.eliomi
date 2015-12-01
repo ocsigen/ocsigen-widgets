@@ -20,13 +20,10 @@
  *)
 
 {shared{
-  open Ow_dom
   open Eliom_content.Html5
 }}
 
 {client{
-  open Eliom_content.Html5
-
   class type alert_event = object
     inherit Dom_html.event
   end
@@ -202,7 +199,7 @@
 }}
 
 {shared{
-  type dyn_alert_fun' = any_elt' elt -> any_elt' elt list Lwt.t
+  type ('a, 'b) dyn_alert_fun' = 'a elt -> 'b elt list Lwt.t
 }}
 
 {server{
@@ -222,7 +219,7 @@
   -> ?before:('a elt -> unit Lwt.t)
   -> ?after:('a elt -> unit Lwt.t)
   -> 'a elt
-  -> dyn_alert_fun' client_value
+  -> ('a, _) dyn_alert_fun' client_value
   -> 'a elt
 
 }}

@@ -21,7 +21,6 @@
  *)
 
 {client{
-  open Ow_dom
   open Eliom_content.Html5
   (** Scrollbar module.
 

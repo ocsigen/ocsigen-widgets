@@ -22,12 +22,6 @@
 {shared{
   open Eliom_content.Html5
   open Html5_types
-  open Ow_dom
-}}
-
-{client{
-  open Dom_html
-  open Dom
 }}
 
 {client{
@@ -306,7 +300,7 @@
 }}
 
 {shared{
-  type dyn_alert_fun' = any_elt' elt -> any_elt' elt list Lwt.t
+  type ('a, 'b) dyn_alert_fun' = 'a elt -> 'b elt list Lwt.t
 }}
 
 {server{
@@ -335,7 +329,7 @@
       ?(before : ('a elt -> unit Lwt.t) option)
       ?(after : ('a elt -> unit Lwt.t) option)
       (elt : 'a elt)
-      (f : dyn_alert_fun' client_value) =
+      (f : ('a, _) dyn_alert_fun' client_value) =
     ignore {unit{
         ignore (
           dyn_alert

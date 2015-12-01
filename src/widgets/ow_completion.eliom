@@ -22,7 +22,6 @@
 {shared{
   open Eliom_content.Html5
   open Html5_types
-  open Ow_dom
 }}
 {client{
   open Dom_html

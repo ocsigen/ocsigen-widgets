@@ -22,7 +22,6 @@
 {shared{
   open Eliom_content.Html5
   open Html5_types
-  open Ow_dom
 }}
 {client{
   open Dom_html
@@ -30,8 +29,6 @@
 }}
 
 {client{
-  open Eliom_content.Html5
-
   (** Popups are a special kind of [alerts] that are automatically showed in
       the middle of the screen. *)
 
@@ -78,10 +75,6 @@
   val to_dyn_popup : 'a elt -> Ow_alert.dyn_alert Js.t
 }}
 
-{shared{
-  type dyn_popup_fun' = Ow_alert.dyn_alert_fun'
-}}
-
 {server{
   val closeable_by_click :
      'a elt
@@ -99,6 +92,6 @@
   -> ?allow_outer_clicks:bool
   -> ?with_background:bool
   -> 'a elt
-  -> dyn_popup_fun' client_value
+  -> ('a, _) Ow_alert.dyn_alert_fun' client_value
   -> 'a elt
 }}

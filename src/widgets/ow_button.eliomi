@@ -20,12 +20,10 @@
  *)
 
 {shared{
-  open Ow_dom
   open Eliom_content.Html5
 }}
 
 {client{
-  open Ow_dom
   open Eliom_content.Html5
 
   (** Buttons are html elements with a state of [pressed] or [unpressed]
@@ -269,7 +267,8 @@
 }}
 
 {shared{
-  type button_dyn_alert_fun' = any_elt' elt -> any_elt' elt -> any_elt' elt list Lwt.t
+  type ('a, 'b, 'c) button_dyn_alert_fun' =
+    'a elt -> 'b elt -> 'c elt list Lwt.t
 }}
 
 {server{
@@ -310,6 +309,6 @@
   -> ?after:('a elt -> 'b elt -> unit Lwt.t)
   -> 'a elt
   -> 'b elt
-  -> button_dyn_alert_fun' client_value
+  -> ('a, 'b, _) button_dyn_alert_fun' client_value
   -> ('a elt * 'b elt)
 }}
