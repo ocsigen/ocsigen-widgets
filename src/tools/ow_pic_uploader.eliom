@@ -257,9 +257,11 @@ let make ~directory ~name ?crop_ratio ?max_width ?max_height
 {shared{
 
 let upload_pic_form t ~url_path ~text ~on_error ~continuation () =
-  let inp = D.Raw.input ~a:[a_input_type `File] () in
+  let header = h1 [pcdata text] in
+  let inp = D.Raw.input ~a:[a_input_type `File; a_accept ["image/*"]] () in
   let send_button = D.Raw.input ~a:[a_input_type `Submit; a_value "Send"] () in
-  let container = D.div ~a:[a_class ["ow_pic_uploader"]] [ inp; send_button ] in
+  let container =
+    D.div ~a:[a_class ["ow_pic_uploader"]] [ header; inp; send_button ] in
   ignore {unit{
     bind_send_button
       %t %url_path %inp %send_button %container %on_error %continuation }};
