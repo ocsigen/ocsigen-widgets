@@ -43,12 +43,13 @@ end
 (** On client side, [with_spinner th] returns immediately a spinner
     while Lwt thread [th] is not finished, that will automatically
     be replaced by the result of [th] when finished.
+    It has class "spinning" while the spinner is present.
 
     On server side, it will wait for [th] to be finished before returning
     its result (and never display a spinner).
 *)
 val with_spinner :
-  ?a:[< Html5_types.div_attrib ] Eliom_content.Html5.F.attrib list ->
+  ?a:[< Html5_types.div_attrib > `Class ] Eliom_content.Html5.F.attrib list ->
   ?fail:(exn -> [< Html5_types.div_content_fun > `Em `I ]
            Eliom_content.Html5.F.elt list Lwt.t) ->
   [< Html5_types.div_content_fun ] Eliom_content.Html5.F.elt list Lwt.t ->

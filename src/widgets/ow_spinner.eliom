@@ -59,11 +59,14 @@ let with_spinner ?a ?(fail=default_fail) thread =
 
 {client{
 
-let with_spinner ?a ?(fail=default_fail) thread =
+let with_spinner ?(a = []) ?(fail=default_fail) thread =
   match Lwt.state thread with
-  | Lwt.Return v -> Lwt.return (Html5.D.div ?a v)
+  | Lwt.Return v -> Lwt.return (Html5.D.div ~a v)
   | Lwt.Sleep ->
-    let d = Html5.D.div ?a [Ow_icons.F.spinner ()] in
+    let loading = "spinning" in
+    let d = Html5.D.div
+        ~a:(Eliom_content.Html5.F.a_class [loading]::a) [Ow_icons.F.spinner ()]
+    in
     Lwt.async
       (fun () ->
          lwt v = try_lwt
@@ -76,8 +79,9 @@ let with_spinner ?a ?(fail=default_fail) thread =
                (v :> [ Html5_types.div_content_fun ] Html5.F.elt list)
          in
          Eliom_content.Html5.Manip.replaceChildren d v ;
+         Eliom_content.Html5.Manip.Class.remove d loading ;
          Lwt.return ()) ;
     Lwt.return d
-  | Lwt.Fail e -> lwt c = fail e in Lwt.return (Html5.D.div ?a c)
+  | Lwt.Fail e -> lwt c = fail e in Lwt.return (Html5.D.div ~a c)
 
 }}
