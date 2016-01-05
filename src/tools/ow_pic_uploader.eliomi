@@ -81,11 +81,20 @@ val make :
   t
 
 {shared{
-(** Creates a form that will ask for an image, send it, possibly ask te user
+(** Creates a form that will ask for an image, send it, possibly ask the user
     to crop it. On success, the continuation called as last parameter will
     be called with the name of the file on server as parameter
     (use this for example to close the popup window).
 
+    - Argument [?fit_in_box]: if given, it is a client-side function that
+    will be called with the container as argument and will be expected to
+    return a couple [int option * int option], which represents the width
+    and the height of the box in which the picture has to fit. If this
+    argument is provided, we use the "box sizing method", otherwise
+    we use the "explicit sizing method", as explained in
+    http://deepliquid.com/content/Jcrop_Sizing_Issues.html
+    If the function returns [None, None], it will neither use the box sizing
+    method or the explicit sizing method.
     - Argument [~url_path] is the URL path of the directory containing
     these pictures on the server.
     - Argument [~text] is the text you want to display before the form.
@@ -96,6 +105,9 @@ val make :
 
  *)
 val upload_pic_form :
+  ?fit_in_box:
+    ([ `Div ] Eliom_content.Html5.D.elt -> int option * int option)
+    client_value ->
   t ->
   url_path: string list ->
   text: string ->
@@ -114,9 +126,12 @@ val upload_pic_form :
 
     It may raise an exception if something went wrong.
 
-    The arguments are the same as for [upload_pic_form].
+    Cf. [upload_pic_form] for the documentation for the arguments.
 *)
 val upload_pic_popup :
+  ?fit_in_box:
+    ([ `Div ] Eliom_content.Html5.D.elt -> int option * int option)
+    client_value ->
   t ->
   url_path: string list ->
   text: string ->
