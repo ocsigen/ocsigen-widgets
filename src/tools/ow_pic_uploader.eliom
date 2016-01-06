@@ -169,6 +169,7 @@ let make ~directory ~name ?crop_ratio ?max_width ?max_height
 {client{
 
    let bind_send_button
+       ?fit_in_box
        uploader
        url_path inp send_button container on_error continuation =
      Lwt_js_events.async (fun () ->
@@ -228,14 +229,28 @@ let make ~directory ~name ?crop_ratio ?max_width ?max_height
                                       float (x2 - x1),
                                       float (y2 - y1));
                             ignore
-                              (new Ow_jcrop.jcrop
-                                ?aspect_ratio:crop_ratio
-                                ~set_select
-                                ~true_size:(nw, nh)
-                                ~on_select:(fun c ->
-                                  coord := (c##x,c##y,c##w,c##h))
-                                ~allow_select:false
-                                (To_dom.of_img im));
+                              (match fit_in_box with
+                               | Some(f) ->
+                                 let box_width, box_height = f container in
+                                 new Ow_jcrop.jcrop
+                                   ?aspect_ratio:crop_ratio
+                                   ~set_select
+                                   ?box_width
+                                   ?box_height
+                                   ~on_select:(fun c ->
+                                     coord := (c##x,c##y,c##w,c##h))
+                                   ~allow_select:false
+                                   (To_dom.of_img im)
+                               | None ->
+                                 new Ow_jcrop.jcrop
+                                   ?aspect_ratio:crop_ratio
+                                   ~set_select
+                                   ~true_size:(nw, nh)
+                                   ~on_select:(fun c ->
+                                     coord := (c##x,c##y,c##w,c##h))
+                                   ~allow_select:false
+                                   (To_dom.of_img im)
+                              );
                             Lwt.return ());
                           Lwt_js_events.clicks (To_dom.of_element send_button)
                             (fun _ _ ->
@@ -256,7 +271,8 @@ let make ~directory ~name ?crop_ratio ?max_width ?max_height
 
 {shared{
 
-let upload_pic_form t ~url_path ~text ~on_error ~continuation () =
+let upload_pic_form ?fit_in_box
+       t ~url_path ~text ~on_error ~continuation () =
   let header = h1 [pcdata text] in
   let inp = D.Raw.input ~a:[a_input_type `File; a_accept ["image/*"]] () in
   let send_button = D.Raw.input ~a:[a_input_type `Submit; a_value "Send"] () in
@@ -264,6 +280,7 @@ let upload_pic_form t ~url_path ~text ~on_error ~continuation () =
     D.div ~a:[a_class ["ow_pic_uploader"]] [ header; inp; send_button ] in
   ignore {unit{
     bind_send_button
+      ?fit_in_box:%fit_in_box
       %t %url_path %inp %send_button %container %on_error %continuation }};
   container
 
@@ -271,7 +288,7 @@ let upload_pic_form t ~url_path ~text ~on_error ~continuation () =
 
 {client{
 
-let upload_pic_popup t ~url_path ~text () =
+let upload_pic_popup ?fit_in_box t ~url_path ~text () =
   let w, u = Lwt.wait () in
   let box = ref None in
   let continuation fname =
@@ -292,7 +309,9 @@ let upload_pic_popup t ~url_path ~text () =
          Lwt.wakeup u None;
          Lwt.return ()
       ));
-  let form = upload_pic_form t ~url_path ~text ~on_error ~continuation () in
+  let form =
+    upload_pic_form t ?fit_in_box
+      ~url_path ~text ~on_error ~continuation () in
   let d = D.div ~a:[a_class ["ow_background"]]
       [div ~a:[a_class ["ow_popup"]] [close_button; form]]
   in
