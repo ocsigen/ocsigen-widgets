@@ -86,6 +86,10 @@ val make :
     be called with the name of the file on server as parameter
     (use this for example to close the popup window).
 
+    - Argument [?send]: if given, the text used to mean "Send"
+    - Argument [?crop]: if given, the text used to mean "crop"
+    - Argument [?select_an_area_of_the_picture]: if given,
+    the text used to mean "Select an area of the picture"
     - Argument [?fit_in_box]: if given, it is a client-side function that
     will be called with the container as argument and will be expected to
     return a couple [int option * int option], which represents the width
@@ -105,6 +109,9 @@ val make :
 
  *)
 val upload_pic_form :
+  ?send:string ->
+  ?crop:string ->
+  ?select_an_area_of_the_picture:string ->
   ?fit_in_box:
     ([ `Div ] Eliom_content.Html5.D.elt -> int option * int option)
     client_value ->
@@ -129,6 +136,9 @@ val upload_pic_form :
     Cf. [upload_pic_form] for the documentation for the arguments.
 *)
 val upload_pic_popup :
+  ?send:string ->
+  ?crop:string ->
+  ?select_an_area_of_the_picture:string ->
   ?fit_in_box:
     ([ `Div ] Eliom_content.Html5.D.elt -> int option * int option)
     client_value ->
