@@ -168,10 +168,12 @@ let make ~directory ~name ?crop_ratio ?max_width ?max_height
 
 {client{
 
-   let bind_send_button
-       ?fit_in_box
-       uploader
-       url_path inp send_button container on_error continuation =
+let bind_send_button
+    ?(crop="Crop")
+    ?(select_an_area_of_the_picture="Select an area of the picture")
+    ?fit_in_box
+    uploader
+    url_path inp send_button container on_error continuation =
      Lwt_js_events.async (fun () ->
        Lwt_js_events.clicks (To_dom.of_element send_button)
          (fun _ _ ->
@@ -205,7 +207,7 @@ let make ~directory ~name ?crop_ratio ?max_width ?max_height
                           in
                           Manip.removeChildren container;
                           Manip.appendChild container
-                            (p [pcdata "Select an area of the picture"]);
+                            (p [pcdata select_an_area_of_the_picture]);
                           Manip.appendChild container im;
                           Manip.appendChild container send_button;
                           let coord = ref (0., 0., 100., 100.) in
@@ -271,15 +273,17 @@ let make ~directory ~name ?crop_ratio ?max_width ?max_height
 
 {shared{
 
-let upload_pic_form ?fit_in_box
-       t ~url_path ~text ~on_error ~continuation () =
+let upload_pic_form ?(send="Send") ?crop ?select_an_area_of_the_picture ?fit_in_box
+    t ~url_path ~text ~on_error ~continuation () =
   let header = h1 [pcdata text] in
   let inp = D.Raw.input ~a:[a_input_type `File; a_accept ["image/*"]] () in
-  let send_button = D.Raw.input ~a:[a_input_type `Submit; a_value "Send"] () in
+  let send_button = D.Raw.input ~a:[a_input_type `Submit; a_value send] () in
   let container =
     D.div ~a:[a_class ["ow_pic_uploader"]] [ header; inp; send_button ] in
   ignore {unit{
     bind_send_button
+      ?crop:%crop
+      ?select_an_area_of_the_picture:%select_an_area_of_the_picture
       ?fit_in_box:%fit_in_box
       %t %url_path %inp %send_button %container %on_error %continuation }};
   container
@@ -288,7 +292,8 @@ let upload_pic_form ?fit_in_box
 
 {client{
 
-let upload_pic_popup ?fit_in_box t ~url_path ~text () =
+let upload_pic_popup ?send ?crop ?select_an_area_of_the_picture
+       ?fit_in_box t ~url_path ~text () =
   let w, u = Lwt.wait () in
   let box = ref None in
   let continuation fname =
@@ -310,7 +315,7 @@ let upload_pic_popup ?fit_in_box t ~url_path ~text () =
          Lwt.return ()
       ));
   let form =
-    upload_pic_form t ?fit_in_box
+    upload_pic_form t ?send ?crop ?select_an_area_of_the_picture ?fit_in_box
       ~url_path ~text ~on_error ~continuation () in
   let d = D.div ~a:[a_class ["ow_background"]]
       [div ~a:[a_class ["ow_popup"]] [close_button; form]]
