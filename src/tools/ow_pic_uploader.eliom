@@ -326,3 +326,9 @@ let upload_pic_popup ?send ?crop ?select_an_area_of_the_picture
 
 
 }}
+
+
+{server{
+let destroy { service } =
+  Eliom_service.unregister service
+}}
