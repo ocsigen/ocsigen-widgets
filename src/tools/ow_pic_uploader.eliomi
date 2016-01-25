@@ -149,3 +149,9 @@ val upload_pic_popup :
   string option Lwt.t
 
  }}
+
+
+{server{
+(** [destroy u]: unregister the Eliom service of [u].  *)
+val destroy : t -> unit
+}}
