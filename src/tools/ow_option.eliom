@@ -19,7 +19,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *)
 
-{shared{
+[%%shared
   open Ow_pervasives
 
   (* FIXME
@@ -52,13 +52,13 @@
     match Lwt.state t with
       | Lwt.Return v -> f v
       | _ -> g ()
-}}
+]
 
 (* FIXME
  * Should be of_jsOpt or of_js_opt ?
  *
  * *)
-{client{
+[%%client
   let of_opt elt =
     Js.Opt.case elt (fun () -> failwith "of_opt") id
-}}
+]

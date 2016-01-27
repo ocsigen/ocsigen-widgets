@@ -19,7 +19,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *)
 
-{client{
+[%%client.start]
   open Dom_html
 
   (** Various utility tools. *)
@@ -51,4 +51,4 @@
     -> unit
 
   (* TODOC Do we really need to have three different tools modules ? Can we merge them ? *)
-}}
+

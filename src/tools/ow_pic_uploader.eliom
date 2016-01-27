@@ -19,29 +19,29 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *)
 
-{shared{
+[%%shared
 open Eliom_content.Html5
 open Eliom_content.Html5.F
 
 type crop_type =
   string (* image name *) *
  (float * float * float * float)
-  deriving (Json)
+  [@@deriving json]
 
 type 'data t =
   { directory : string list;
     service : (unit, Eliom_lib.file_info,
-               [ Eliom_service.service_method ],
-               [ Eliom_service.attached ],
-               [ Eliom_service.service_kind ],
+               Eliom_service.service_method,
+               Eliom_service.attached,
+               Eliom_service.service_kind,
                [ `WithoutSuffix ], unit,
                [ `One of Eliom_lib.file_info ] Eliom_parameter.param_name,
-               [ Eliom_service.registrable ],
+               Eliom_service.registrable,
                string Eliom_service.ocaml_service)
         Eliom_service.service;
     crop : ((crop_type * 'data, unit) server_function * float option) option;
   }
-}}
+]
 
 let resize im ?max_width ?max_height () =
   let height = Magick.get_image_height im in
@@ -118,7 +118,7 @@ let new_filename filename =
 
 let make ~directory ~name ?crop_ratio ?max_width ?max_height
     ?(service_wrapper = fun f a -> f a)
-    ?(crop_wrapper = fun f a -> lwt _ = f a in Lwt.return ())
+    ?(crop_wrapper = fun f a -> let%lwt _ = f a in Lwt.return ())
     ~data_deriver
     () =
   let service = Eliom_service.Ocaml.post_coservice'
@@ -155,7 +155,7 @@ let make ~directory ~name ?crop_ratio ?max_width ?max_height
           data_deriver
           (crop_wrapper
              (fun (((fname, _) as v), _) ->
-                lwt () = crop_handler v in
+                let%lwt () = crop_handler v in
                 Lwt.return fname))
       in
       (service_handler, Some (crop_fun, crop_ratio))
@@ -167,7 +167,7 @@ let make ~directory ~name ?crop_ratio ?max_width ?max_height
     crop }
 
 
-{client{
+[%%client
 
 let bind_send_button
     ?(crop="Crop")
@@ -178,16 +178,16 @@ let bind_send_button
      Lwt_js_events.async (fun () ->
        Lwt_js_events.clicks (To_dom.of_element send_button)
          (fun _ _ ->
-            Js.Optdef.case ((To_dom.of_input inp)##files)
+            Js.Optdef.case ((To_dom.of_input inp)##.files)
               (fun _ -> Lwt.return ())
               (fun files ->
-                 Js.Opt.case (files##item(0))
+                 Js.Opt.case (files##(item (0)))
                    (fun () -> Lwt.return ())
                    (fun file ->
                       Manip.removeChildren container;
                       Manip.appendChild container (Ow_icons.F.spinner ());
-                      try_lwt
-                        lwt fname =
+                      try%lwt
+                        let%lwt fname =
                           Eliom_client.call_ocaml_service
                             ~service:uploader.service
                             () file
@@ -216,11 +216,11 @@ let bind_send_button
                             (* We must wait for the image to be loaded
                                before setting the crop widget *)
                             let im' = To_dom.of_img im in
-                            lwt _ = Lwt_js_events.load im' in
-                            let nw = Js.Optdef.case (im'##naturalWidth)
+                            let%lwt _ = Lwt_js_events.load im' in
+                            let nw = Js.Optdef.case (im'##.naturalWidth)
                                 (fun () -> 0) (fun x -> x)
                             in
-                            let nh = Js.Optdef.case (im'##naturalHeight)
+                            let nh = Js.Optdef.case (im'##.naturalHeight)
                                 (fun () -> 0) (fun x -> x)
                             in
                             let side = min (nw / 3) (nh / 3) in
@@ -241,7 +241,7 @@ let bind_send_button
                                    ?box_width
                                    ?box_height
                                    ~on_select:(fun c ->
-                                     coord := (c##x,c##y,c##w,c##h))
+                                     coord := (c##.x,c##.y,c##.w,c##.h))
                                    ~allow_select:false
                                    (To_dom.of_img im)
                                | None ->
@@ -250,7 +250,7 @@ let bind_send_button
                                    ~set_select
                                    ~true_size:(nw, nh)
                                    ~on_select:(fun c ->
-                                     coord := (c##x,c##y,c##w,c##h))
+                                     coord := (c##.x,c##.y,c##.w,c##.h))
                                    ~allow_select:false
                                    (To_dom.of_img im)
                               );
@@ -260,8 +260,9 @@ let bind_send_button
                                Manip.removeChildren container;
                                Manip.appendChild container
                                  (Ow_icons.F.spinner ());
-                               try_lwt
-                                 lwt () = crop_fun ((fname, !coord), data) in
+                               try%lwt
+                                 let%lwt () = crop_fun ((fname, !coord), data)
+                                 in
                                  continuation fname
                                with e -> on_error e)
                       with e -> on_error e)
@@ -270,9 +271,9 @@ let bind_send_button
      )
 
 
- }}
+ ]
 
-{shared{
+[%%shared
 
 let upload_pic_form
     ?(send="Send") ?crop ?select_an_area_of_the_picture ?fit_in_box
@@ -282,18 +283,19 @@ let upload_pic_form
   let send_button = D.Raw.input ~a:[a_input_type `Submit; a_value send] () in
   let container =
     D.div ~a:[a_class ["ow_pic_uploader"]] [ header; inp; send_button ] in
-  ignore {unit{
+  ignore [%client (
     bind_send_button
-      ?crop:%crop
-      ?select_an_area_of_the_picture:%select_an_area_of_the_picture
-      ?fit_in_box:%fit_in_box
-    %t %url_path %inp %send_button %container %on_error %continuation %data
-  }};
+      ?crop:~%crop
+      ?select_an_area_of_the_picture:~%select_an_area_of_the_picture
+      ?fit_in_box:~%fit_in_box
+      ~%t ~%url_path ~%inp ~%send_button ~%container ~%on_error
+      ~%continuation ~%data
+  : unit)];
   container
 
- }}
+ ]
 
-{client{
+[%%client
 
 let upload_pic_popup ?send ?crop ?select_an_area_of_the_picture
     ?fit_in_box t ~url_path ~text data =
@@ -328,4 +330,4 @@ let upload_pic_popup ?send ?crop ?select_an_area_of_the_picture
   w
 
 
-}}
+]

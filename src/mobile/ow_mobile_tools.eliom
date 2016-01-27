@@ -19,7 +19,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *)
 
-{client{
+[%%client
   (*** Enable / Disable ***)
 
   (** Various tools to activate mobile features. *)
@@ -28,5 +28,5 @@
     Ow_event_tools.disable_event Dom_html.Event.touchmove Dom_html.document
 
   let hide_navigation_bar () =
-    Dom_html.window##scroll(0,1)
-}}
+    Dom_html.window##(scroll (0)(1))
+]

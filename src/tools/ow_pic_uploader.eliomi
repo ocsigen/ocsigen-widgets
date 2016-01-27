@@ -38,16 +38,16 @@
 
 *)
 
-{shared{
+[%%shared.start]
 
 (** The type of picture uploaders. *)
 type 'data t
 
 (** Type of the data sent to the cropping function *)
 type crop_type = string (* image name *) * (float * float * float * float)
-                   deriving(Json)
-}}
+                   [@@deriving json]
 
+[%%server.start]
 (** [make ~directory ~name ()] creates a picture uploader in [directory]
     with a service called [name] (choose the name you want, as lon g as two
     uploaders have different names).
@@ -82,8 +82,8 @@ val make :
   unit ->
   'data t
 
-{shared{
-(** Creates a form that will ask for an image, send it, possibly ask the user
+[%%shared.start]
+(** Creates a form that will ask for an image, send it, possibly ask te user
     to crop it. On success, the continuation called as last parameter will
     be called with the name of the file on server as parameter
     (use this for example to close the popup window).
@@ -111,26 +111,22 @@ val make :
 
  *)
 val upload_pic_form :
-<<<<<<< 0555ca1afbeb2c3f3190064a567b9bed852cd287
   ?send:string ->
   ?crop:string ->
   ?select_an_area_of_the_picture:string ->
   ?fit_in_box:
     ([ `Div ] Eliom_content.Html5.D.elt -> int option * int option)
-    client_value ->
-  t ->
-=======
+    Eliom_pervasives.client_value ->
   'data t ->
->>>>>>> Ow_pic_uploader: Make possible to send custom data to crop handlers
   url_path: string list ->
   text: string ->
   on_error: (exn -> unit Lwt.t) ->
   continuation: (string -> unit Lwt.t) ->
   'data ->
   [ `Div ] Eliom_content.Html5.D.elt
-}}
 
-{client{
+
+[%%client.start]
 
 (** This function will display a popup asking the user to upload a picture,
     and returns:
@@ -147,11 +143,9 @@ val upload_pic_popup :
   ?select_an_area_of_the_picture:string ->
   ?fit_in_box:
     ([ `Div ] Eliom_content.Html5.D.elt -> int option * int option)
-    client_value ->
+    Eliom_pervasives.client_value ->
   'data t ->
   url_path: string list ->
   text: string ->
   'data ->
   string option Lwt.t
-
- }}

@@ -20,11 +20,11 @@
  *)
 
 
-{shared{
+[%%shared
   open Eliom_content.Html5
-}}
+]
 
-{client{
+[%%client
   class type button = object
     inherit Ow_active_set.item
     inherit Ow_base_widget.widget
@@ -143,10 +143,10 @@
 
     let internal_press b =
       let this = (elt' :> button Js.t) in
-      (Js.Unsafe.coerce this)##pressed <- Js.bool b;
-      if Js.to_bool this##pressed
-      then this##classList##add(Js.string "pressed")
-      else this##classList##remove(Js.string "pressed")
+      (Js.Unsafe.coerce this)##.pressed := Js.bool b;
+      if Js.to_bool this##.pressed
+      then this##.classList##(add (Js.string "pressed"))
+      else this##.classList##(remove (Js.string "pressed"))
     in
 
     ignore (Ow_base_widget.ctor elt' "button");
@@ -155,68 +155,68 @@
         ~enable:(fun this ->
             let wthis = wbutton this in
             Ow_event.dispatchEvent this (Ow_event.customEvent Event.S.pre_press);
-            if not (wthis##_prevented = Js._true) then begin
+            if not (wthis##._prevented = Js._true) then begin
               Ow_event.dispatchEvent this (Ow_event.customEvent Event.S.press);
               internal_press true;
               Ow_event.dispatchEvent this (Ow_event.customEvent Event.S.post_press);
             end;
-            wthis##_prevented <- Js._false
+            wthis##._prevented := Js._false
           )
         ~disable:(fun this ->
             let wthis = wbutton this in
             Ow_event.dispatchEvent this (Ow_event.customEvent Event.S.pre_unpress);
-            if not ((wbutton this)##_prevented = Js._true) then begin
+            if not ((wbutton this)##._prevented = Js._true) then begin
               Ow_event.dispatchEvent this (Ow_event.customEvent Event.S.unpress);
               internal_press false;
               Ow_event.dispatchEvent this (Ow_event.customEvent Event.S.post_unpress);
             end;
-            wthis##_prevented <- Js._false
+            wthis##._prevented := Js._false
           )
         elt'
     );
 
-    elt'##_press <-
+    elt'##._press :=
     meth (fun this ->
       match set with
-      | None -> this##enable()
+      | None -> this##enable
       | Some set ->
           Ow_active_set.enable ~set (this :> Ow_active_set.item Js.t)
     );
 
-    elt'##_unpress <-
+    elt'##._unpress :=
     meth (fun this ->
       match set with
-      | None -> this##disable()
+      | None -> this##disable
       | Some set ->
           Ow_active_set.disable ~set (this :> Ow_active_set.item Js.t)
     );
 
-    elt'##_toggle <-
+    elt'##._toggle :=
     meth (fun this ->
-      if Js.to_bool this##pressed
-      then this##unpress()
-      else this##press()
+      if Js.to_bool this##.pressed
+      then this##unpress
+      else this##press
     );
 
-    elt'##_prevented <- Js._false;
+    elt'##._prevented := Js._false;
 
-    elt'##_prevent <-
+    elt'##._prevent :=
     meth (fun this prevent ->
-      (wbutton this)##_prevented <- prevent;
+      (wbutton this)##._prevented := prevent;
     );
 
-    (Js.Unsafe.coerce elt')##pressed <- false;
+    (Js.Unsafe.coerce elt')##.pressed := false;
     if pressed then
-      elt'##press()
+      elt'##press
     else
-      elt'##unpress();
+      elt'##unpress;
 
     Lwt.async (fun () ->
       Lwt_js_events.clicks (To_dom.of_element elt)
         (fun e _ ->
-           lwt ret = predicate () in
+           let%lwt ret = predicate () in
            if ret then
-             elt'##toggle();
+             elt'##toggle;
            Lwt.return ()));
     elt
 
@@ -244,7 +244,7 @@
     in
 
     let on_outer_click _ =
-      elt'##unpress()
+      elt'##unpress
     in
 
     ignore (Ow_alert.alert
@@ -266,26 +266,26 @@
     Lwt.async (fun () ->
       pre_unpresses elt
         (fun _ _ ->
-           elt'##prevent(Js.bool (not closeable_by_button));
+           elt'##(prevent (Js.bool (not closeable_by_button)));
            Lwt.return ()));
 
     Lwt.async (fun () ->
       presses elt
         (fun _ _ ->
            Ow_log.log "show";
-           elt_alert'##show();
+           elt_alert'##show;
            Lwt.return ()));
 
     Lwt.async (fun () ->
       unpresses elt
         (fun _ _ ->
-           elt_alert'##hide();
+           elt_alert'##hide;
            Lwt.return ()));
 
     Lwt.async (fun () ->
       Ow_alert.outer_clicks elt
         (fun _ _ ->
-           elt'##unpress();
+           elt'##unpress;
            Lwt.return ()));
 
     (* We want to listen events before unpress or press the button *)
@@ -316,7 +316,7 @@
     in
 
     let on_outer_click _ =
-      elt'##unpress()
+      elt'##unpress
     in
 
     ignore (Ow_alert.dyn_alert
@@ -336,27 +336,27 @@
       | None, None -> ()
     end;
 
-    elt'##_update <-
+    elt'##._update :=
     meth (fun this ->
-      elt_alert'##update();
+      elt_alert'##update;
     );
 
     Lwt.async (fun () ->
       pre_unpresses elt
         (fun _ _ ->
-           elt'##prevent(Js.bool (not closeable_by_button));
+           elt'##(prevent (Js.bool (not closeable_by_button)));
            Lwt.return ()));
 
     Lwt.async (fun () ->
       presses elt
         (fun _ _ ->
-           lwt () = elt_alert'##show() in
+           let%lwt () = elt_alert'##show in
            Lwt.return ()));
 
     Lwt.async (fun () ->
       unpresses elt
         (fun _ _ ->
-           elt_alert'##hide();
+           elt_alert'##hide;
            Lwt.return ()));
 
     (* We want to listen events before unpress or press the button *)
@@ -369,14 +369,14 @@
   let to_button elt = (Js.Unsafe.coerce (To_dom.of_element elt) :> button Js.t)
   let to_button_alert elt = (Js.Unsafe.coerce (To_dom.of_element elt) :> button_alert Js.t)
   let to_button_dyn_alert elt = (Js.Unsafe.coerce (To_dom.of_element elt) :> button_dyn_alert Js.t)
-}}
+]
 
-{shared{
+[%%shared
   type ('a, 'b, 'c) button_dyn_alert_fun' =
     'a elt -> 'b elt -> 'c elt list Lwt.t
-}}
+]
 
-{server{
+[%%server
   let closeable_by_click = Ow_alert.closeable_by_click
 
   let button
@@ -384,18 +384,18 @@
       ?(pressed : bool option)
       ?(predicate : (unit -> bool Lwt.t) option)
       (elt : 'a elt) =
-    ignore {unit{
+    ignore [%client (
         ignore (
-          let button = match %set with
+          let button = match ~%set with
             | None -> button ?set:None
             | Some set -> button ~set:(Ow_active_set.of_server_set set)
           in
           button
-            ?pressed:%pressed
-            ?predicate:%predicate
-            %elt
+            ?pressed:~%pressed
+            ?predicate:~%predicate
+            ~%elt
         )
-     }};
+     : unit)];
     elt
 
   let button_alert
@@ -410,26 +410,26 @@
         ?(after : ('a elt -> 'b elt -> unit) option)
         (elt : 'a elt)
         (elt_alert : 'b elt) =
-    ignore {unit{
+    ignore [%client (
         ignore (
-          let button_alert = match %set with
+          let button_alert = match ~%set with
             | None -> button_alert ?set:None
             | Some set -> button_alert ~set:((Ow_active_set.of_server_set set)
                                              :> Ow_active_set.t)
           in
           button_alert
-            ?v:%v
-            ?h:%h
-            ?pressed:%pressed
-            ?predicate:%predicate
-            ?allow_outer_clicks:%allow_outer_clicks
-            ?closeable_by_button:%closeable_by_button
-            ?before:%before
-            ?after:%after
-            %elt
-            %elt_alert
+            ?v:~%v
+            ?h:~%h
+            ?pressed:~%pressed
+            ?predicate:~%predicate
+            ?allow_outer_clicks:~%allow_outer_clicks
+            ?closeable_by_button:~%closeable_by_button
+            ?before:~%before
+            ?after:~%after
+            ~%elt
+            ~%elt_alert
         )
-    }};
+    : unit)];
     (elt, elt_alert)
 
   let button_dyn_alert
@@ -445,26 +445,26 @@
         (elt : 'a elt)
         (elt_alert : 'b elt)
         (f : ('a, _, _) button_dyn_alert_fun' client_value) =
-    ignore {unit{
+    ignore [%client (
         ignore (
-          let alert = match %set with
+          let alert = match ~%set with
             | None -> button_dyn_alert ?set:None
             | Some set ->
                 button_dyn_alert ~set:((Ow_active_set.of_server_set set) :> Ow_active_set.t)
           in
           button_dyn_alert
-            ?v:%v
-            ?h:%h
-            ?pressed:%pressed
-            ?predicate:%predicate
-            ?allow_outer_clicks:%allow_outer_clicks
-            ?closeable_by_button:%closeable_by_button
-            ?before:%before
-            ?after:%after
-            %elt
-            %elt_alert
-            %f
+            ?v:~%v
+            ?h:~%h
+            ?pressed:~%pressed
+            ?predicate:~%predicate
+            ?allow_outer_clicks:~%allow_outer_clicks
+            ?closeable_by_button:~%closeable_by_button
+            ?before:~%before
+            ?after:~%after
+            ~%elt
+            ~%elt_alert
+            ~%f
         )
-    }};
+    : unit)];
     (elt, elt_alert)
-}}
+]

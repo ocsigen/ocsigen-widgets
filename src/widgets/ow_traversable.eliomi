@@ -20,16 +20,16 @@
  *)
 
 
-{shared{
+[%%shared.start]
   open Eliom_content.Html5
   open Html5_types
-}}
-{client{
+
+[%%client.start]
   open Dom_html
   open Dom
-}}
 
-{client{
+
+[%%client.start]
 
   (** A traversable element can iterate through their children. *)
 (*VVV This is not a description of the widget. Please fix.
@@ -174,9 +174,9 @@
 
   (** Check if the given element is an instance of a [traversable] widget. *)
   val to_traversable : Html5_types.ul elt -> traversable Js.t
-}}
 
-{shared{
+
+[%%shared.start]
   val li :
     ?a:[< Html5_types.li_attrib > `Class `User_data ]
       Eliom_content.Html5.D.attrib list
@@ -186,21 +186,21 @@
   -> ?value_to_match:Html5_types.text
   -> Html5_types.flow5_without_interactive Eliom_content.Html5.D.Raw.elt list
   -> [> Html5_types.li ] Eliom_content.Html5.D.elt
-}}
 
-{server{
+
+[%%server.start]
   module Style : sig
     val traversable_cls : string
     val traversable_elt_cls : string
     val selected_cls : string
   end
-}}
 
-{server{
+
+[%%server.start]
   class type traversable = object end
-}}
 
-{server{
+
+[%%server.start]
   val traversable :
      ?enable_link:bool
   -> ?focus:bool
@@ -210,4 +210,4 @@
      *)
   -> ul elt
   -> ul elt
-}}
+

@@ -19,29 +19,29 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *)
 
-{client{
+[%%client
   (* position / coordinated *)
 
   type position_type = Client | Screen | Page
   type touch_type = All_touches | Target_touches | Changed_touches
 
   let get_mouse_ev_coord ?(p_type=Client) ev = match p_type with
-    | Client    -> ev##clientX, ev##clientY
-    | Screen    -> ev##screenX, ev##screenY
+    | Client    -> ev##.clientX, ev##.clientY
+    | Screen    -> ev##.screenX, ev##.screenY
     | Page      ->
-      Js.Optdef.case (ev##pageX) (fun () -> 0) (fun x -> x),
-      Js.Optdef.case (ev##pageY) (fun () -> 0) (fun y -> y)
+      Js.Optdef.case (ev##.pageX) (fun () -> 0) (fun x -> x),
+      Js.Optdef.case (ev##.pageY) (fun () -> 0) (fun y -> y)
 
   let get_touch_coord ?(p_type=Client) ev = match p_type with
-    | Client    -> ev##clientX, ev##clientY
-    | Screen    -> ev##screenX, ev##screenY
-    | Page      -> ev##pageX, ev##pageY
+    | Client    -> ev##.clientX, ev##.clientY
+    | Screen    -> ev##.screenX, ev##.screenY
+    | Page      -> ev##.pageX, ev##.pageY
 
   let get_touch_ev_coord ?(t_type=All_touches) idx ?p_type event =
     let item = match t_type with
-      | All_touches     -> event##touches##item(idx)
-      | Target_touches  -> event##targetTouches##item(idx)
-      | Changed_touches -> event##changedTouches##item(idx)
+      | All_touches     -> event##.touches##(item idx)
+      | Target_touches  -> event##.targetTouches##(item idx)
+      | Changed_touches -> event##.changedTouches##(item idx)
     in
     Js.Optdef.case item (fun () -> (0, 0)) (get_touch_coord ?p_type)
 
@@ -77,4 +77,4 @@
      disable_event Dom_html.Event.dragstart html_elt;
      disable_event Dom_html.Event.dragenter html_elt;
      disable_event Dom_html.Event.drop html_elt]
-}}
+]

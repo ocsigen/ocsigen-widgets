@@ -6,7 +6,7 @@
    Licensed under the MIT license
  *)
 
-{client{
+[%%client.start]
   (* TODOC : See ojw_swipejs.mli and do the same here. *)
 
   type t
@@ -28,4 +28,4 @@
   val next: t -> unit
 
   val prev: t -> unit
-}}
+

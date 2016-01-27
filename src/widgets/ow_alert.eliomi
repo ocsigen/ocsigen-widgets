@@ -19,11 +19,11 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *)
 
-{shared{
+[%%shared.start]
   open Eliom_content.Html5
-}}
 
-{client{
+
+[%%client.start]
   class type alert_event = object
     inherit Dom_html.event
   end
@@ -196,13 +196,13 @@
      'a elt
   -> dyn_alert Js.t
 
-}}
 
-{shared{
+
+[%%shared.start]
   type ('a, 'b) dyn_alert_fun' = 'a elt -> 'b elt list Lwt.t
-}}
 
-{server{
+
+[%%server.start]
   val closeable_by_click :
      'a elt
   -> 'a elt
@@ -219,7 +219,5 @@
   -> ?before:('a elt -> unit Lwt.t)
   -> ?after:('a elt -> unit Lwt.t)
   -> 'a elt
-  -> ('a, _) dyn_alert_fun' client_value
+  -> ('a, _) dyn_alert_fun' Eliom_pervasives.client_value
   -> 'a elt
-
-}}

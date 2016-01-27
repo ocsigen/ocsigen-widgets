@@ -19,7 +19,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *)
 
-{shared{
+[%%shared.start]
   include module type of List
 
   (** [find_remove f l] takes the first value from the list returning true, and
@@ -32,4 +32,4 @@
 
   (** Remove duplicates in a sorted list *)
   val uniq : 'a list -> 'a list
-}}
+

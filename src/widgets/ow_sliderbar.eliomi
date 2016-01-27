@@ -20,7 +20,7 @@
  *)
 
 
-{client{
+[%%client.start]
   (** Binding of the jQuery_ui slider for ocaml.
 
       To use it, you must include jquery-ui.js and jquery-1.9.1.js
@@ -41,4 +41,4 @@
   (** Replace the callback function done on slides. *)
   (* TODOC Replace or add ? it add on the scrollbar module, better be consistant on this. *)
   val on_slide : Dom_html.element Js.t -> (unit -> unit) -> 'a Lwt.t
-}}
+

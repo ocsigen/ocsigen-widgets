@@ -20,16 +20,16 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *)
 
-{shared{
+[%%shared.start]
   open Eliom_content.Html5
   open Html5_types
-}}
-{client{
+
+[%%client.start]
   open Dom_html
   open Dom
-}}
 
-{client{
+
+[%%client.start]
   (** A dropdown menu is a menu which can be displayed under an element
       which will act like a [button]. *)
 
@@ -93,18 +93,18 @@
   -> ('a elt * Html5_types.ul elt)
 
   (* FIXME: add conversion functions. *)
-}}
 
-{shared{
+
+[%%shared.start]
   val li :
     ?a:[< Html5_types.li_attrib > `Class `User_data ]
       Eliom_content.Html5.D.attrib list
   -> href:string
   -> Html5_types.flow5_without_interactive Eliom_content.Html5.D.Raw.elt list
   -> [> Html5_types.li ] Eliom_content.Html5.D.elt
-}}
 
-{server{
+
+[%%server.start]
   val dropdown :
      ?v : Ow_position.v_orientation'
   -> ?h : Ow_position.h_orientation'
@@ -113,4 +113,4 @@
   -> 'a elt
   -> ul elt
   -> ('a elt * ul elt)
-}}
+

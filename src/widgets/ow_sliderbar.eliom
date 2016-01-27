@@ -20,7 +20,7 @@
  *)
 
 
-{client{
+[%%client
   class type slider_utils = object
     method onSlideList : (((unit -> bool) list) ref) Js.prop
   end
@@ -31,18 +31,18 @@
   end
 
   let get_slider_utils elt : slider_utils Js.t =
-    (Js.Unsafe.coerce elt)##oslider_utils
+    (Js.Unsafe.coerce elt)##.oslider_utils
 
   let set_slider_utils elt =
     let create_slider_utils () = Js.Unsafe.obj [||]
     in
-    (Js.Unsafe.coerce elt)##oslider_utils <- (create_slider_utils ())
+    (Js.Unsafe.coerce elt)##.oslider_utils := (create_slider_utils ())
 
   let get_on_slide_list elt =
-    (get_slider_utils elt)##onSlideList
+    (get_slider_utils elt)##.onSlideList
 
   let set_on_slide_list elt value =
-    (get_slider_utils elt)##onSlideList <- value
+    (get_slider_utils elt)##.onSlideList := value
 
   let slide_utils_constructor elt =
     set_slider_utils elt;
@@ -55,9 +55,9 @@
   let set_orientation elt options = function
     | None -> ()
     | Some vertical -> ((if vertical then
-                          options##orientation <- (Js.string "vertical")
+                          options##.orientation := (Js.string "vertical")
                         else
-                          options##orientation <- (Js.string "horizontal"));
+                          options##.orientation := (Js.string "horizontal"));
                        ())
 
   let append_callback list f elt =
@@ -78,15 +78,15 @@
 
   let get_value elt =
     let slider = Js.Unsafe.coerce (Ojquery.js_jQelt elt) in
-    slider##slider_v(Js.string "value")
+    slider##(slider_v (Js.string "value"))
 
   let set_on_slide elt f =
     let scrollbar = Js.Unsafe.coerce (Ojquery.js_jQelt elt) in
-    scrollbar##on(Js.string "slide", Js.wrap_callback (f))
+    scrollbar##(on (Js.string "slide") (Js.wrap_callback (f)))
 
   let get_value elt =
     let scrollbar = Js.Unsafe.coerce (Ojquery.js_jQelt elt) in
-    scrollbar##slider_v(Js.string "value")
+    scrollbar##(slider_v (Js.string "value"))
 
   let add_slider ?vertical ?slide elt =
     let slider = Js.Unsafe.coerce (Ojquery.js_jQelt elt) in
@@ -98,10 +98,10 @@
                                                   !list)))) in
     slide_utils_constructor elt;
     set_orientation elt options vertical;
-    options##slide <- (iter_callbacks (get_on_slide_list elt));
+    options##.slide := (iter_callbacks (get_on_slide_list elt));
     (match (slide) with
     | Some f -> ignore (on_slide_ elt f)
     | None -> ());
-    slider##slider(options);
+    slider##(slider options);
     ()
-}}
+]

@@ -19,7 +19,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *)
 
-{client{
+[%%client.start]
   (** Various tools related to events. *)
 
   (** {3 Position and Coordination } *)
@@ -92,4 +92,4 @@
 
   val disable_drag_and_drop : #Dom_html.eventTarget Js.t ->
     Dom_html.event_listener_id list
-}}
+

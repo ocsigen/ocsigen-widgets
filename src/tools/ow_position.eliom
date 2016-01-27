@@ -19,7 +19,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *)
 
-{shared{
+[%%shared
   type position' = [
     | `fixed
     | `absolute
@@ -38,9 +38,9 @@
     | `top
     | common_orientation'
   ]
-}}
+]
 
-{client{
+[%%client
   open Dom
   open Dom_html
   open Ow_pervasives
@@ -62,7 +62,7 @@
     let elt_h' = Ow_size.get_full_height elt' in
     let s_left, s_top =
       if scroll
-      then document##body##scrollLeft, document##body##scrollTop
+      then document##.body##.scrollLeft, document##.body##.scrollTop
       else 0, 0
     in
     let calc_h = function
@@ -85,7 +85,7 @@
          | `top    -> (calc_v `top,    calc_v `bottom)
          | `center -> (calc_v `center, calc_v `center))
     in
-    let rect = relative##getBoundingClientRect() in
+    let rect = relative##getBoundingClientRect in
     let to_side (shift,shift') x =
       let to_int shift = (int_of_float (Js.to_float x)) + shift in
       let integer = to_int shift in
@@ -94,7 +94,7 @@
         then integer
         else to_int shift'
       in integer
-    in (to_side (hshift,hshift') rect##left, to_side (vshift,vshift') rect##top)
+    in (to_side (hshift,hshift') rect##.left, to_side (vshift,vshift') rect##.top)
 
   let absolute_coord
         ?(h : h_orientation' = `center)
@@ -109,7 +109,7 @@
     let elt_h' = Ow_size.get_full_height elt' in
     let s_left, s_top =
       if scroll
-      then document##body##scrollLeft, document##body##scrollTop
+      then document##.body##.scrollLeft, document##.body##.scrollTop
       else 0, 0
     in
     let hshift,vshift =
@@ -122,18 +122,18 @@
          | `top    -> s_top
          | `center -> s_top + (rel_h' / 2) - (elt_h' / 2))
     in
-    let rect = relative##getBoundingClientRect() in
+    let rect = relative##getBoundingClientRect in
     let to_side shift x = (int_of_float (Js.to_float x)) + shift in
-    (to_side hshift rect##left, to_side vshift rect##top)
+    (to_side hshift rect##.left, to_side vshift rect##.top)
 
   let generic_move ?(position = `absolute) (left, top) elt =
-    elt##style##top <-  (Ow_size.pxstring_of_int top);
-    elt##style##left <- (Ow_size.pxstring_of_int left);
-    elt##style##position <- attr_of_position position
+    elt##.style##.top :=  (Ow_size.pxstring_of_int top);
+    elt##.style##.left := (Ow_size.pxstring_of_int left);
+    elt##.style##.position := attr_of_position position
 
   let relative_move ?h ?v ?scroll ?position ~relative elt =
     generic_move ?position (relative_coord ?v ?h ?scroll ~relative elt) elt
 
   let absolute_move ?h ?v ?scroll ?position ~relative elt =
     generic_move ?position (absolute_coord ?v ?h ?scroll ~relative elt) elt
-}}
+]

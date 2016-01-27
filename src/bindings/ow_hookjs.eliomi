@@ -6,7 +6,7 @@
    http://www.usehook.com
  *)
 
-{client{
+[%%client.start]
   (* TODOC The licence is weird, to say the least. *)
 
   (** Binding for hook.js.
@@ -39,4 +39,4 @@
   val init : t -> ?options:(options Js.t) -> unit -> unit
 
   (* TODOC Same as swipe, why two steps here ? *)
-}}
+

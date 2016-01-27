@@ -21,7 +21,7 @@
 
 val section : Lwt_log.section
 
-{client{
+[%%client.start]
   (** Client debugging functions.*)
 
   (** Create a JS alert message. *)
@@ -35,4 +35,4 @@ val section : Lwt_log.section
 
   (** Log an int in the firebug console. *)
   val log_int : int -> unit
-}}
+

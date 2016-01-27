@@ -7,7 +7,7 @@
  *)
 
 
-{client{
+[%%client.start]
   (** Swiping library.
       @author Arnaud Parant
   *)
@@ -56,4 +56,4 @@
   (** Jump to a specific slide.
       @param duration in milliseconds *) (* TODOC : default for duration ? *)
   val slide_to : t -> int -> ?duration:int -> unit -> unit
-}}
+

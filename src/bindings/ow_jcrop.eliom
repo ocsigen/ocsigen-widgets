@@ -18,7 +18,7 @@
    Author: Charly Chevalier
    *)
 
-{client{
+[%%client
   open Ow_pervasives
 
   (* Type used to constraint usage of parameters of Jcrop's callbacks *)
@@ -74,27 +74,27 @@
     (* Create default object for options *)
     let opt = (Js.Unsafe.obj [||] :> options Js.t) in
 
-    Ow_option.iter (fun ov -> opt##onSelect <- wrap_callback ov) on_select;
-    Ow_option.iter (fun ov -> opt##onChange <- wrap_callback ov) on_change;
-    Ow_option.iter (fun ov -> opt##onRelease <- wrap_callback ov) on_release;
+    Ow_option.iter (fun ov -> opt##.onSelect := wrap_callback ov) on_select;
+    Ow_option.iter (fun ov -> opt##.onChange := wrap_callback ov) on_change;
+    Ow_option.iter (fun ov -> opt##.onRelease := wrap_callback ov) on_release;
 
-    Ow_option.iter (fun ov -> opt##aspectRatio <- ov) aspect_ratio;
+    Ow_option.iter (fun ov -> opt##.aspectRatio := ov) aspect_ratio;
     Ow_option.iter (fun (x1, y1, x2, y2) ->
-      opt##setSelect <-  Js.array [| x1; y1; x2; y2 |]) set_select;
-    Ow_option.iter (fun (x, y) -> opt##minSize <- Js.array [| x; y |]) min_size;
-    Ow_option.iter (fun (x, y) -> opt##maxSize <- Js.array [| x; y |]) max_size;
-    Ow_option.iter (fun ov -> opt##boxHeight <- ov) box_height;
-    Ow_option.iter (fun ov -> opt##boxWidth <- ov) box_width;
+      opt##.setSelect :=  Js.array [| x1; y1; x2; y2 |]) set_select;
+    Ow_option.iter (fun (x, y) -> opt##.minSize := Js.array [| x; y |]) min_size;
+    Ow_option.iter (fun (x, y) -> opt##.maxSize := Js.array [| x; y |]) max_size;
+    Ow_option.iter (fun ov -> opt##.boxHeight := ov) box_height;
+    Ow_option.iter (fun ov -> opt##.boxWidth := ov) box_width;
     Ow_option.iter
-      (fun (x, y) -> opt##trueSize <- Js.array [| x; y |]) true_size;
+      (fun (x, y) -> opt##.trueSize := Js.array [| x; y |]) true_size;
 
-    opt##allowSelect <- Js.bool allow_select;
-    opt##bgColor <- bg_color;
-    opt##bgOpacity <- bg_opacity;
+    opt##.allowSelect := Js.bool allow_select;
+    opt##.bgColor := bg_color;
+    opt##.bgOpacity := bg_opacity;
 
     let img =
       Js.Unsafe.coerce (Ojquery.js_jQelt (elt :> Dom_html.element Js.t))
     in
-    img##_Jcrop(opt)
+    img##(_Jcrop opt)
   end
-}}
+]

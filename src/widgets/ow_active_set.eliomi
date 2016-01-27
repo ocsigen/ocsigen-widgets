@@ -19,11 +19,11 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *)
 
-{shared{
+[%%shared.start]
   type t'
-}}
 
-{client{
+
+[%%client.start]
   class type item = object
     inherit Dom_html.element
 
@@ -50,10 +50,10 @@
     -> disable : (#item Js.t -> unit)
     -> #item' Js.t
     -> item Js.t
-}}
 
-{client{
+
+[%%client.start]
   val set : ?at_least_one:bool -> unit -> t
   val of_server_set : t' -> t
   val to_server_set : t -> t'
-}}
+

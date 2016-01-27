@@ -19,11 +19,11 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *)
 
-{shared{
+[%%shared
   type t' = int
-}}
+]
 
-{client{
+[%%client
   class type item = object
     inherit Dom_html.element
 
@@ -51,15 +51,15 @@
   let enable ~set it =
     (match set.active with
      | None -> ()
-     | Some active -> active##disable());
-    it##enable();
+     | Some active -> active##disable);
+    it##enable;
     set.active <- Some (Js.Unsafe.coerce it :> item Js.t)
 
   let disable ~set it =
     if set.at_least_one
     then (())
     else
-      (it##disable();
+      (it##disable;
        set.active <- None)
 
   let ctor
@@ -68,12 +68,12 @@
       (elt : #item' Js.t) =
     let elt' = (Js.Unsafe.coerce elt :> item' Js.t) in
     let meth = Js.wrap_meth_callback in
-    elt'##_enable <- meth enable;
-    elt'##_disable <- meth disable;
+    elt'##._enable := meth enable;
+    elt'##._disable := meth disable;
     (elt' :> item Js.t)
-}}
+]
 
-{client{
+[%%client
   module HT = Hashtbl
 
   let htable =
@@ -89,4 +89,4 @@
 
   let to_server_set set =
     HT.hash set
-}}
+]

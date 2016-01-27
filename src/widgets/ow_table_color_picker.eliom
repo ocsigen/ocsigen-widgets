@@ -19,12 +19,12 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *)
 
-{shared{
+[%%shared
 
 open Eliom_content.Html5
 open Eliom_content.Html5.F
 
-type div = [ Html5_types.div ] Eliom_content.Html5.D.elt
+type div = Html5_types.div Eliom_content.Html5.D.elt
 type t = (string ref * div * div list * div)
 
 let raise_exception str =
@@ -157,9 +157,9 @@ let create ?(initial_color = 0, 0, 0) ?(lll_color = lll_color_p5) () =
   let type_t = (color_ref, color_div, div_color_list, block) in
   type_t, color_div, block
 
-}}
+]
 
-{client{
+[%%client
 
 open Lwt
 
@@ -175,9 +175,9 @@ let start (color_ref, color_div, color_list, _) =
       Lwt.async (fun () ->
         Lwt_js_events.clicks dom_div (fun _ _ ->
           Lwt.return
-            (let color = dom_div##title in
-             dom_color_div##style##backgroundColor <- color;
-             dom_color_div##title <- color;
+            (let color = dom_div##.title in
+             dom_color_div##.style##.backgroundColor := color;
+             dom_color_div##.title := color;
              color_ref := (Js.to_string color))));
       aux tail
   in aux color_list
@@ -204,4 +204,4 @@ let get_color (color_ref, _ , _, _) = !color_ref
 
 let get_square_color_div_list (_, _, color_list, _) = color_list
 
-}}
+]

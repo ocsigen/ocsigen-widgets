@@ -19,7 +19,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *)
 
-{client{
+[%%client.start]
   (** First is moves event
       Second is end event
       Third is move_func call at each move event
@@ -144,4 +144,4 @@
     (slide_event -> unit Lwt.t -> unit Lwt.t) ->
     (slide_event -> unit Lwt.t) ->
     unit Lwt.t
-}}
+

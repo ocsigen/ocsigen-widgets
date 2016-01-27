@@ -29,7 +29,7 @@
    to be able to upload files and limit the maximum size of uploaded files.
 *)
 
-{server{
+[%%server.start]
 
   (** Call this function once at startup with parameters [~dir] and [()]
       (and possibly optional parameters) to initialize a directory where
@@ -68,4 +68,4 @@
       It takes the temporary filename as parameter. *)
   val default_new_filename : string -> string
 
-}}
+

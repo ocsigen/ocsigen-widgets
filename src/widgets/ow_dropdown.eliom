@@ -20,16 +20,16 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *)
 
-{shared{
+[%%shared
   open Eliom_content.Html5
   open Html5_types
-}}
-{client{
+]
+[%%client
   open Dom_html
   open Dom
-}}
+]
 
-{client{
+[%%client
   class type dropdown = object
     inherit Ow_button.button
 
@@ -63,30 +63,30 @@
        FIXME: Should we check if 'pressed' method is not undefined ? It should
        never happen.. *)
     let is_traversable = match is_traversable with
-      | None -> (fun _ -> Js.to_bool (elt'##pressed))
+      | None -> (fun _ -> Js.to_bool (elt'##.pressed))
       | Some f -> (fun _ -> f (Js.Unsafe.coerce elt') (* FIXME why do we need to Unsafe.coerce ? *))
     in
 
     let on_mouseovers, on_mouseouts =
       (fun f ->
-         Js.Opt.iter (elt'##_timeout)
+         Js.Opt.iter (elt'##._timeout)
            (fun th -> Lwt.cancel th);
          f ()),
       (fun () ->
          let th = Lwt_js.sleep hover_timeout in
-         elt'##_timeout <- Js.some th;
-         try_lwt
-           lwt () = th in
-           if (Js.to_bool elt'##pressed) then
-             elt'##unpress();
+         elt'##._timeout := Js.some th;
+         try%lwt
+           let%lwt () = th in
+           if (Js.to_bool elt'##.pressed) then
+             elt'##unpress;
            Lwt.return ()
          with Lwt.Canceled -> Lwt.return ())
     in
 
     let cstyle = Ow_fun.getComputedStyle elt' in
-    elt_traversable'##style##minWidth <- cstyle##width;
+    elt_traversable'##.style##.minWidth := cstyle##.width;
 
-    elt'##classList##add(Js.string "ojw_dropdown");
+    elt'##.classList##(add (Js.string "ojw_dropdown"));
 
     ignore (
       Ow_button.button_alert
@@ -96,7 +96,7 @@
         elt elt_traversable
     );
 
-    elt'##_traversable <-
+    elt'##._traversable :=
       Ow_traversable.to_traversable
         (Ow_traversable.traversable
            ?on_keydown
@@ -116,37 +116,37 @@
       Lwt.async (fun () ->
           Lwt_js_events.mouseouts elt_traversable'
             (fun _ _ ->
-               lwt () = on_mouseouts () in
+               let%lwt () = on_mouseouts () in
                Lwt.return ()));
     end;
 
-    elt'##_timeout <- Js.null;
+    elt'##._timeout := Js.null;
 
     if hover then begin
       Lwt.async (fun () ->
         Lwt_js_events.mouseovers elt'
           (fun _ _ ->
              on_mouseovers (fun () ->
-               if not (Js.to_bool elt'##pressed) then
-                 elt'##press()
+               if not (Js.to_bool elt'##.pressed) then
+                 elt'##press
              );
              Lwt.return ()));
 
       Lwt.async (fun () ->
         Lwt_js_events.mouseouts elt'
           (fun _ _ ->
-             lwt () = on_mouseouts () in
+             let%lwt () = on_mouseouts () in
              Lwt.return ()));
     end;
 
     (elt, elt_traversable)
-}}
+]
 
-{shared{
+[%%shared
   let li ?a ~href = Ow_traversable.li ?a ?value:None ~anchor:true ~href ?value_to_match:None
-}}
+]
 
-{server{
+[%%server
   let dropdown
       ?(v:Ow_position.v_orientation' option)
       ?(h:Ow_position.h_orientation' option)
@@ -154,15 +154,15 @@
       ?(hover_timeout:float option)
       (elt : 'a elt)
       (elt_traversable : ul elt) =
-    ignore {unit{
+    ignore [%client (
         ignore (
           dropdown
-            ?v:%v
-            ?h:%h
-            ?hover:%hover
-            ?hover_timeout:%hover_timeout
-            %elt %elt_traversable
+            ?v:~%v
+            ?h:~%h
+            ?hover:~%hover
+            ?hover_timeout:~%hover_timeout
+            ~%elt ~%elt_traversable
         )
-    }};
+    : unit)];
     (elt, elt_traversable);
-}}
+]

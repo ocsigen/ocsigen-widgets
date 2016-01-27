@@ -19,11 +19,11 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *)
 
-{shared{
+[%%shared.start]
 
 type orientation_t = Vertical | Horizontal
 type callback = unit -> unit Lwt.t
-type div = [ Html5_types.div ] Eliom_content.Html5.D.elt
+type div = Html5_types.div Eliom_content.Html5.D.elt
 type t
 
 (**
@@ -42,9 +42,9 @@ val create :
   unit ->
   t * div
 
-}}
 
-{client{
+
+[%%client.start]
 
 val change_start_slide_callback : t -> callback -> unit
 val remove_start_slide_callback : t -> unit
@@ -63,5 +63,3 @@ val get_value : t -> float
 
 (** launch click callback at start with initialize value *)
 val start : t -> unit
-
-}}

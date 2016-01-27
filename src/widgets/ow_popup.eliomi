@@ -19,16 +19,16 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *)
 
-{shared{
+[%%shared.start]
   open Eliom_content.Html5
   open Html5_types
-}}
-{client{
+
+[%%client.start]
   open Dom_html
   open Dom
-}}
 
-{client{
+
+[%%client.start]
   (** Popups are a special kind of [alerts] that are automatically showed in
       the middle of the screen. *)
 
@@ -73,9 +73,9 @@
   (** Tests if an element is an alert or not and returns it as a [dyn_popup]
       instance. *)
   val to_dyn_popup : 'a elt -> Ow_alert.dyn_alert Js.t
-}}
 
-{server{
+
+[%%server.start]
   val closeable_by_click :
      'a elt
   -> 'a elt
@@ -92,6 +92,5 @@
   -> ?allow_outer_clicks:bool
   -> ?with_background:bool
   -> 'a elt
-  -> ('a, _) Ow_alert.dyn_alert_fun' client_value
+  -> ('a, _) Ow_alert.dyn_alert_fun' Eliom_pervasives.client_value
   -> 'a elt
-}}

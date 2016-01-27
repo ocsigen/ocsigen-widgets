@@ -21,7 +21,7 @@
 
 (** Manipulation on option values. *)
 
-{shared{
+[%%shared.start]
   (** [map f v] returns the application of f on the option v if v is not None, or None. *)
   val map : ('a -> 'b) -> 'a option -> 'b option
 
@@ -36,9 +36,9 @@
 
   (** [lwt_map t f g] If the thread has returned a value v, returns (f v). Else, returns g () *)
   val lwt_map : 'a Lwt.t -> ('a -> 'b) -> (unit -> 'b) -> 'b
-}}
 
-{client{
+
+[%%client.start]
   (** De-optize the value. May raise "of_opt"*)
   val of_opt : 'a Js.Opt.t -> 'a
-}}
+

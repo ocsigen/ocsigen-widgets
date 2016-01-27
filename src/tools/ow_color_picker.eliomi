@@ -19,11 +19,11 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *)
 
-{client{
+[%%client.start]
   type t
 
   val create : ?width:int -> unit -> t
   val append_at : Dom_html.element Js.t -> t -> unit
   val init_handler : t -> unit
   val get_rgb : t -> int * int * int
-}}
+

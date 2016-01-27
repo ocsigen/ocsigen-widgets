@@ -19,7 +19,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *)
 
-{shared{
+[%%shared
 
 open Lwt
 open Eliom_content.Html5
@@ -28,7 +28,7 @@ open Eliom_content.Html5.F
 type orientation_t = Vertical | Horizontal
 
 type callback = unit -> unit Lwt.t
-type div = [ Html5_types.div ] Eliom_content.Html5.D.elt
+type div = Html5_types.div Eliom_content.Html5.D.elt
 type t = (div * div * orientation_t * float ref *
             callback option ref * callback option ref *
             callback option ref * callback option ref)
@@ -58,9 +58,9 @@ let create ?(orientation = Horizontal)
   in
   type_t, slider
 
-}}
+]
 
-{client{
+[%%client
 
 let change_start_slide_callback (_, _, _, _, start_callback, _, _, _) new_callback =
   start_callback := Some new_callback
@@ -99,8 +99,8 @@ let start (slider, dragger, ori, value,
 
   let margin = 4 in
   let slider_width, slider_height =
-    ref (dom_slider##clientWidth - margin * 2),
-    ref (dom_slider##clientHeight - margin * 2)
+    ref (dom_slider##.clientWidth - margin * 2),
+    ref (dom_slider##.clientHeight - margin * 2)
   in
   let dragger_width, dragger_height = Ow_size.get_size dom_dragger in
 
@@ -125,9 +125,9 @@ let start (slider, dragger, ori, value,
   let value_of_y y = set_value ((float_of_int y) /. !max_height) in
 
   let set_dragger_position () = match ori with
-    | Vertical          -> dom_dragger##style##top <- Js.string
+    | Vertical          -> dom_dragger##.style##.top := Js.string
       ((string_of_int (y_of_value () + margin)) ^ "px")
-    | Horizontal        -> dom_dragger##style##left <- Js.string
+    | Horizontal        -> dom_dragger##.style##.left := Js.string
       ((string_of_int (x_of_value () + margin)) ^ "px")
   in
 
@@ -182,8 +182,8 @@ let start (slider, dragger, ori, value,
   (* resize event *)
   Lwt.async (fun () ->
     Lwt_js_events.limited_onorientationchanges_or_onresizes (fun _ _ ->
-      slider_width := (dom_slider##clientWidth - margin * 2);
-      slider_height := (dom_slider##clientHeight - margin * 2);
+      slider_width := (dom_slider##.clientWidth - margin * 2);
+      slider_height := (dom_slider##.clientHeight - margin * 2);
       max_width := (float_of_int (!slider_width - dragger_width));
       max_height := (float_of_int (!slider_height - dragger_height));
       let ox, oy = Dom_html.elementClientPosition dom_slider in
@@ -191,4 +191,4 @@ let start (slider, dragger, ori, value,
       oy_slider := oy;
       Lwt.return (set_dragger_position ()) ))
 
-}}
+]

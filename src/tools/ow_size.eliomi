@@ -21,7 +21,7 @@
 
 (** Size functions for Dom elements. *)
 
-{client{
+[%%client.start]
   (** {3 Size and orientation} *)
 
   type orientation = Portrait | Landscape
@@ -77,4 +77,4 @@
   val client_left : Dom_html.element Js.t -> int
 
   val client_right : Dom_html.element Js.t -> int
-}}
+

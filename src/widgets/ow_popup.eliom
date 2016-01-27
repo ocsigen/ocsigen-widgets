@@ -20,16 +20,16 @@
  *)
 
 
-{shared{
+[%%shared
   open Eliom_content.Html5
   open Html5_types
-}}
-{client{
+]
+[%%client
   open Dom_html
   open Dom
-}}
+]
 
-{client{
+[%%client
   open Dom
   open Dom_html
   open Eliom_content.Html5
@@ -40,15 +40,15 @@
     let update_bg bg =
       let w, h =
         let w, h = Ow_size.get_screen_size () in
-        Js.Optdef.case (window##innerWidth)
+        Js.Optdef.case (window##.innerWidth)
           (fun () -> w)
           (fun w -> w),
-        Js.Optdef.case (window##innerHeight)
+        Js.Optdef.case (window##.innerHeight)
           (fun () -> h)
           (fun h -> h)
       in
-      bg##style##height <- Ow_size.pxstring_of_int h;
-      bg##style##width <- Ow_size.pxstring_of_int w;
+      bg##.style##.height := Ow_size.pxstring_of_int h;
+      bg##.style##.width := Ow_size.pxstring_of_int w;
     in
     match !global_bg with
       | Some bg ->
@@ -56,10 +56,10 @@
           bg
       | None ->
           let bg = createDiv Dom_html.document in
-          bg##classList##add(Js.string "ojw_background");
+          bg##.classList##(add (Js.string "ojw_background"));
           global_bg := Some bg;
           update_bg bg;
-          appendChild document##body bg;
+          appendChild document##.body bg;
           bg
 
   module Style = struct
@@ -69,13 +69,13 @@
   exception Close_button_not_in_popup
 
   let show_background () =
-    (get_global_bg ())##style##visibility <- Js.string "visible"
+    (get_global_bg ())##.style##.visibility := Js.string "visible"
 
   let hide_background () =
-    (get_global_bg ())##style##visibility <- Js.string "hidden"
+    (get_global_bg ())##.style##.visibility := Js.string "hidden"
 
   let define_popup ~bg ?(with_background = true) elt =
-    (To_dom.of_element elt)##classList##add(Js.string Style.popup_cls);
+    (To_dom.of_element elt)##.classList##(add (Js.string Style.popup_cls));
 
     Lwt.async (fun () ->
       Ow_alert.shows elt
@@ -122,28 +122,28 @@
 
   let to_popup = Ow_alert.to_alert
   let to_dyn_popup = Ow_alert.to_dyn_alert
-}}
+]
 
-{shared{
+[%%shared
   let closeable_by_click = Ow_alert.closeable_by_click
-}}
+]
 
-{server{
+[%%server
 
   let popup
       ?(show : bool option)
       ?(allow_outer_clicks : bool option)
       ?(with_background : bool option)
       (elt : 'a elt) =
-    ignore {unit{
+    ignore [%client (
         ignore (
           popup
-            ?show:%show
-            ?allow_outer_clicks:%allow_outer_clicks
-            ?with_background:%with_background
-            %elt
+            ?show:~%show
+            ?allow_outer_clicks:~%allow_outer_clicks
+            ?with_background:~%with_background
+            ~%elt
         )
-      }};
+      : unit)];
     elt
 
   let dyn_popup
@@ -152,15 +152,15 @@
       ?(with_background : bool option)
       (elt : 'a elt)
       (f : ('a, _) Ow_alert.dyn_alert_fun' client_value) =
-    ignore {unit{
+    ignore [%client (
         ignore (
           dyn_popup
-            ?show:%show
-            ?allow_outer_clicks:%allow_outer_clicks
-            ?with_background:%with_background
-            %elt
-            %f
+            ?show:~%show
+            ?allow_outer_clicks:~%allow_outer_clicks
+            ?with_background:~%with_background
+            ~%elt
+            ~%f
         )
-    }};
+    : unit)];
     elt
-}}
+]

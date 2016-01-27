@@ -19,12 +19,12 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *)
 
-{shared{
+[%%shared
   open Eliom_content.Html5
   open Html5_types
-}}
+]
 
-{client{
+[%%client
   open Dom
   open Dom_html
 
@@ -106,17 +106,17 @@
     let unsafe_elt elt = (Js.Unsafe.coerce elt :> Dom_html.element Js.t) in
     let get_parent close =
       let rec aux node =
-        Js.Opt.case (node##parentNode)
+        Js.Opt.case (node##.parentNode)
           (fun () -> raise Close_button_not_in_alert)
           (fun p ->
              let p' = unsafe_elt p in
-             if Js.to_bool (p'##classList##contains(Js.string Style.alert_cls))
-             || Js.to_bool (p'##classList##contains(Js.string Style.dyn_alert_cls))
+             if Js.to_bool (p'##.classList##(contains (Js.string Style.alert_cls)))
+             || Js.to_bool (p'##.classList##(contains (Js.string Style.dyn_alert_cls)))
              then p
              else aux p')
       in aux (unsafe_elt close)
     in
-    let on_close elt = (Js.Unsafe.coerce elt)##hide() in
+    let on_close elt = ((Js.Unsafe.coerce elt))##hide in
     Ow_tools.closeable_by_click
       ~get_parent ~on_close (To_dom.of_element elt);
     elt
@@ -125,7 +125,7 @@
 
   let get_display elt' =
     let elt' = Ow_fun.getComputedStyle elt' in
-    Js.string (match (Js.to_string elt'##display) with
+    Js.string (match (Js.to_string elt'##.display) with
         | "none" -> "block" (* should we force ? *)
         | "" -> "block" (* should we force ? *)
         | display -> display
@@ -148,14 +148,14 @@
   let alert
       ?(show = false)
       ?(allow_outer_clicks = false)
-      ?(on_outer_click = (fun elt' -> elt'##hide()))
+      ?(on_outer_click = (fun elt' -> elt'##hide))
       ?(before = (fun _ -> ()))
       ?(after = (fun _ -> ()))
       elt =
     let elt' = (Js.Unsafe.coerce (To_dom.of_element elt) :> alert' Js.t) in
     let meth = Js.wrap_meth_callback in
 
-    elt'##classList##add(Js.string Style.alert_cls);
+    elt'##.classList##(add (Js.string Style.alert_cls));
 
     if not allow_outer_clicks then begin
       created_alerts := (elt' :> alert Js.t)::!created_alerts;
@@ -164,33 +164,33 @@
 
     let display = get_display elt' in
 
-    elt'##_show <-
+    elt'##._show :=
     meth (fun this ->
-      if not this##visible() then begin
+      if not this##visible then begin
         (* Could blink, FIXME: should be set after the [before] function. *)
-        this##style##display <- display;
+        this##.style##.display := display;
         before elt;
         Ow_event.dispatchEvent this (Ow_event.customEvent Event.S.show);
         after elt;
       end;
     );
 
-    elt'##_hide <-
+    elt'##._hide :=
     meth (fun this ->
       Ow_event.dispatchEvent this (Ow_event.customEvent Event.S.hide);
-      this##style##display <- Js.string "none";
+      this##.style##.display := Js.string "none";
       ()
     );
 
-    elt'##_visible <-
+    elt'##._visible :=
     meth (fun this ->
-      not (this##style##display = (Js.string "none"))
+      not (this##.style##.display = (Js.string "none"))
     );
 
     if show then
-      elt'##show()
+      elt'##show
     else
-      elt'##hide();
+      elt'##hide;
 
     Lwt.async (fun () ->
       outer_clicks elt
@@ -204,7 +204,7 @@
   let dyn_alert
       ?(show = false)
       ?(allow_outer_clicks = false)
-      ?(on_outer_click = (fun elt' -> elt'##hide()))
+      ?(on_outer_click = (fun elt' -> elt'##hide))
       ?(before = (fun _ -> Lwt.return ()))
       ?(after = (fun _ -> Lwt.return ()))
       elt f =
@@ -213,55 +213,55 @@
 
     ignore (alert ~allow_outer_clicks elt);
 
-    elt'##classList##add(Js.string Style.dyn_alert_cls);
+    elt'##.classList##(add (Js.string Style.dyn_alert_cls));
 
     let display = get_display elt' in
 
     let internal_show ?(event = true) ?(update_display = true) this =
       (* Could blink, FIXME: should be set after the [before] function. *)
       if update_display then
-        this##style##display <- display;
-      lwt () = before elt in
-      lwt cnt = f elt in
+        this##.style##.display := display;
+      let%lwt () = before elt in
+      let%lwt cnt = f elt in
       List.iter
         (fun c -> appendChild elt' (To_dom.of_element c))
         cnt;
       if event then
         Ow_event.dispatchEvent this (Ow_event.customEvent Event.S.show);
-      lwt () = after elt in
+      let%lwt () = after elt in
       Lwt.return ()
     in
 
     let internal_clear () =
       List.iter
         (removeChild elt')
-        (list_of_nodeList elt'##childNodes)
+        (list_of_nodeList elt'##.childNodes)
     in
 
-    elt'##_show <-
+    elt'##._show :=
     meth (fun this ->
-      if not this##visible() then begin
+      if not this##visible then begin
         internal_show this
       end else Lwt.return ()
     );
 
-    elt'##_hide <-
+    elt'##._hide :=
     meth (fun this ->
       Ow_event.dispatchEvent this (Ow_event.customEvent Event.S.hide);
-      this##style##display <- Js.string "none";
+      this##.style##.display := Js.string "none";
       internal_clear ()
     );
 
-    elt'##_update <-
+    elt'##._update :=
     meth (fun this ->
       internal_clear ();
       internal_show ~event:false ~update_display:false this;
     );
 
     if show then
-      Lwt.async (fun () -> elt'##show())
+      Lwt.async (fun () -> elt'##show)
     else
-      elt'##hide();
+      elt'##hide;
 
     Lwt.async (fun () ->
       outer_clicks elt
@@ -278,7 +278,7 @@
            let close_opened_alerts () =
              List.iter
                (fun elt' ->
-                 if elt'##visible() then
+                 if elt'##visible then
                    Ow_event.dispatchEvent elt'
                      (Ow_event.customEvent Event.S.outer_click))
                !created_alerts
@@ -297,15 +297,15 @@
                              *)
             Lwt.return ()))
 
-}}
+]
 
-{shared{
+[%%shared
   type ('a, 'b) dyn_alert_fun' = 'a elt -> 'b elt list Lwt.t
-}}
+]
 
-{server{
+[%%server
   let closeable_by_click (elt : 'a elt) =
-    ignore {unit{ ignore (closeable_by_click %elt) }};
+    ignore [%client ( ignore (closeable_by_click ~%elt) : unit)];
     elt
 
   let alert
@@ -313,15 +313,15 @@
       ?(before : ('a elt -> unit) option)
       ?(after : ('a elt -> unit) option)
       (elt : 'a elt) =
-    ignore {unit{
+    ignore [%client (
         ignore (
           alert
-            ?allow_outer_clicks:%allow_outer_clicks
-            ?before:%before
-            ?after:%after
-            %elt
+            ?allow_outer_clicks:~%allow_outer_clicks
+            ?before:~%before
+            ?after:~%after
+            ~%elt
         )
-    }};
+    : unit)];
     elt
 
   let dyn_alert
@@ -330,15 +330,15 @@
       ?(after : ('a elt -> unit Lwt.t) option)
       (elt : 'a elt)
       (f : ('a, _) dyn_alert_fun' client_value) =
-    ignore {unit{
+    ignore [%client (
         ignore (
           dyn_alert
-            ?allow_outer_clicks:%allow_outer_clicks
-            ?before:%before
-            ?after:%after
-            %elt
-            %f
+            ?allow_outer_clicks:~%allow_outer_clicks
+            ?before:~%before
+            ?after:~%after
+            ~%elt
+            ~%f
         )
-    }};
+    : unit)];
     elt
-}}
+]

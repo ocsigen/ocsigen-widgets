@@ -6,7 +6,7 @@
 
  *)
 
-{client{
+[%%client
   type jq_elt = Ojquery.t
   type t = Js.Unsafe.any
 
@@ -23,9 +23,9 @@
 
   let create content =
     let elt = Dom_html.createDiv Dom_html.document in
-    elt##className <- Js.string "swipe";
+    elt##.className := Js.string "swipe";
     let wrap_elt = Dom_html.createDiv Dom_html.document in
-    elt##className <- Js.string "swipe-wrap";
+    elt##.className := Js.string "swipe-wrap";
     Dom.appendChild wrap_elt content;
     Dom.appendChild elt wrap_elt;
     let jq_elt = Ojquery.jQelt elt in
@@ -59,4 +59,4 @@
     ignore (Js.Unsafe.meth_call jq_swipe "slide"
               [| Js.Unsafe.inject index;
                  Js.Unsafe.inject duration |])
-}}
+]

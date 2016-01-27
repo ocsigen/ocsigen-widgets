@@ -19,21 +19,21 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *)
 
-{shared{
+[%%shared.start]
   open Eliom_content.Html5
   open Html5_types
-}}
-{client{
+
+[%%client.start]
   open Dom_html
   open Dom
-}}
 
-{shared{
+
+[%%shared.start]
   type refresh_fun' = int -> string -> li elt list Lwt.t
   type on_confirm_fun' = string -> unit Lwt.t
-}}
 
-{client{
+
+[%%client.start]
   open Eliom_content.Html5
 
   (** A completion widget to complete on string value. *)
@@ -122,15 +122,15 @@
   -> 'a elt
   -> Html5_types.ul elt
   -> ('a elt * Html5_types.ul elt)
-}}
 
-{server{
+
+[%%server.start]
   (* w1 is a completion of w0. ex: is_completed_by "e" "eddy" = yes *)
   (* both arg are utf8 caml string *)
   val is_completed_by : string -> string -> bool
-}}
 
-{shared{
+
+[%%shared.start]
   val li :
     ?a:[< Html5_types.li_attrib > `Class `User_data ]
       Eliom_content.Html5.D.attrib list
@@ -138,11 +138,11 @@
   -> value_to_match:Html5_types.text
   -> Html5_types.flow5_without_interactive Eliom_content.Html5.D.Raw.elt list
   -> [> Html5_types.li ] Eliom_content.Html5.D.elt
-}}
 
-{server{
+
+[%%server.start]
   val completion :
-     refresh:refresh_fun' client_value
+     refresh:refresh_fun' Eliom_pervasives.client_value
   -> ?limit:int
   -> ?accents:bool
   -> ?sensitive:bool
@@ -150,8 +150,7 @@
   -> ?auto_match:bool
   -> ?clear_input_on_confirm:bool
   -> ?move_with_tab:bool
-  -> ?on_confirm:on_confirm_fun' client_value
+  -> ?on_confirm:on_confirm_fun' Eliom_pervasives.client_value
   -> 'a elt
   -> ul elt
   -> ('a elt * ul elt)
-}}

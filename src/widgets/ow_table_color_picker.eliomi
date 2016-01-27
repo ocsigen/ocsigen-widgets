@@ -19,10 +19,10 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *)
 
-{shared{
+[%%shared.start]
 
 type t
-type div = [ Html5_types.div ] Eliom_content.Html5.D.elt
+type div = Html5_types.div Eliom_content.Html5.D.elt
 
 (** The agrument is the divisor of 255
 *** It have to be greater than 1 **)
@@ -55,9 +55,9 @@ val create :
   unit ->
   (t * div * div)
 
-}}
 
-{client{
+
+[%%client.start]
 
 (** Get two color_picker to fusion in single
     This new color_picker use color squares of both
@@ -83,6 +83,3 @@ val get_color: t -> string
 
 (** get all square color div element *)
 val get_square_color_div_list : t -> div list
-
-
-}}

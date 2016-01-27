@@ -1,4 +1,4 @@
-{server{
+[%%server
   let table =
     [
       (" ", " ") ;
@@ -4034,4 +4034,4 @@
         | Not_found -> c
     in
     Text.map remove_accents w
-}}
+]

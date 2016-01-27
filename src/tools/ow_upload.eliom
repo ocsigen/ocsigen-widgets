@@ -20,13 +20,13 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *)
 
-{shared{
+[%%shared
   open Eliom_content
   open Eliom_content.Html5
 
-}}
+]
 
-{server{
+[%%server
   let mkdir_if_needed dirs =
     try
       ignore (List.fold_left
@@ -44,9 +44,9 @@
         ~exn ~section:Ow_log.section ~level:Lwt_log.Error
         "Error in Ow_upload.mkdir_if_needed"
 
-}}
+]
 
-{server{
+[%%server
 
   let default_new_filename _ =
     let base64url_of_base64 s =
@@ -67,11 +67,11 @@
     let rec loop () =
       let filenames = Sys.readdir dpath in
       let now = Unix.gettimeofday () in
-      lwt () = Array.fold_left
+      let%lwt () = Array.fold_left
         (fun t filename ->
-           lwt () = t in
+           let%lwt () = t in
            let filename = String.concat "/" [dpath; filename] in
-           lwt stat = Lwt_unix.LargeFile.stat filename in
+           let%lwt stat = Lwt_unix.LargeFile.stat filename in
            let date = stat.Lwt_unix.LargeFile.st_mtime in
            if now -. date >= timeout
            then Lwt_unix.unlink filename
@@ -80,10 +80,10 @@
         (Lwt.return ())
         filenames
       in
-      lwt () = Lwt_unix.sleep timeout in
+      let%lwt () = Lwt_unix.sleep timeout in
       loop ()
     in
-    try_lwt
+    try%lwt
       loop ()
     with
       | Unix.Unix_error _ as exn ->
@@ -110,7 +110,7 @@
       let fname = new_filename (Eliom_request_info.get_tmp_filename file_info)
       in
       let fpath = String.concat "/" [dpath; fname] in
-      lwt () = cp (Eliom_request_info.get_tmp_filename file_info) fpath in
+      let%lwt () = cp (Eliom_request_info.get_tmp_filename file_info) fpath in
       Lwt.return fname
 
-}}
+]

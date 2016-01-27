@@ -20,7 +20,7 @@
  *)
 
 
-{client{
+[%%client
   let removeDiacritics (w :Js.js_string Js.t) : Js.js_string Js.t =
     Js.Unsafe.fun_call (Js.Unsafe.variable "removeDiacritics")
       [| Js.Unsafe.inject w |]
@@ -30,4 +30,4 @@
       [| Js.Unsafe.inject elt |]
 
   (* TODOC Shouldn't be in tools ? It still need an interface. *)
-}}
+]

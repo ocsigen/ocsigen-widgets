@@ -21,7 +21,7 @@
 
 (** Wait spinner image. *)
 
-{shared{
+[%%shared.start]
 module D : sig
 
   (** Display spinner with DOM semantics *)
@@ -55,4 +55,4 @@ val with_spinner :
   [< Html5_types.div_content_fun ] Eliom_content.Html5.F.elt list Lwt.t ->
   [> Html5_types.div ] Eliom_content.Html5.F.elt Lwt.t
 
- }}
+ 

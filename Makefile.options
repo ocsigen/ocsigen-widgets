@@ -47,9 +47,9 @@ CLIENT_FILES_DOC := $(wildcard\
 )
 
 # OCamlfind packages for the server
-SERVER_PACKAGES := text, magick
+SERVER_PACKAGES := text magick lwt.ppx js_of_ocaml.deriving.ppx
 # OCamlfind packages for the client
-CLIENT_PACKAGES := ojquery
+CLIENT_PACKAGES := lwt.ppx js_of_ocaml.deriving.ppx js_of_ocaml.ppx ojquery
 
 # Native mode (yes/no): Compile also with native mode (it will always compile with byte mode)
 NATIVE := yes

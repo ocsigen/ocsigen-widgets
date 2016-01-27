@@ -20,7 +20,7 @@
  *)
 
 
-{client{
+[%%client
   module StorageBase = struct
 
     type t = Dom_html.storage Js.t
@@ -32,7 +32,7 @@
         (fun v -> v)
 
     let length storage =
-      storage##length
+      storage##.length
 
     let create_key key_name json_type =
       Js.string key_name, json_type
@@ -43,11 +43,11 @@
         (fun v -> Some (func v))
 
     let get_name_key storage id =
-      let opt_value = storage##key(id) in
+      let opt_value = storage##(key id) in
       opt_get opt_value (fun v -> Js.to_string v)
 
     let get_item storage (js_key_name, json_type) =
-      let opt_value = storage##getItem(js_key_name) in
+      let opt_value = storage##(getItem js_key_name) in
       opt_get opt_value (fun v ->
         Deriving_Json.from_string json_type (Js.to_string v))
 
@@ -59,13 +59,13 @@
 
     let set_item storage (js_key_name, json_type) value =
       let item = Js.string (Deriving_Json.to_string json_type value) in
-      storage##setItem(js_key_name, item)
+      storage##(setItem js_key_name item)
 
     let remove_item storage (js_key_name, json_type) =
-      storage##removeItem(js_key_name)
+      storage##(removeItem js_key_name)
 
     let clear storage =
-      storage##clear()
+      storage##clear
 
   end
 
@@ -109,7 +109,7 @@
 
       let get () =
         get_opt_storage
-          Dom_html.window##localStorage
+          Dom_html.window##.localStorage
           error_string
 
     end
@@ -121,8 +121,8 @@
 
       let get () =
         get_opt_storage
-          Dom_html.window##sessionStorage
+          Dom_html.window##.sessionStorage
           error_string
 
     end
-}}
+]

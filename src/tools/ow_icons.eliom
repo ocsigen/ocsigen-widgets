@@ -25,7 +25,7 @@
     Add the appropriate CSS and fonts to use them.
 *)
 
-{shared{
+[%%shared
 module Make(A : module type of Eliom_content.Html5.F) = struct
 
   let icon classes
@@ -51,4 +51,4 @@ end
 module F = Make(Eliom_content.Html5.F)
 module D = Make(Eliom_content.Html5.D)
 
-}}
+]

@@ -6,7 +6,7 @@
    http://www.usehook.com
  *)
 
-{client{
+[%%client
   type t = Ojquery.t
 
   class type options =
@@ -24,8 +24,8 @@
 
   let create () =
     let hook_elt = Dom_html.createDiv Dom_html.document in
-    hook_elt##className <- Js.string "hook";
-    hook_elt##id <- Js.string "hook";
+    hook_elt##.className := Js.string "hook";
+    hook_elt##.id := Js.string "hook";
     let jq_elt = Ojquery.jQelt hook_elt in
     hook_elt, jq_elt
 
@@ -36,4 +36,4 @@
 
   let init jq_elt ?(options=null_obj) () =
     Lwt.async (fun () -> Lwt.return (ignore (Js.Unsafe.meth_call jq_elt "hook" [| Js.Unsafe.inject options |])))
-}}
+]

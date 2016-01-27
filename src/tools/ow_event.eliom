@@ -19,7 +19,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *)
 
-{client{
+[%%client
   (*
   var event;
     if (document.createEvent) {
@@ -70,11 +70,11 @@
       init##detail <- detail;
       jsnew ctor (Js.string typ, init)
 *)
-      let ev = Js.Unsafe.global##document##createEvent(Js.string "CustomEvent") in
-      ev##initCustomEvent
-        (Js.string typ, Js.bool can_bubble, Js.bool cancelable, detail);
+      let ev = Js.Unsafe.global##.document##(createEvent (Js.string "CustomEvent")) in
+      ev##(initCustomEvent
+        (Js.string typ) (Js.bool can_bubble) (Js.bool cancelable) detail);
       ev
 
     let dispatchEvent (elt : #Dom_html.element Js.t) (ev : #Dom_html.event Js.t) : unit =
-      (Js.Unsafe.coerce elt)##dispatchEvent(ev)
-}}
+      (Js.Unsafe.coerce elt)##(dispatchEvent ev)
+]

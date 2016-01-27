@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *)
 
-{client{
+[%%client
   open Eliom_content.Html5
 
   type scroll_t =
@@ -60,22 +60,22 @@
 
   let empty_options () : options Js.t =
     let o = Js.Unsafe.obj [||] in
-    o##callbacks <- Js.Unsafe.obj [||];
+    o##.callbacks := Js.Unsafe.obj [||];
     o
 
   let scroll_to_i a i options =
-    a##mCustomScrollbar_i(Js.string "scrollTo", i, options)
+    a##(mCustomScrollbar_i (Js.string "scrollTo") i options)
 
   let scroll_to_s a s options =
-    a##mCustomScrollbar_s(Js.string "scrollTo", Js.string s, options)
+    a##(mCustomScrollbar_s (Js.string "scrollTo") (Js.string s) options)
 
   let scroll_to ?inertia ?scroll elt =
     try
       let options = empty_options () in
       (match inertia with
        | None | Some true -> ()
-       | Some false -> (options##scrollInertia <- 0));
-      let a = (Js.Unsafe.coerce elt)##scrollbar in
+       | Some false -> (options##.scrollInertia := 0));
+      let a = (Js.Unsafe.coerce elt)##.scrollbar in
       (match scroll with
        | None -> ()
        | Some (Int (i : int)) ->
@@ -99,42 +99,42 @@
     with _ -> ()
 
   let get_scrollbar_utils elt : scrollbar_utils Js.t =
-    (Js.Unsafe.coerce elt)##oscroll_utils
+    (Js.Unsafe.coerce elt)##.oscroll_utils
 
   let set_scrollbar_utils elt =
     let create_scrollbar_utils () = Js.Unsafe.obj [||]
     in
-    (Js.Unsafe.coerce elt)##oscroll_utils <- (create_scrollbar_utils ())
+    (Js.Unsafe.coerce elt)##.oscroll_utils := (create_scrollbar_utils ())
 
   let set_lwt_on_scroll elt (value : ('a Lwt.t * 'a Lwt.u) ref) =
-    (get_scrollbar_utils elt)##lwt_on_scroll <- value
+    (get_scrollbar_utils elt)##.lwt_on_scroll := value
 
   let set_dragger_pos elt value =
-    (get_scrollbar_utils elt)##draggerPos <- value
+    (get_scrollbar_utils elt)##.draggerPos := value
 
   let set_dragger_pct elt value =
-    (get_scrollbar_utils elt)##draggerPct <- value
+    (get_scrollbar_utils elt)##.draggerPct := value
 
   let set_scroll_list elt value =
-    (get_scrollbar_utils elt)##on_scroll_list <- value
+    (get_scrollbar_utils elt)##.on_scroll_list := value
 
   let get_scroll_list elt =
-    (get_scrollbar_utils elt)##on_scroll_list
+    (get_scrollbar_utils elt)##.on_scroll_list
 
   let set_scroll_start_list elt value =
-    (get_scrollbar_utils elt)##scroll_start_list <- value
+    (get_scrollbar_utils elt)##.scroll_start_list := value
 
   let get_scroll_start_list elt =
-    (get_scrollbar_utils elt)##scroll_start_list
+    (get_scrollbar_utils elt)##.scroll_start_list
 
   let set_scrolling_list elt value =
-    (get_scrollbar_utils elt)##while_scroll_list <- value
+    (get_scrollbar_utils elt)##.while_scroll_list := value
 
   let get_scrolling_list elt =
-    (get_scrollbar_utils elt)##while_scroll_list
+    (get_scrollbar_utils elt)##.while_scroll_list
 
   let get_lwt_on_scroll elt : ('a Lwt.t * 'a Lwt.u) ref =
-    (get_scrollbar_utils elt)##lwt_on_scroll
+    (get_scrollbar_utils elt)##.lwt_on_scroll
 
   let scrollbar_utils_constructor elt =
     set_scrollbar_utils elt;
@@ -146,26 +146,26 @@
     ()
 
   let get_dragger_pos elt : int =
-    (get_scrollbar_utils (To_dom.of_element elt))##draggerPos
+    (get_scrollbar_utils (To_dom.of_element elt))##.draggerPos
 
   let get_dragger_pct elt : int =
-    (get_scrollbar_utils (To_dom.of_element elt))##draggerPct
+    (get_scrollbar_utils (To_dom.of_element elt))##.draggerPct
 
   let lwt_scroll_to ?inertia ?scroll elt =
     let elt = (To_dom.of_element elt) in
     scroll_to ?inertia ?scroll elt;
     let lwt_onscroll = get_lwt_on_scroll elt in
-    lwt _ = fst !(lwt_onscroll) in
+    let%lwt _ = fst !(lwt_onscroll) in
     lwt_onscroll := Lwt.wait();
     Lwt.return ()
 
   let update_ ?height ?scroll elt =
     try
-      let a = (Js.Unsafe.coerce elt)##scrollbar in
-      Ow_option.iter (fun f -> (Js.Unsafe.coerce elt)##style##height <-
+      let a = (Js.Unsafe.coerce elt)##.scrollbar in
+      Ow_option.iter (fun f -> (Js.Unsafe.coerce elt)##.style##.height :=
                               Js.string (string_of_int
                                            (f elt)^"px")) height;
-      a##mCustomScrollbar(Js.string "update");
+      a##(mCustomScrollbar (Js.string "update"));
       scroll_to ?scroll elt;
       Lwt.return ()
     with e -> Ow_log.log ("scroll update error: "^Printexc.to_string e);
@@ -182,7 +182,7 @@
          (fun _ ->
             Lwt.async (fun () ->
                 Lwt_list.iter_p (fun (scroll, height, elt) ->
-                    lwt () = Lwt_js_events.request_animation_frame () in
+                    let%lwt () = Lwt_js_events.request_animation_frame () in
                     update_ ?height ?scroll elt) !t))
          Ow_size.width_height);
     fun ?height ?scroll elt ->
@@ -297,32 +297,32 @@
                                                   !list)))) in
     let elt = (To_dom.of_element elt) in
     let scrollbar = Js.Unsafe.coerce (Ojquery.js_jQelt elt) in
-    (Js.Unsafe.coerce elt)##scrollbar <- scrollbar;
+    (Js.Unsafe.coerce elt)##.scrollbar := scrollbar;
     scrollbar_utils_constructor elt;
-    lwt () = Lwt_js_events.request_animation_frame () in
+    let%lwt () = Lwt_js_events.request_animation_frame () in
     let options = empty_options () in
-    options##scrollInertia <- (match inertia with
+    options##.scrollInertia := (match inertia with
         | 0 -> 0
         | x when x < 10 -> 10
         | _ -> inertia);
     (match mouse_wheel_pixels with
      | None -> ()
-     | Some x ->     options##mouse_wheel_pixels <- x);
+     | Some x ->     options##.mouse_wheel_pixels := x);
     (match height with
      | None -> ()
      | Some f ->
-         (Js.Unsafe.coerce elt)##style##height <-
+         (Js.Unsafe.coerce elt)##.style##.height :=
            Js.string (string_of_int (f elt)^"px");
-         options##set_height <- f elt);
-    options##callbacks##onScroll <- (iter_callbacks (get_scroll_list elt));
+         options##.set_height := f elt);
+    options##.callbacks##.onScroll := (iter_callbacks (get_scroll_list elt));
     ignore (scrolls_ (stop_scroll_wait elt) elt);
     ignore (scrolls_ (fun () -> set_dragger_pos elt
                         (Js.Unsafe.eval_string "mcs.draggerTop")) elt);
     ignore (scrolls_ (fun () -> set_dragger_pct elt
                         (Js.Unsafe.eval_string "mcs.topPct")) elt);
-    options##callbacks##onScrollStart <-
+    options##.callbacks##.onScrollStart :=
       (iter_callbacks (get_scroll_start_list elt));
-    options##callbacks##whileScrolling <-
+    options##.callbacks##.whileScrolling :=
       (iter_callbacks (get_scrolling_list elt));
     (match on_scroll_callback with
      | None -> ()
@@ -333,17 +333,17 @@
     (match while_scrolling_callback with
      | None -> ()
      | Some f -> ignore (while_scrolling_ f elt));
-    options##callbacks##onTotalScroll <- (de_optize_callback
+    options##.callbacks##.onTotalScroll := (de_optize_callback
                                             on_total_scroll_callback);
-    options##callbacks##onTotalScrollBack <- (de_optize_callback
+    options##.callbacks##.onTotalScrollBack := (de_optize_callback
                                                 on_total_scroll_back_callback);
     (match on_total_scroll_offset with
      | None -> ()
-     | Some x -> options##callbacks##onTotalScrollOffset <- x);
+     | Some x -> options##.callbacks##.onTotalScrollOffset := x);
     (match on_total_scroll_back_offset with
      | None -> ()
-     | Some x -> options##callbacks##onTotalScrollBackOffset <- x);
-    scrollbar##mCustomScrollbar(options);
+     | Some x -> options##.callbacks##.onTotalScrollBackOffset := x);
+    scrollbar##(mCustomScrollbar options);
     if scroll <> None || height <> None
     then begin
       add ?scroll ?height elt;
@@ -351,4 +351,4 @@
       Lwt.return ()
     end
     else Lwt.return ()
-}}
+]

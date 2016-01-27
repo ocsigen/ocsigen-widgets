@@ -19,7 +19,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *)
 
-{client{
+[%%client
   open Lwt
 
   let slide_without_start move_events end_event moves_func end_func =
@@ -32,15 +32,15 @@
       (dom_elt: #Dom_html.eventTarget Js.t)
       start_func moves_func end_func =
 
-    lwt ev = start_event dom_elt in
-    lwt _ = start_func ev in
+    let%lwt ev = start_event dom_elt in
+    let%lwt _ = start_func ev in
     slide_without_start moves_func end_func
 
   let slide_events start_events slide_without_start
       dom_elt starts_func moves_func end_func =
 
     start_events dom_elt (fun ev lt ->
-      lwt _ = starts_func ev lt in
+      let%lwt _ = starts_func ev lt in
       slide_without_start moves_func end_func)
 
   let mouseslide_without_start =
@@ -96,8 +96,8 @@
   let touch_or_mouse_slide (dom_elt: #Dom_html.eventTarget Js.t)
       start_func moves_func end_func =
 
-    lwt event = touch_or_mouse_start dom_elt in
-    lwt _ = start_func event in
+    let%lwt event = touch_or_mouse_start dom_elt in
+    let%lwt _ = start_func event in
     touch_or_mouse_without_start event moves_func end_func
 
 
@@ -107,6 +107,6 @@
     Lwt_js_events.async_loop
       (fun ?use_capture () -> touch_or_mouse_start dom_elt) ()
       (fun ev lt ->
-        lwt _ = starts_func ev lt in
+        let%lwt _ = starts_func ev lt in
       touch_or_mouse_without_start ev moves_func end_func)
-}}
+]

@@ -29,7 +29,7 @@
 
   *)
 
-{shared{
+[%%shared.start]
   (** The type to determin the value of the position attribute of the javascript
       element. *)
   type position' = [
@@ -55,9 +55,9 @@
     | `top
     | common_orientation'
   ]
-}}
 
-{client{
+
+[%%client.start]
   open Dom
   open Dom_html
 
@@ -112,4 +112,4 @@
     -> relative:#element Js.t
     -> #element Js.t
     -> unit
-}}
+

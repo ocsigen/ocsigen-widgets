@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *)
 
-{client{
+[%%client.start]
   open Eliom_content.Html5
   (** Scrollbar module.
 
@@ -102,4 +102,4 @@
 
   (** Add a function to the list of callbacks executed after a scroll. *)
   val scrolls : (unit -> unit) -> 'a elt -> 'a Lwt.t
-}}
+

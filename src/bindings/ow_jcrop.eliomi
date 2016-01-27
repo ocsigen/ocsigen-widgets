@@ -19,7 +19,7 @@
     @see < http://github.com/tapmodo/Jcrop > Jcrop
 *)
 
-{client{
+[%%client.start]
   (** Types used to constraint usage of parameters of Jcrop's callbacks *)
   class type param = object
     method x : float Js.readonly_prop
@@ -63,4 +63,4 @@
     ->
   object
   end
-}}
+

@@ -19,7 +19,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *)
 
-{client{
+[%%client.start]
   class type widget = object
     inherit Dom_html.element
     method t : Js.js_string Js.t Js.readonly_prop
@@ -31,4 +31,4 @@
   end
 
   val ctor : #widget' Js.t -> string -> widget Js.t
-}}
+

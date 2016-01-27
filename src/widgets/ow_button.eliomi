@@ -19,11 +19,11 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *)
 
-{shared{
+[%%shared.start]
   open Eliom_content.Html5
-}}
 
-{client{
+
+[%%client.start]
   open Eliom_content.Html5
 
   (** Buttons are html elements with a state of [pressed] or [unpressed]
@@ -264,20 +264,20 @@
   val to_button : 'a elt -> button Js.t
   val to_button_alert : 'a elt -> button_alert Js.t
   val to_button_dyn_alert : 'a elt -> button_dyn_alert Js.t
-}}
 
-{shared{
+
+[%%shared.start]
   type ('a, 'b, 'c) button_dyn_alert_fun' =
     'a elt -> 'b elt -> 'c elt list Lwt.t
-}}
 
-{server{
+
+[%%server.start]
   val closeable_by_click :
      'a elt
   -> 'a elt
 
   val button :
-    ?set:Ow_active_set.t' client_value
+    ?set:Ow_active_set.t' Eliom_pervasives.client_value
   -> ?pressed:bool
   -> ?predicate:(unit -> bool Lwt.t)
   -> 'a elt
@@ -286,7 +286,7 @@
   val button_alert :
      ?v : Ow_position.v_orientation'
   -> ?h : Ow_position.h_orientation'
-  -> ?set:Ow_active_set.t' client_value
+  -> ?set:Ow_active_set.t' Eliom_pervasives.client_value
   -> ?pressed:bool
   -> ?predicate:(unit -> bool Lwt.t)
   -> ?allow_outer_clicks:bool
@@ -300,7 +300,7 @@
   val button_dyn_alert :
      ?v : Ow_position.v_orientation'
   -> ?h : Ow_position.h_orientation'
-  -> ?set:Ow_active_set.t' client_value
+  -> ?set:Ow_active_set.t' Eliom_pervasives.client_value
   -> ?pressed:bool
   -> ?predicate:(unit -> bool Lwt.t)
   -> ?allow_outer_clicks:bool
@@ -309,6 +309,5 @@
   -> ?after:('a elt -> 'b elt -> unit Lwt.t)
   -> 'a elt
   -> 'b elt
-  -> ('a, 'b, _) button_dyn_alert_fun' client_value
+  -> ('a, 'b, _) button_dyn_alert_fun' Eliom_pervasives.client_value
   -> ('a elt * 'b elt)
-}}
