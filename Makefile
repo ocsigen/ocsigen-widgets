@@ -47,13 +47,14 @@ opt:: $(LIBDIR)/${PKG_NAME}.server.cmxs
 ## Aux
 
 # Use `eliomdep -sort' only in OCaml>4
-ifeq ($(shell ocamlc -version|cut -c1),4)
-eliomdep=$(shell $(ELIOMDEP) $(1) -ppx -sort $(2) $(filter %.eliom %.ml,$(3))))
-else
-eliomdep=$(3)
-endif
+# ifeq ($(shell ocamlc -version|cut -c1),4)
+# eliomdep=$(shell $(ELIOMDEP) $(1) -ppx -sort $(2) $(filter %.eliom %.ml,$(3))))
+# else
+# eliomdep=$(3)
+# endif
 objs=$(patsubst %.ml,$(1)/%.$(2),$(patsubst %.eliom,$(1)/%.$(2),$(filter %.eliom %.ml,$(3))))
-depsort=$(call objs,$(1),$(2),$(call eliomdep,$(3),$(4),$(5)))
+# depsort=$(call objs,$(1),$(2),$(call eliomdep,$(3),$(4),$(5)))
+depsort=$(shell ocaml tools/sort_deps.ml .depend $(patsubst %.ml,$(1)/%.$(2),$(patsubst %.eliom,$(1)/%.$(2),$(filter %.eliom %.ml,$(5)))))
 
 $(LIBDIR):
 	mkdir $(LIBDIR)
