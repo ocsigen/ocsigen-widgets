@@ -41,11 +41,11 @@
 {shared{
 
 (** The type of picture uploaders. *)
-type t
+type 'data t
 
 (** Type of the data sent to the cropping function *)
 type crop_type = string (* image name *) * (float * float * float * float)
-
+                   deriving(Json)
 }}
 
 (** [make ~directory ~name ()] creates a picture uploader in [directory]
@@ -76,9 +76,11 @@ val make :
   ?max_height: int ->
   ?service_wrapper:((Ocsigen_extensions.file_info -> string Lwt.t) ->
                     Eliom_lib.file_info -> string Lwt.t) ->
-  ?crop_wrapper:((crop_type -> string Lwt.t) -> crop_type -> unit Lwt.t) ->
+  ?crop_wrapper:((crop_type * 'data -> string Lwt.t) ->
+                 crop_type * 'data -> unit Lwt.t) ->
+  data_deriver:(crop_type * 'data) Deriving_Json.t ->
   unit ->
-  t
+  'data t
 
 {shared{
 (** Creates a form that will ask for an image, send it, possibly ask the user
@@ -109,6 +111,7 @@ val make :
 
  *)
 val upload_pic_form :
+<<<<<<< 0555ca1afbeb2c3f3190064a567b9bed852cd287
   ?send:string ->
   ?crop:string ->
   ?select_an_area_of_the_picture:string ->
@@ -116,11 +119,14 @@ val upload_pic_form :
     ([ `Div ] Eliom_content.Html5.D.elt -> int option * int option)
     client_value ->
   t ->
+=======
+  'data t ->
+>>>>>>> Ow_pic_uploader: Make possible to send custom data to crop handlers
   url_path: string list ->
   text: string ->
   on_error: (exn -> unit Lwt.t) ->
   continuation: (string -> unit Lwt.t) ->
-  unit ->
+  'data ->
   [ `Div ] Eliom_content.Html5.D.elt
 }}
 
@@ -142,10 +148,10 @@ val upload_pic_popup :
   ?fit_in_box:
     ([ `Div ] Eliom_content.Html5.D.elt -> int option * int option)
     client_value ->
-  t ->
+  'data t ->
   url_path: string list ->
   text: string ->
-  unit ->
+  'data ->
   string option Lwt.t
 
  }}

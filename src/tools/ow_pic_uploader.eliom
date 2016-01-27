@@ -28,7 +28,7 @@ type crop_type =
  (float * float * float * float)
   deriving (Json)
 
-type t =
+type 'data t =
   { directory : string list;
     service : (unit, Eliom_lib.file_info,
                [ Eliom_service.service_method ],
@@ -39,7 +39,7 @@ type t =
                [ Eliom_service.registrable ],
                string Eliom_service.ocaml_service)
         Eliom_service.service;
-    crop : ((crop_type, unit) server_function * float option) option;
+    crop : ((crop_type * 'data, unit) server_function * float option) option;
   }
 }}
 
@@ -119,6 +119,7 @@ let new_filename filename =
 let make ~directory ~name ?crop_ratio ?max_width ?max_height
     ?(service_wrapper = fun f a -> f a)
     ?(crop_wrapper = fun f a -> lwt _ = f a in Lwt.return ())
+    ~data_deriver
     () =
   let service = Eliom_service.Ocaml.post_coservice'
       ~name
@@ -151,9 +152,9 @@ let make ~directory ~name ?crop_ratio ?max_width ?max_height
       let crop_handler = make_crop_handler ~directory ~crop_ratio () in
       let crop_fun = server_function
           ~name:("_c"^name)
-          Json.t<crop_type>
+          data_deriver
           (crop_wrapper
-             (fun ((fname, _) as v) ->
+             (fun (((fname, _) as v), _) ->
                 lwt () = crop_handler v in
                 Lwt.return fname))
       in
@@ -173,7 +174,7 @@ let bind_send_button
     ?(select_an_area_of_the_picture="Select an area of the picture")
     ?fit_in_box
     uploader
-    url_path inp send_button container on_error continuation =
+    url_path inp send_button container on_error continuation data =
      Lwt_js_events.async (fun () ->
        Lwt_js_events.clicks (To_dom.of_element send_button)
          (fun _ _ ->
@@ -260,7 +261,7 @@ let bind_send_button
                                Manip.appendChild container
                                  (Ow_icons.F.spinner ());
                                try_lwt
-                                 lwt () = crop_fun (fname, !coord) in
+                                 lwt () = crop_fun ((fname, !coord), data) in
                                  continuation fname
                                with e -> on_error e)
                       with e -> on_error e)
@@ -273,8 +274,9 @@ let bind_send_button
 
 {shared{
 
-let upload_pic_form ?(send="Send") ?crop ?select_an_area_of_the_picture ?fit_in_box
-    t ~url_path ~text ~on_error ~continuation () =
+let upload_pic_form
+    ?(send="Send") ?crop ?select_an_area_of_the_picture ?fit_in_box
+    t ~url_path ~text ~on_error ~continuation data =
   let header = h1 [pcdata text] in
   let inp = D.Raw.input ~a:[a_input_type `File; a_accept ["image/*"]] () in
   let send_button = D.Raw.input ~a:[a_input_type `Submit; a_value send] () in
@@ -285,7 +287,8 @@ let upload_pic_form ?(send="Send") ?crop ?select_an_area_of_the_picture ?fit_in_
       ?crop:%crop
       ?select_an_area_of_the_picture:%select_an_area_of_the_picture
       ?fit_in_box:%fit_in_box
-      %t %url_path %inp %send_button %container %on_error %continuation }};
+    %t %url_path %inp %send_button %container %on_error %continuation %data
+  }};
   container
 
  }}
@@ -293,7 +296,7 @@ let upload_pic_form ?(send="Send") ?crop ?select_an_area_of_the_picture ?fit_in_
 {client{
 
 let upload_pic_popup ?send ?crop ?select_an_area_of_the_picture
-       ?fit_in_box t ~url_path ~text () =
+    ?fit_in_box t ~url_path ~text data =
   let w, u = Lwt.wait () in
   let box = ref None in
   let continuation fname =
@@ -316,7 +319,7 @@ let upload_pic_popup ?send ?crop ?select_an_area_of_the_picture
       ));
   let form =
     upload_pic_form t ?send ?crop ?select_an_area_of_the_picture ?fit_in_box
-      ~url_path ~text ~on_error ~continuation () in
+      ~url_path ~text ~on_error ~continuation data in
   let d = D.div ~a:[a_class ["ow_background"]]
       [div ~a:[a_class ["ow_popup"]] [close_button; form]]
   in
