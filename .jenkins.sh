@@ -7,7 +7,6 @@ opam pin add --no-action reactiveData 'https://github.com/ocsigen/reactiveData.g
 opam pin add --no-action text 'https://github.com/vbmithr/ocaml-text.git#master'
 opam pin add --no-action ocsigen-widgets .
 
-opam install -y ppx_deriving
 opam install --deps-only ocsigen-widgets
 opam install --verbose ocsigen-widgets
 

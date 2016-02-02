@@ -16,5 +16,7 @@ depends: [
   "imagemagick"
   "js_of_ocaml"
   "ojquery"
-  "eliom"
+  "ppx_deriving" {build}
+  "eliom" {>= "5.0"}
 ]
+available: [ ocaml-version >= "4.02" ]

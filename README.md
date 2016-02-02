@@ -13,14 +13,8 @@ TODO
 
 ###<a id="installation"></a>Installation
 
-```shell
-make
-make install
-```
-
-```shell
-make reinstall
-```
+The easiest way is to use OPAM. You need to pin the `ojquery` and
+`ocsigen-widgets` GitHub repositories.
 
 ###<a id="documentation"></a>Documentation
 
