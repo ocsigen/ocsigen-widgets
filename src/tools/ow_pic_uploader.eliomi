@@ -82,6 +82,19 @@ val make :
   unit ->
   'data t
 
+[%%client.start]
+(** Experimental client version of [make] to be used with client apps
+    (mobile apps).
+    Call it with exactly the same parameter values as on server side
+    if you want to avoid injection.
+*)
+val make :
+  name: string ->
+  ?crop_ratio: float option ->
+  data_deriver:(crop_type * 'data) Deriving_Json.t ->
+  unit ->
+  'data t
+
 [%%shared.start]
 (** Creates a form that will ask for an image, send it, possibly ask te user
     to crop it. On success, the continuation called as last parameter will

@@ -166,6 +166,26 @@ let make ~directory ~name ?crop_ratio ?max_width ?max_height
     service;
     crop }
 
+let%client make ~name ?crop_ratio ~data_deriver () =
+  let service = Eliom_service.Ocaml.post_coservice'
+      ~name
+      ~post_params:(Eliom_parameter.file "f")
+      ()
+  in
+  let crop = match crop_ratio with
+    | None -> None
+    | Some crop_ratio ->
+      let crop_fun = server_function
+          ~name:("_c"^name)
+          data_deriver
+          ()
+      in
+      Some (crop_fun, crop_ratio)
+  in
+  { directory = [];
+    service;
+    crop }
+
 
 [%%client
 
