@@ -34,7 +34,7 @@ end
 
 let default_fail e =
   Lwt.return [
-    if ~%(Ocsigen_config.get_debugmode ())
+    if Eliom_config.get_debugmode ()
     then Html5.F.em [Html5.F.pcdata (Printexc.to_string e)]
     else Ow_icons.F.question ()
   ]
