@@ -219,5 +219,5 @@
   -> ?before:('a elt -> unit Lwt.t)
   -> ?after:('a elt -> unit Lwt.t)
   -> 'a elt
-  -> ('a, _) dyn_alert_fun' Eliom_pervasives.client_value
+  -> ('a, _) dyn_alert_fun' Eliom_client_common.client_value
   -> 'a elt

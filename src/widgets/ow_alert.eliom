@@ -329,7 +329,7 @@
       ?(before : ('a elt -> unit Lwt.t) option)
       ?(after : ('a elt -> unit Lwt.t) option)
       (elt : 'a elt)
-      (f : ('a, _) dyn_alert_fun' client_value) =
+      (f : ('a, _) dyn_alert_fun' Eliom_client_common.client_value) =
     ignore [%client (
         ignore (
           dyn_alert

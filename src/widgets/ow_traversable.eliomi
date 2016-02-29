@@ -205,8 +205,8 @@
      ?enable_link:bool
   -> ?focus:bool
     (* TODO
-  -> ?is_traversable:(#traversable Js.t -> bool) client_value
-  -> ?on_keydown:(Dom_html.keyboardEvent Js.t -> bool Lwt.t) client_value
+  -> ?is_traversable:(#traversable Js.t -> bool) Eliom_client_common.client_value
+  -> ?on_keydown:(Dom_html.keyboardEvent Js.t -> bool Lwt.t) Eliom_client_common.client_value
      *)
   -> ul elt
   -> ul elt

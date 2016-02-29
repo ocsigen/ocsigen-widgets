@@ -479,7 +479,7 @@
 
 [%%server
   let completion
-      ~(refresh : refresh_fun' client_value)
+      ~(refresh : refresh_fun' Eliom_client_common.client_value)
       ?(limit : int option)
       ?(accents : bool option)
       ?(sensitive : bool option)
@@ -487,7 +487,7 @@
       ?(auto_match : bool option)
       ?(clear_input_on_confirm : bool option)
       ?(move_with_tab : bool option)
-      ?(on_confirm : on_confirm_fun' client_value option)
+      ?(on_confirm : on_confirm_fun' Eliom_client_common.client_value option)
       (elt : 'a elt)
       (elt_traversable : ul elt) =
     ignore [%client (

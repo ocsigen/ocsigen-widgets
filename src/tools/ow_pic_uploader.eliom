@@ -39,7 +39,7 @@ type 'data t =
                Eliom_service.registrable,
                string Eliom_service.ocaml_service)
         Eliom_service.service;
-    crop : ((crop_type * 'data, unit) server_function * float option) option;
+    crop : ((crop_type * 'data, unit) Eliom_client.server_function * float option) option;
   }
 ]
 
@@ -150,7 +150,7 @@ let make ~directory ~name ?crop_ratio ?max_width ?max_height
          but as nobody knows the name of the picture at this time,
          we use a static service, hidden in a server_function. *)
       let crop_handler = make_crop_handler ~directory ~crop_ratio () in
-      let crop_fun = server_function
+      let crop_fun = Eliom_client.server_function
           ~name:("_c"^name)
           data_deriver
           (crop_wrapper
@@ -175,7 +175,7 @@ let%client make ~name ?crop_ratio ~data_deriver () =
   let crop = match crop_ratio with
     | None -> None
     | Some crop_ratio ->
-      let crop_fun = server_function
+      let crop_fun = Eliom_client.server_function
           ~name:("_c"^name)
           data_deriver
           ()

@@ -92,5 +92,5 @@
   -> ?allow_outer_clicks:bool
   -> ?with_background:bool
   -> 'a elt
-  -> ('a, _) Ow_alert.dyn_alert_fun' Eliom_pervasives.client_value
+  -> ('a, _) Ow_alert.dyn_alert_fun' Eliom_client_common.client_value
   -> 'a elt
