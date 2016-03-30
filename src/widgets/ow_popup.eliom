@@ -151,7 +151,7 @@
       ?(allow_outer_clicks : bool option)
       ?(with_background : bool option)
       (elt : 'a elt)
-      (f : ('a, _) Ow_alert.dyn_alert_fun' Eliom_client_common.client_value) =
+      (f : ('a, _) Ow_alert.dyn_alert_fun' Eliom_client_value.t) =
     ignore [%client (
         ignore (
           dyn_popup

@@ -309,8 +309,8 @@
      ?(enable_link : bool option)
      ?(focus : bool option)
      (* TODO
-     ?(is_traversable : (#traversable Js.t -> bool) option Eliom_client_common.client_value)
-     ?(on_keydown : (Dom_html.keyboardEvent Js.t -> bool Lwt.t) option Eliom_client_common.client_value)
+     ?(is_traversable : (#traversable Js.t -> bool) option Eliom_client_value.t)
+     ?(on_keydown : (Dom_html.keyboardEvent Js.t -> bool Lwt.t) option Eliom_client_value.t)
       *)
      (elt : 'a elt) =
     ignore [%client (

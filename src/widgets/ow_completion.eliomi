@@ -142,7 +142,7 @@
 
 [%%server.start]
   val completion :
-     refresh:refresh_fun' Eliom_client_common.client_value
+     refresh:refresh_fun' Eliom_client_value.t
   -> ?limit:int
   -> ?accents:bool
   -> ?sensitive:bool
@@ -150,7 +150,7 @@
   -> ?auto_match:bool
   -> ?clear_input_on_confirm:bool
   -> ?move_with_tab:bool
-  -> ?on_confirm:on_confirm_fun' Eliom_client_common.client_value
+  -> ?on_confirm:on_confirm_fun' Eliom_client_value.t
   -> 'a elt
   -> ul elt
   -> ('a elt * ul elt)

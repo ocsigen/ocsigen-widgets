@@ -129,7 +129,7 @@ val upload_pic_form :
   ?select_an_area_of_the_picture:string ->
   ?fit_in_box:
     ([ `Div ] Eliom_content.Html5.D.elt -> int option * int option)
-    Eliom_client_common.client_value ->
+    Eliom_client_value.t ->
   'data t ->
   url_path: string list ->
   text: string ->
@@ -156,7 +156,7 @@ val upload_pic_popup :
   ?select_an_area_of_the_picture:string ->
   ?fit_in_box:
     ([ `Div ] Eliom_content.Html5.D.elt -> int option * int option)
-    Eliom_client_common.client_value ->
+    Eliom_client_value.t ->
   'data t ->
   url_path: string list ->
   text: string ->

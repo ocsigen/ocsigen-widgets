@@ -277,7 +277,7 @@
   -> 'a elt
 
   val button :
-    ?set:Ow_active_set.t' Eliom_client_common.client_value
+    ?set:Ow_active_set.t' Eliom_client_value.t
   -> ?pressed:bool
   -> ?predicate:(unit -> bool Lwt.t)
   -> 'a elt
@@ -286,7 +286,7 @@
   val button_alert :
      ?v : Ow_position.v_orientation'
   -> ?h : Ow_position.h_orientation'
-  -> ?set:Ow_active_set.t' Eliom_client_common.client_value
+  -> ?set:Ow_active_set.t' Eliom_client_value.t
   -> ?pressed:bool
   -> ?predicate:(unit -> bool Lwt.t)
   -> ?allow_outer_clicks:bool
@@ -300,7 +300,7 @@
   val button_dyn_alert :
      ?v : Ow_position.v_orientation'
   -> ?h : Ow_position.h_orientation'
-  -> ?set:Ow_active_set.t' Eliom_client_common.client_value
+  -> ?set:Ow_active_set.t' Eliom_client_value.t
   -> ?pressed:bool
   -> ?predicate:(unit -> bool Lwt.t)
   -> ?allow_outer_clicks:bool
@@ -309,5 +309,5 @@
   -> ?after:('a elt -> 'b elt -> unit Lwt.t)
   -> 'a elt
   -> 'b elt
-  -> ('a, 'b, _) button_dyn_alert_fun' Eliom_client_common.client_value
+  -> ('a, 'b, _) button_dyn_alert_fun' Eliom_client_value.t
   -> ('a elt * 'b elt)

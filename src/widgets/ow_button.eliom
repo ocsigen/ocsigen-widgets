@@ -380,7 +380,7 @@
   let closeable_by_click = Ow_alert.closeable_by_click
 
   let button
-      ?(set : Ow_active_set.t' Eliom_client_common.client_value option)
+      ?(set : Ow_active_set.t' Eliom_client_value.t option)
       ?(pressed : bool option)
       ?(predicate : (unit -> bool Lwt.t) option)
       (elt : 'a elt) =
@@ -401,7 +401,7 @@
   let button_alert
         ?(v : Ow_position.v_orientation' option)
         ?(h : Ow_position.h_orientation' option)
-        ?(set : Ow_active_set.t' Eliom_client_common.client_value option)
+        ?(set : Ow_active_set.t' Eliom_client_value.t option)
         ?(pressed : bool option)
         ?(predicate : (unit -> bool Lwt.t) option)
         ?(allow_outer_clicks : bool option)
@@ -435,7 +435,7 @@
   let button_dyn_alert
         ?(v : Ow_position.v_orientation' option)
         ?(h : Ow_position.h_orientation' option)
-        ?(set : Ow_active_set.t' Eliom_client_common.client_value option)
+        ?(set : Ow_active_set.t' Eliom_client_value.t option)
         ?(pressed : bool option)
         ?(predicate : (unit -> bool Lwt.t) option)
         ?(allow_outer_clicks : bool option)
@@ -444,7 +444,7 @@
         ?(after : ('a elt -> 'b elt -> unit Lwt.t) option)
         (elt : 'a elt)
         (elt_alert : 'b elt)
-        (f : ('a, _, _) button_dyn_alert_fun' Eliom_client_common.client_value) =
+        (f : ('a, _, _) button_dyn_alert_fun' Eliom_client_value.t) =
     ignore [%client (
         ignore (
           let alert = match ~%set with
