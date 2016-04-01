@@ -1,10 +1,12 @@
-opam-version: "1"
+opam-version: "1.2"
 maintainer: "dev@ocsigen.org"
+authors: "dev@ocsigen.org"
+homepage: "https://ocsigen.org/ocsigen-widgets/"
+bug-reports: "https://github.com/ocsigen/ocsigen-widgets/issues"
+dev-repo: "https://github.com/ocsigen/ocsigen-widgets.git"
 version: "dev"
-build: [
-  [ make ]
-  [ make "install" ]
-]
+build: [ make ]
+install: [ make "install" ]
 remove: [
   [ "rm" "-rf" "%{lib}%/ocsigen-widgets/server" ]
   [ "rm" "-rf" "%{lib}%/ocsigen-widgets/client" ]
