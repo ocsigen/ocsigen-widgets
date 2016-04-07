@@ -28,17 +28,19 @@ type crop_type =
  (float * float * float * float)
   [@@deriving json]
 
+type service =
+    Service :
+      (unit,
+       Eliom_lib.file_info,
+       _, _, _, Eliom_service.non_ext, _, [`WithoutSuffix],
+       unit,
+       [ `One of Eliom_lib.file_info ] Eliom_parameter.param_name,
+       string Eliom_service.ocaml)
+        Eliom_service.t -> service
+
 type 'data t =
   { directory : string list;
-    service : (unit, Eliom_lib.file_info,
-               Eliom_service.service_method,
-               Eliom_service.attached,
-               Eliom_service.service_kind,
-               [ `WithoutSuffix ], unit,
-               [ `One of Eliom_lib.file_info ] Eliom_parameter.param_name,
-               Eliom_service.registrable,
-               string Eliom_service.ocaml_service)
-        Eliom_service.service;
+    service : service;
     crop : ((crop_type * 'data, unit) Eliom_client.server_function * float option) option;
   }
 ]
@@ -121,9 +123,15 @@ let make ~directory ~name ?crop_ratio ?max_width ?max_height
     ?(crop_wrapper = fun f a -> let%lwt _ = f a in Lwt.return ())
     ~data_deriver
     () =
-  let service = Eliom_service.Ocaml.post_coservice'
+  let service =
+    Eliom_service.create
       ~name
-      ~post_params:(Eliom_parameter.file "f")
+      ~ret:Eliom_service.Ret.Ocaml
+      ~id:Eliom_service.Id.Global
+      ~meth:
+        (Eliom_service.Meth.Post
+           (Eliom_parameter.unit,
+            Eliom_parameter.file "f"))
       ()
   in
   let service_handler, crop = match crop_ratio with
@@ -163,13 +171,19 @@ let make ~directory ~name ?crop_ratio ?max_width ?max_height
   Eliom_registration.Ocaml.register service
     (fun () -> service_wrapper service_handler);
   { directory;
-    service;
+    service = Service service;
     crop }
 
 let%client make ~name ?crop_ratio ~data_deriver () =
-  let service = Eliom_service.Ocaml.post_coservice'
+  let service =
+    Eliom_service.create
       ~name
-      ~post_params:(Eliom_parameter.file "f")
+      ~ret:Eliom_service.Ret.Ocaml
+      ~id:Eliom_service.Id.Global
+      ~meth:
+        (Eliom_service.Meth.Post
+           (Eliom_parameter.unit,
+            Eliom_parameter.file "f"))
       ()
   in
   let crop = match crop_ratio with
@@ -183,7 +197,7 @@ let%client make ~name ?crop_ratio ~data_deriver () =
       Some (crop_fun, crop_ratio)
   in
   { directory = [];
-    service;
+    service = Service service;
     crop }
 
 
@@ -207,10 +221,10 @@ let bind_send_button
                       Manip.removeChildren container;
                       Manip.appendChild container (Ow_icons.F.spinner ());
                       try%lwt
+                        let {service = Service service} = uploader in
                         let%lwt fname =
                           Eliom_client.call_ocaml_service
-                            ~service:uploader.service
-                            () file
+                            ~service () file
                         in
                         match uploader.crop with
                         | None -> (* Finished! *)
