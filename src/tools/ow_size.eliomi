@@ -77,4 +77,3 @@
   val client_left : Dom_html.element Js.t -> int
 
   val client_right : Dom_html.element Js.t -> int
-
