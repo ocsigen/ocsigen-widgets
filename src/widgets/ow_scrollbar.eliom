@@ -184,7 +184,7 @@
                 Lwt_list.iter_p (fun (scroll, height, elt) ->
                     let%lwt () = Lwt_js_events.request_animation_frame () in
                     update_ ?height ?scroll elt) !t))
-         Ow_size.width_height);
+         Ot_size.width_height);
     fun ?height ?scroll elt ->
       match scroll, height with
       | None, None -> ()

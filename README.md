@@ -1,5 +1,8 @@
 #Ocsigen-widgets
 
+Warning: this project is deprecated.
+Please contribute to Ocsigen toolkit instead.
+
 1. [Getting started](#getting-started)
 
 ##<a id="getting-started"></a>Getting started

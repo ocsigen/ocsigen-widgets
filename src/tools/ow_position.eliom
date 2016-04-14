@@ -56,10 +56,10 @@
         ~relative elt =
     let elt' = Ow_fun.getComputedStyle elt in
     let rel' = Ow_fun.getComputedStyle relative in
-    let rel_w' = Ow_size.get_full_width rel' in
-    let rel_h' = Ow_size.get_full_height rel' in
-    let elt_w' = Ow_size.get_full_width elt' in
-    let elt_h' = Ow_size.get_full_height elt' in
+    let rel_w' = Ot_size.get_full_width rel' in
+    let rel_h' = Ot_size.get_full_height rel' in
+    let elt_w' = Ot_size.get_full_width elt' in
+    let elt_h' = Ot_size.get_full_height elt' in
     let s_left, s_top =
       if scroll
       then document##.body##.scrollLeft, document##.body##.scrollTop
@@ -103,10 +103,10 @@
         ~relative elt =
     let elt' = Ow_fun.getComputedStyle elt in
     let rel' = Ow_fun.getComputedStyle relative in
-    let rel_w' = Ow_size.get_full_width rel' in
-    let rel_h' = Ow_size.get_full_height rel' in
-    let elt_w' = Ow_size.get_full_width elt' in
-    let elt_h' = Ow_size.get_full_height elt' in
+    let rel_w' = Ot_size.get_full_width rel' in
+    let rel_h' = Ot_size.get_full_height rel' in
+    let elt_w' = Ot_size.get_full_width elt' in
+    let elt_h' = Ot_size.get_full_height elt' in
     let s_left, s_top =
       if scroll
       then document##.body##.scrollLeft, document##.body##.scrollTop
@@ -127,8 +127,8 @@
     (to_side hshift rect##.left, to_side vshift rect##.top)
 
   let generic_move ?(position = `absolute) (left, top) elt =
-    elt##.style##.top :=  (Ow_size.pxstring_of_int top);
-    elt##.style##.left := (Ow_size.pxstring_of_int left);
+    elt##.style##.top :=  (Ot_size.pxstring_of_int top);
+    elt##.style##.left := (Ot_size.pxstring_of_int left);
     elt##.style##.position := attr_of_position position
 
   let relative_move ?h ?v ?scroll ?position ~relative elt =

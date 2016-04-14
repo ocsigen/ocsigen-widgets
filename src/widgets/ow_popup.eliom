@@ -39,7 +39,7 @@
   let get_global_bg () =
     let update_bg bg =
       let w, h =
-        let w, h = Ow_size.get_screen_size () in
+        let w, h = Ot_size.get_screen_size () in
         Js.Optdef.case (window##.innerWidth)
           (fun () -> w)
           (fun w -> w),
@@ -47,8 +47,8 @@
           (fun () -> h)
           (fun h -> h)
       in
-      bg##.style##.height := Ow_size.pxstring_of_int h;
-      bg##.style##.width := Ow_size.pxstring_of_int w;
+      bg##.style##.height := Ot_size.pxstring_of_int h;
+      bg##.style##.width := Ot_size.pxstring_of_int w;
     in
     match !global_bg with
       | Some bg ->

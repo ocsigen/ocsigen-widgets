@@ -102,7 +102,7 @@ let start (slider, dragger, ori, value,
     ref (dom_slider##.clientWidth - margin * 2),
     ref (dom_slider##.clientHeight - margin * 2)
   in
-  let dragger_width, dragger_height = Ow_size.get_size dom_dragger in
+  let dragger_width, dragger_height = Ot_size.get_size dom_dragger in
 
   let ox_slider, oy_slider =
     let ox, oy = Dom_html.elementClientPosition dom_slider in
