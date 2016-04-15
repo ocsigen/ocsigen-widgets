@@ -20,5 +20,6 @@ depends: [
   "ojquery"
   "ppx_deriving" {build}
   "eliom" {>= "5.0"}
+  "ocsigen-toolkit"
 ]
 available: [ ocaml-version >= "4.02" ]
