@@ -4,6 +4,7 @@ opam pin add --no-action js_of_ocaml 'https://github.com/ocsigen/js_of_ocaml.git
 opam pin add --no-action ojquery 'https://github.com/ocsigen/ojquery.git#master'
 opam pin add --no-action reactiveData 'https://github.com/ocsigen/reactiveData.git#master'
 opam pin add --no-action text 'https://github.com/vbmithr/ocaml-text.git#master'
+opam pin add --no-action ocsigen-toolkit 'https://github.com/ocsigen/ocsigen-toolkit.git#master'
 opam pin add --no-action ocsigen-widgets .
 
 opam install --deps-only ocsigen-widgets
