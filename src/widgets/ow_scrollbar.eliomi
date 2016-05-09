@@ -21,7 +21,7 @@
  *)
 
 [%%client.start]
-  open Eliom_content.Html5
+  open Eliom_content.Html
   (** Scrollbar module.
 
       Allow to add customizable scrollbars to your pages.
@@ -102,4 +102,3 @@
 
   (** Add a function to the list of callbacks executed after a scroll. *)
   val scrolls : (unit -> unit) -> 'a elt -> 'a Lwt.t
-

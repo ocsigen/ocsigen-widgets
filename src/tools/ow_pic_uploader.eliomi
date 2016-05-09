@@ -128,7 +128,7 @@ val upload_pic_form :
   ?crop:string ->
   ?select_an_area_of_the_picture:string ->
   ?fit_in_box:
-    ([ `Div ] Eliom_content.Html5.D.elt -> int option * int option)
+    ([ `Div ] Eliom_content.Html.D.elt -> int option * int option)
     Eliom_client_value.t ->
   'data t ->
   url_path: string list ->
@@ -136,7 +136,7 @@ val upload_pic_form :
   on_error: (exn -> unit Lwt.t) ->
   continuation: (string -> unit Lwt.t) ->
   'data ->
-  [ `Div ] Eliom_content.Html5.D.elt
+  [ `Div ] Eliom_content.Html.D.elt
 
 
 [%%client.start]
@@ -155,7 +155,7 @@ val upload_pic_popup :
   ?crop:string ->
   ?select_an_area_of_the_picture:string ->
   ?fit_in_box:
-    ([ `Div ] Eliom_content.Html5.D.elt -> int option * int option)
+    ([ `Div ] Eliom_content.Html.D.elt -> int option * int option)
     Eliom_client_value.t ->
   'data t ->
   url_path: string list ->

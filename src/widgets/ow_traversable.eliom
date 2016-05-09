@@ -20,9 +20,9 @@
  *)
 
 [%%shared
-  open Eliom_content.Html5
-  open Eliom_content.Html5.D
-  open Html5_types
+  open Eliom_content.Html
+  open Eliom_content.Html.D
+  open Html_types
 ]
 [%%client
   open Dom_html
@@ -39,13 +39,13 @@
   class type traversable = object
     inherit Ow_base_widget.widget
 
-    method getContainer : Html5_types.ul elt Js.meth
+    method getContainer : Html_types.ul elt Js.meth
 
     method next : unit Js.meth
     method prev : unit Js.meth
     method resetActive : unit Js.meth
-    method setActive : Html5_types.li elt -> unit Js.meth
-    method getActive : Html5_types.li elt Js.opt Js.meth
+    method setActive : Html_types.li elt -> unit Js.meth
+    method getActive : Html_types.li elt Js.opt Js.meth
     method isTraversable : bool Js.meth
   end
 
@@ -53,17 +53,17 @@
     inherit traversable
     inherit Ow_base_widget.widget'
 
-    method _getContainer : (#traversable Js.t, Html5_types.ul elt) Js.meth_callback Js.prop
+    method _getContainer : (#traversable Js.t, Html_types.ul elt) Js.meth_callback Js.prop
 
     method _next : (#traversable Js.t, unit) Js.meth_callback Js.prop
     method _prev : (#traversable Js.t, unit) Js.meth_callback Js.prop
     method _resetActive : (#traversable Js.t, unit) Js.meth_callback Js.prop
-    method _setActive : (#traversable Js.t, Html5_types.li elt -> unit) Js.meth_callback Js.prop
-    method _getActive : (#traversable Js.t, Html5_types.li elt Js.opt) Js.meth_callback Js.prop
+    method _setActive : (#traversable Js.t, Html_types.li elt -> unit) Js.meth_callback Js.prop
+    method _getActive : (#traversable Js.t, Html_types.li elt Js.opt) Js.meth_callback Js.prop
     method _isTraversable : (#traversable Js.t, bool) Js.meth_callback Js.prop
 
-    method _setActiveBy : (#traversable Js.t, by -> Html5_types.li elt -> unit) Js.meth_callback Js.prop
-    method setActiveBy : by -> Html5_types.li elt -> unit Js.meth
+    method _setActiveBy : (#traversable Js.t, by -> Html_types.li elt -> unit) Js.meth_callback Js.prop
+    method setActiveBy : by -> Html_types.li elt -> unit Js.meth
   end
 
   class type traversable_detail_event = object
@@ -293,11 +293,11 @@
       ) @ a
     in
     if anchor then
-      Eliom_content.Html5.D.li ~a [
-        Eliom_content.Html5.D.Raw.a
+      Eliom_content.Html.D.li ~a [
+        Eliom_content.Html.D.Raw.a
           ~a:[a_tabindex (-1); a_href (uri_of_string (fun () -> href))] elts
       ]
-    else Eliom_content.Html5.D.li ~a elts
+    else Eliom_content.Html.D.li ~a elts
 ]
 
 [%%server

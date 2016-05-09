@@ -20,11 +20,11 @@
  *)
 
 [%%shared.start]
-  open Eliom_content.Html5
+  open Eliom_content.Html
 
 
 [%%client.start]
-  open Eliom_content.Html5
+  open Eliom_content.Html
 
   (** Buttons are html elements with a state of [pressed] or [unpressed]
       and actions are generally coupled with a state (such as {b show}/{b hide}

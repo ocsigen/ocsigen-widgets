@@ -20,8 +20,8 @@
  *)
 
 [%%shared.start]
-  open Eliom_content.Html5
-  open Html5_types
+  open Eliom_content.Html
+  open Html_types
 
 [%%client.start]
   open Dom_html

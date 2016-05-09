@@ -22,7 +22,7 @@
 [%%shared.start]
 
 type t
-type div = Html5_types.div Eliom_content.Html5.D.elt
+type div = Html_types.div Eliom_content.Html.D.elt
 
 (** The agrument is the divisor of 255
 *** It have to be greater than 1 **)

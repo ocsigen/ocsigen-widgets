@@ -26,10 +26,10 @@
 *)
 
 [%%shared
-module Make(A : module type of Eliom_content.Html5.F) = struct
+module Make(A : module type of Eliom_content.Html.F) = struct
 
   let icon classes
-      ?(a = ([] : Html5_types.i_attrib Eliom_content.Html5.attrib list)) () =
+      ?(a = ([] : Html_types.i_attrib Eliom_content.Html.attrib list)) () =
     A.i ~a:(A.a_class ("fa"::classes)::a) []
 
   let user = icon ["fa-user"; "fa-fw"]
@@ -48,7 +48,7 @@ module Make(A : module type of Eliom_content.Html5.F) = struct
 
 end
 
-module F = Make(Eliom_content.Html5.F)
-module D = Make(Eliom_content.Html5.D)
+module F = Make(Eliom_content.Html.F)
+module D = Make(Eliom_content.Html.D)
 
 ]

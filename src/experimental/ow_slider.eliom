@@ -22,13 +22,13 @@
 [%%shared
 
 open Lwt
-open Eliom_content.Html5
-open Eliom_content.Html5.F
+open Eliom_content.Html
+open Eliom_content.Html.F
 
 type orientation_t = Vertical | Horizontal
 
 type callback = unit -> unit Lwt.t
-type div = Html5_types.div Eliom_content.Html5.D.elt
+type div = Html_types.div Eliom_content.Html.D.elt
 type t = (div * div * orientation_t * float ref *
             callback option ref * callback option ref *
             callback option ref * callback option ref)
@@ -94,8 +94,8 @@ let start (slider, dragger, ori, value,
            start_slide, move_slide, end_slide, click) =
 
   (* get data *)
-  let dom_slider = Eliom_content.Html5.To_dom.of_element slider in
-  let dom_dragger = Eliom_content.Html5.To_dom.of_element dragger in
+  let dom_slider = Eliom_content.Html.To_dom.of_element slider in
+  let dom_dragger = Eliom_content.Html.To_dom.of_element dragger in
 
   let margin = 4 in
   let slider_width, slider_height =

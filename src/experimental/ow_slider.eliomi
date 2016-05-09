@@ -23,7 +23,7 @@
 
 type orientation_t = Vertical | Horizontal
 type callback = unit -> unit Lwt.t
-type div = Html5_types.div Eliom_content.Html5.D.elt
+type div = Html_types.div Eliom_content.Html.D.elt
 type t
 
 (**

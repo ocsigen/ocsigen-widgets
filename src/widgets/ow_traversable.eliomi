@@ -21,8 +21,8 @@
 
 
 [%%shared.start]
-  open Eliom_content.Html5
-  open Html5_types
+  open Eliom_content.Html
+  open Html_types
 
 [%%client.start]
   open Dom_html
@@ -102,7 +102,7 @@
 
     (** Get the original version of the container used as [traversable]
         element (without conversion). *)
-    method getContainer : Html5_types.ul elt Js.meth
+    method getContainer : Html_types.ul elt Js.meth
 
     (** Explicitly set active the next element of the [traversable]
         element. *)
@@ -116,11 +116,11 @@
     method resetActive : unit Js.meth
 
     (** Explicitly set to active state a [traversable]'s child. *)
-    method setActive : Html5_types.li elt -> unit Js.meth
+    method setActive : Html_types.li elt -> unit Js.meth
 
     (** Get the current active element. If there is no active element,
         returns [Js.null]. *)
-    method getActive : Html5_types.li elt Js.opt Js.meth
+    method getActive : Html_types.li elt Js.opt Js.meth
 
     (** Returns true if the [traversable] element can listen keys and
         interpret them. Uses the [is_traversable] function on the construction
@@ -167,25 +167,25 @@
   -> ?focus : bool
   -> ?is_traversable : (#traversable Js.t -> bool)
   -> ?on_keydown : (Dom_html.keyboardEvent Js.t -> bool Lwt.t)
-  -> Html5_types.ul elt
-  -> Html5_types.ul elt
+  -> Html_types.ul elt
+  -> Html_types.ul elt
 
   (** {2 Conversion functions} *)
 
   (** Check if the given element is an instance of a [traversable] widget. *)
-  val to_traversable : Html5_types.ul elt -> traversable Js.t
+  val to_traversable : Html_types.ul elt -> traversable Js.t
 
 
 [%%shared.start]
   val li :
-    ?a:[< Html5_types.li_attrib > `Class `User_data ]
-      Eliom_content.Html5.D.attrib list
+    ?a:[< Html_types.li_attrib > `Class `User_data ]
+      Eliom_content.Html.D.attrib list
   -> ?anchor:bool
   -> ?href:string
-  -> ?value:Html5_types.text
-  -> ?value_to_match:Html5_types.text
-  -> Html5_types.flow5_without_interactive Eliom_content.Html5.D.Raw.elt list
-  -> [> Html5_types.li ] Eliom_content.Html5.D.elt
+  -> ?value:Html_types.text
+  -> ?value_to_match:Html_types.text
+  -> Html_types.flow5_without_interactive Eliom_content.Html.D.Raw.elt list
+  -> [> Html_types.li ] Eliom_content.Html.D.elt
 
 
 [%%server.start]

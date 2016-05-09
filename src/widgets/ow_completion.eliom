@@ -20,8 +20,8 @@
  *)
 
 [%%shared
-  open Eliom_content.Html5
-  open Html5_types
+  open Eliom_content.Html
+  open Html_types
 ]
 [%%client
   open Dom_html
@@ -79,7 +79,7 @@
   class type completion' = object
     inherit completion
 
-    method _choices : Html5_types.li elt list Js.prop
+    method _choices : Html_types.li elt list Js.prop
     method _needUpdate : bool Js.prop
     method _selected : bool Js.prop
     method _selectedValue : string Js.prop

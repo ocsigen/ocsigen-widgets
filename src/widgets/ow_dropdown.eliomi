@@ -21,8 +21,8 @@
  *)
 
 [%%shared.start]
-  open Eliom_content.Html5
-  open Html5_types
+  open Eliom_content.Html
+  open Html_types
 
 [%%client.start]
   open Dom_html
@@ -89,19 +89,19 @@
   -> ?predicate : (unit -> bool Lwt.t)
   -> ?on_keydown : (Dom_html.keyboardEvent Js.t -> bool Lwt.t)
   -> 'a elt
-  -> Html5_types.ul elt
-  -> ('a elt * Html5_types.ul elt)
+  -> Html_types.ul elt
+  -> ('a elt * Html_types.ul elt)
 
   (* FIXME: add conversion functions. *)
 
 
 [%%shared.start]
   val li :
-    ?a:[< Html5_types.li_attrib > `Class `User_data ]
-      Eliom_content.Html5.D.attrib list
+    ?a:[< Html_types.li_attrib > `Class `User_data ]
+      Eliom_content.Html.D.attrib list
   -> href:string
-  -> Html5_types.flow5_without_interactive Eliom_content.Html5.D.Raw.elt list
-  -> [> Html5_types.li ] Eliom_content.Html5.D.elt
+  -> Html_types.flow5_without_interactive Eliom_content.Html.D.Raw.elt list
+  -> [> Html_types.li ] Eliom_content.Html.D.elt
 
 
 [%%server.start]
@@ -113,4 +113,3 @@
   -> 'a elt
   -> ul elt
   -> ('a elt * ul elt)
-

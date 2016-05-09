@@ -20,8 +20,8 @@
  *)
 
 [%%shared.start]
-  open Eliom_content.Html5
-  open Html5_types
+  open Eliom_content.Html
+  open Html_types
 
 [%%client.start]
   open Dom_html
@@ -34,7 +34,7 @@
 
 
 [%%client.start]
-  open Eliom_content.Html5
+  open Eliom_content.Html
 
   (** A completion widget to complete on string value. *)
 
@@ -120,8 +120,8 @@
   -> ?move_with_tab : bool
   -> ?on_confirm : on_confirm_fun'
   -> 'a elt
-  -> Html5_types.ul elt
-  -> ('a elt * Html5_types.ul elt)
+  -> Html_types.ul elt
+  -> ('a elt * Html_types.ul elt)
 
 
 [%%server.start]
@@ -132,12 +132,12 @@
 
 [%%shared.start]
   val li :
-    ?a:[< Html5_types.li_attrib > `Class `User_data ]
-      Eliom_content.Html5.D.attrib list
-  -> value:Html5_types.text
-  -> value_to_match:Html5_types.text
-  -> Html5_types.flow5_without_interactive Eliom_content.Html5.D.Raw.elt list
-  -> [> Html5_types.li ] Eliom_content.Html5.D.elt
+    ?a:[< Html_types.li_attrib > `Class `User_data ]
+      Eliom_content.Html.D.attrib list
+  -> value:Html_types.text
+  -> value_to_match:Html_types.text
+  -> Html_types.flow5_without_interactive Eliom_content.Html.D.Raw.elt list
+  -> [> Html_types.li ] Eliom_content.Html.D.elt
 
 
 [%%server.start]

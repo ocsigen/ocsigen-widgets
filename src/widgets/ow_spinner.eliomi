@@ -26,8 +26,8 @@ module D : sig
 
   (** Display spinner with DOM semantics *)
   val spinner :
-    ?a:Html5_types.i_attrib Eliom_content.Html5.attrib list ->
-    unit -> [> Html5_types.i ] Eliom_content.Html5.D.elt
+    ?a:Html_types.i_attrib Eliom_content.Html.attrib list ->
+    unit -> [> Html_types.i ] Eliom_content.Html.D.elt
 
 end
 
@@ -35,8 +35,8 @@ module F : sig
 
   (** Display spinner with functional semantics *)
   val spinner :
-    ?a:Html5_types.i_attrib Eliom_content.Html5.attrib list ->
-    unit -> [> Html5_types.i ] Eliom_content.Html5.F.elt
+    ?a:Html_types.i_attrib Eliom_content.Html.attrib list ->
+    unit -> [> Html_types.i ] Eliom_content.Html.F.elt
 
 end
 
@@ -49,10 +49,8 @@ end
     its result (and never display a spinner).
 *)
 val with_spinner :
-  ?a:[< Html5_types.div_attrib > `Class ] Eliom_content.Html5.F.attrib list ->
-  ?fail:(exn -> [< Html5_types.div_content_fun > `Em `I ]
-           Eliom_content.Html5.F.elt list Lwt.t) ->
-  [< Html5_types.div_content_fun ] Eliom_content.Html5.F.elt list Lwt.t ->
-  [> Html5_types.div ] Eliom_content.Html5.F.elt Lwt.t
-
- 
+  ?a:[< Html_types.div_attrib > `Class ] Eliom_content.Html.F.attrib list ->
+  ?fail:(exn -> [< Html_types.div_content_fun > `Em `I ]
+           Eliom_content.Html.F.elt list Lwt.t) ->
+  [< Html_types.div_content_fun ] Eliom_content.Html.F.elt list Lwt.t ->
+  [> Html_types.div ] Eliom_content.Html.F.elt Lwt.t

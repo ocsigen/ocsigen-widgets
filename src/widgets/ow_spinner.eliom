@@ -35,7 +35,7 @@ end
 let default_fail e =
   Lwt.return [
     if Eliom_config.get_debugmode ()
-    then Html5.F.em [Html5.F.pcdata (Printexc.to_string e)]
+    then Html.F.em [Html.F.pcdata (Printexc.to_string e)]
     else Ow_icons.F.question ()
   ]
 
@@ -47,13 +47,13 @@ let with_spinner ?a ?(fail=default_fail) thread =
   let%lwt v = try%lwt
       let%lwt v = thread in
       Lwt.return
-        (v :> Html5_types.div_content_fun Html5.F.elt list)
+        (v :> Html_types.div_content_fun Html.F.elt list)
     with e ->
       let%lwt v = fail e in
       Lwt.return
-        (v :> Html5_types.div_content_fun Html5.F.elt list)
+        (v :> Html_types.div_content_fun Html.F.elt list)
   in
-  Lwt.return (Html5.D.div ?a v)
+  Lwt.return (Html.D.div ?a v)
 
 ]
 
@@ -61,27 +61,27 @@ let with_spinner ?a ?(fail=default_fail) thread =
 
 let with_spinner ?(a = []) ?(fail=default_fail) thread =
   match Lwt.state thread with
-  | Lwt.Return v -> Lwt.return (Html5.D.div ~a v)
+  | Lwt.Return v -> Lwt.return (Html.D.div ~a v)
   | Lwt.Sleep ->
     let loading = "spinning" in
-    let d = Html5.D.div
-        ~a:(Eliom_content.Html5.F.a_class [loading]::a) [Ow_icons.F.spinner ()]
+    let d = Html.D.div
+        ~a:(Eliom_content.Html.F.a_class [loading]::a) [Ow_icons.F.spinner ()]
     in
     Lwt.async
       (fun () ->
          let%lwt v = try%lwt
              let%lwt v = thread in
              Lwt.return
-               (v :> Html5_types.div_content_fun Html5.F.elt list)
+               (v :> Html_types.div_content_fun Html.F.elt list)
            with e ->
              let%lwt v = fail e in
              Lwt.return
-               (v :> Html5_types.div_content_fun Html5.F.elt list)
+               (v :> Html_types.div_content_fun Html.F.elt list)
          in
-         Eliom_content.Html5.Manip.replaceChildren d v ;
-         Eliom_content.Html5.Manip.Class.remove d loading ;
+         Eliom_content.Html.Manip.replaceChildren d v ;
+         Eliom_content.Html.Manip.Class.remove d loading ;
          Lwt.return ()) ;
     Lwt.return d
-  | Lwt.Fail e -> let%lwt c = fail e in Lwt.return (Html5.D.div ~a c)
+  | Lwt.Fail e -> let%lwt c = fail e in Lwt.return (Html.D.div ~a c)
 
 ]

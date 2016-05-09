@@ -20,7 +20,7 @@
  *)
 
 [%%shared.start]
-  open Eliom_content.Html5
+  open Eliom_content.Html
 
 
 [%%client.start]

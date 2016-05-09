@@ -21,8 +21,8 @@
 
 
 [%%shared
-  open Eliom_content.Html5
-  open Html5_types
+  open Eliom_content.Html
+  open Html_types
 ]
 [%%client
   open Dom_html
@@ -32,7 +32,7 @@
 [%%client
   open Dom
   open Dom_html
-  open Eliom_content.Html5
+  open Eliom_content.Html
 
   let global_bg = ref (None : divElement Js.t option)
 

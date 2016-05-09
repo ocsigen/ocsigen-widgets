@@ -21,7 +21,7 @@
  *)
 
 [%%client
-  open Eliom_content.Html5
+  open Eliom_content.Html
 
   type scroll_t =
     | Bottom
