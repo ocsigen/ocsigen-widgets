@@ -54,12 +54,10 @@
         ?(v : v_orientation' = `center)
         ?(scroll = false)
         ~relative elt =
-    let elt' = Ow_fun.getComputedStyle elt in
-    let rel' = Ow_fun.getComputedStyle relative in
-    let rel_w' = Ot_size.get_full_width rel' in
-    let rel_h' = Ot_size.get_full_height rel' in
-    let elt_w' = Ot_size.get_full_width elt' in
-    let elt_h' = Ot_size.get_full_height elt' in
+    let rel_w' = int_of_float @@ Ot_size.client_width  ~with_border:true relative in
+    let rel_h' = int_of_float @@ Ot_size.client_height ~with_border:true relative in
+    let elt_w' = int_of_float @@ Ot_size.client_width  ~with_border:true elt in
+    let elt_h' = int_of_float @@ Ot_size.client_height ~with_border:true elt in
     let s_left, s_top =
       if scroll
       then document##.body##.scrollLeft, document##.body##.scrollTop
@@ -101,12 +99,10 @@
         ?(v : v_orientation' = `center)
         ?(scroll = false)
         ~relative elt =
-    let elt' = Ow_fun.getComputedStyle elt in
-    let rel' = Ow_fun.getComputedStyle relative in
-    let rel_w' = Ot_size.get_full_width rel' in
-    let rel_h' = Ot_size.get_full_height rel' in
-    let elt_w' = Ot_size.get_full_width elt' in
-    let elt_h' = Ot_size.get_full_height elt' in
+    let rel_w' = int_of_float @@ Ot_size.client_width  ~with_border:true relative in
+    let rel_h' = int_of_float @@ Ot_size.client_height ~with_border:true relative in
+    let elt_w' = int_of_float @@ Ot_size.client_width  ~with_border:true elt in
+    let elt_h' = int_of_float @@ Ot_size.client_height ~with_border:true elt in
     let s_left, s_top =
       if scroll
       then document##.body##.scrollLeft, document##.body##.scrollTop
@@ -127,8 +123,8 @@
     (to_side hshift rect##.left, to_side vshift rect##.top)
 
   let generic_move ?(position = `absolute) (left, top) elt =
-    elt##.style##.top :=  (Ot_size.pxstring_of_int top);
-    elt##.style##.left := (Ot_size.pxstring_of_int left);
+    elt##.style##.top :=  Js.string (Ot_style.px_of_float @@ float_of_int top);
+    elt##.style##.left := Js.string (Ot_style.px_of_float @@ float_of_int left);
     elt##.style##.position := attr_of_position position
 
   let relative_move ?h ?v ?scroll ?position ~relative elt =

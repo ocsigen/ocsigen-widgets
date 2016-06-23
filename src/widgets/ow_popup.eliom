@@ -47,8 +47,8 @@
           (fun () -> h)
           (fun h -> h)
       in
-      bg##.style##.height := Ot_size.pxstring_of_int h;
-      bg##.style##.width := Ot_size.pxstring_of_int w;
+      bg##.style##.height := Js.string @@ Ot_style.px_of_float @@ float_of_int h;
+      bg##.style##.width := Js.string @@ Ot_style.px_of_float @@ float_of_int w;
     in
     match !global_bg with
       | Some bg ->
