@@ -5,7 +5,7 @@ homepage: "https://ocsigen.org/ocsigen-widgets/"
 bug-reports: "https://github.com/ocsigen/ocsigen-widgets/issues"
 dev-repo: "https://github.com/ocsigen/ocsigen-widgets.git"
 version: "dev"
-build: [ make ]
+build: [ make "-j%{jobs}%" ]
 install: [ make "install" ]
 remove: [
   [ "rm" "-rf" "%{lib}%/ocsigen-widgets/server" ]
