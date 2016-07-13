@@ -15,7 +15,6 @@ remove: [
 depends: [
   "ocamlfind"
   "text"
-  "imagemagick"
   "js_of_ocaml"
   "ojquery"
   "ppx_deriving" {build}
