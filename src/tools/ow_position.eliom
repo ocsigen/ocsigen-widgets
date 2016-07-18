@@ -54,10 +54,10 @@
         ?(v : v_orientation' = `center)
         ?(scroll = false)
         ~relative elt =
-    let rel_w' = int_of_float @@ Ot_size.client_width  ~with_border:true relative in
-    let rel_h' = int_of_float @@ Ot_size.client_height ~with_border:true relative in
-    let elt_w' = int_of_float @@ Ot_size.client_width  ~with_border:true elt in
-    let elt_h' = int_of_float @@ Ot_size.client_height ~with_border:true elt in
+    let rel_w' = int_of_float @@ Ot_size.client_width  ~with_margin:true relative in
+    let rel_h' = int_of_float @@ Ot_size.client_height ~with_margin:true relative in
+    let elt_w' = int_of_float @@ Ot_size.client_width  ~with_margin:true elt in
+    let elt_h' = int_of_float @@ Ot_size.client_height ~with_margin:true elt in
     let s_left, s_top =
       if scroll
       then document##.body##.scrollLeft, document##.body##.scrollTop
@@ -99,10 +99,10 @@
         ?(v : v_orientation' = `center)
         ?(scroll = false)
         ~relative elt =
-    let rel_w' = int_of_float @@ Ot_size.client_width  ~with_border:true relative in
-    let rel_h' = int_of_float @@ Ot_size.client_height ~with_border:true relative in
-    let elt_w' = int_of_float @@ Ot_size.client_width  ~with_border:true elt in
-    let elt_h' = int_of_float @@ Ot_size.client_height ~with_border:true elt in
+    let rel_w' = int_of_float @@ Ot_size.client_width  ~with_margin:true relative in
+    let rel_h' = int_of_float @@ Ot_size.client_height ~with_margin:true relative in
+    let elt_w' = int_of_float @@ Ot_size.client_width  ~with_margin:true elt in
+    let elt_h' = int_of_float @@ Ot_size.client_height ~with_margin:true elt in
     let s_left, s_top =
       if scroll
       then document##.body##.scrollLeft, document##.body##.scrollTop
