@@ -126,7 +126,7 @@ let make ~directory ~name ?crop_ratio ?max_width ?max_height
   let service =
     Eliom_service.create_ocaml
       ~name
-      ~id:Eliom_service.Global
+      ~path:Eliom_service.No_path
       ~meth:
         (Eliom_service.Post
            (Eliom_parameter.unit,
@@ -177,7 +177,7 @@ let%client make ~name ?crop_ratio ~data_deriver () =
   let service =
     Eliom_service.create_ocaml
       ~name
-      ~id:Eliom_service.Global
+      ~path:Eliom_service.No_path
       ~meth:
         (Eliom_service.Post
            (Eliom_parameter.unit,
