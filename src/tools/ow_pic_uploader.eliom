@@ -173,32 +173,6 @@ let make ~directory ~name ?crop_ratio ?max_width ?max_height
     service = Service service;
     crop }
 
-let%client make ~name ?crop_ratio ~data_deriver () =
-  let service =
-    Eliom_service.create_ocaml
-      ~name
-      ~path:Eliom_service.No_path
-      ~meth:
-        (Eliom_service.Post
-           (Eliom_parameter.unit,
-            Eliom_parameter.file "f"))
-      ()
-  in
-  let crop = match crop_ratio with
-    | None -> None
-    | Some crop_ratio ->
-      let crop_fun = Eliom_client.server_function
-          ~name:("_c"^name)
-          data_deriver
-          ()
-      in
-      Some (crop_fun, crop_ratio)
-  in
-  { directory = [];
-    service = Service service;
-    crop }
-
-
 [%%client
 
 let bind_send_button
