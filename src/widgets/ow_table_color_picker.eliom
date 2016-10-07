@@ -71,11 +71,11 @@ let genere_lll_color precision =
 
 
 (* Some pre-genereated ll_color in several precision *)
-let lll_color_p2 = genere_lll_color 2
-let lll_color_p3 = genere_lll_color 3
-let lll_color_p4 = genere_lll_color 4
-let lll_color_p5 = genere_lll_color 5
-let lll_color_p6 = genere_lll_color 6
+let lll_color_p2 = lazy (genere_lll_color 2)
+let lll_color_p3 = lazy (genere_lll_color 3)
+let lll_color_p4 = lazy (genere_lll_color 4)
+let lll_color_p5 = lazy (genere_lll_color 5)
+let lll_color_p6 = lazy (genere_lll_color 6)
 
 (* Some hand-mained lll_color *)
 let lll_color_10 = [[["#E03625"; "#FF4B3A"];
@@ -145,7 +145,8 @@ let genere_color_table lll_color =
   let div_color_list, tables = build_table [] [] lll_color in
   div_color_list, tables
 
-let create ?(initial_color = 0, 0, 0) ?(lll_color = lll_color_p5) () =
+let create
+      ?(initial_color = 0, 0, 0) ?(lll_color = Lazy.force lll_color_p5) () =
   let tbl, trl, tdl = initial_color in
   let color_ref = ref (List.nth (List.nth (List.nth lll_color tbl) trl) tdl) in
   let div_color_list, tables = genere_color_table lll_color in
