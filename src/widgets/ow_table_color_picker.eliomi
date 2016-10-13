@@ -29,11 +29,11 @@ type div = Html_types.div Eliom_content.Html.D.elt
 val genere_lll_color : int -> string list list list
 
 (* Some pre-genereated lll_color in several precision *)
-val lll_color_p2 : string list list list
-val lll_color_p3 : string list list list
-val lll_color_p4 : string list list list
-val lll_color_p5 : string list list list
-val lll_color_p6 : string list list list
+val lll_color_p2 : string list list list Lazy.t
+val lll_color_p3 : string list list list Lazy.t
+val lll_color_p4 : string list list list Lazy.t
+val lll_color_p5 : string list list list Lazy.t
+val lll_color_p6 : string list list list Lazy.t
 
 (* Some hand-mained lll_color *)
 val lll_color_6 : string list list list (* 1 table 2 columns 5 lines *)
